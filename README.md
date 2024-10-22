@@ -1,1 +1,3 @@
-# receiptman
+# Receiptman
+
+Docker receipt generator

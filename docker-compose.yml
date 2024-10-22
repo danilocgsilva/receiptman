@@ -1,0 +1,16 @@
+services:
+  receiptman:
+    build:
+      context: .
+    container_name: receiptman
+    volumes:
+      - ./www:/var/www
+    ports:
+      - 2001:80
+  receiptman_db:
+    image: mysql:latest
+    container_name: receiptman_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=receiptmanpassword
+    ports:
+      - 973:3306
