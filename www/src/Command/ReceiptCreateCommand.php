@@ -37,30 +37,32 @@ class ReceiptCreateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->input = $input;
+        $this->output = $output;
+        $this->questionHelper = $this->getHelper('question');
+
         $io = new SymfonyStyle($input, $output);
 
         $baseFolderName = $this->getBaseDateString();
         $dirPath = 'output' . DIRECTORY_SEPARATOR . $baseFolderName;
         
-        $helper = $this->getHelper('question');
-
         $receipt = new PhpDevMysql();
 
-        $questionContainerName = new Question("Write the container name\n");
-        $containerName = $helper->ask($input, $output, $questionContainerName);
-        $receipt->setName($containerName);
+        $receipt->setName(
+            $this->makeQuestionAndGetAnswer("Write the container name\n")
+        );
 
-        $questionHttpRedirection = new Question("Write the port number redirection for http\n");
-        $httpPortNumberRedirection = $helper->ask($input, $output, $questionHttpRedirection);
-        $receipt->setHttpPortRedirection($httpPortNumberRedirection);
+        $receipt->setHttpPortRedirection(
+            $this->makeQuestionAndGetAnswer("Write the port number redirection for http\n")
+        );
         
-        $questionMysqlPortRedirection = new Question("Write the port number redirection for mysql\n");
-        $mysqlPortNumberRedirection = $helper->ask($input, $output, $questionMysqlPortRedirection);
-        $receipt->setMysqlPortRedirection($mysqlPortNumberRedirection);
+        $receipt->setMysqlPortRedirection(
+            $this->makeQuestionAndGetAnswer("Write the port number redirection for mysql\n")
+        );
 
-        $questionMysqlRootPassword = new Question("Write the mysql root password\n");
-        $mysqlRootPassword = $helper->ask($input, $output, $questionMysqlRootPassword);
-        $receipt->setMysqlRootPassword($mysqlRootPassword);
+        $receipt->setMysqlRootPassword(
+            $this->makeQuestionAndGetAnswer("Write the mysql root password\n")
+        );
 
         $this->makerFile($dirPath,$receipt);
 
@@ -72,6 +74,12 @@ class ReceiptCreateCommand extends Command
     private function getBaseDateString(): string
     {
         return (new DateTime())->format('Ymd-his');
+    }
+
+    private function makeQuestionAndGetAnswer(string $questionTitle): string
+    {
+        $question = new Question($questionTitle);
+        return (string) $this->questionHelper->ask($this->input, $this->output, $question);
     }
 
     private function makerFile(string $dirPath, PhpDevMysql $receipt)
