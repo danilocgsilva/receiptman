@@ -46,7 +46,9 @@ class PhpDevMysql
         
         return [
             new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2)),
-            new File("configs/xdebug.ini", $this->getXDebugContent())
+            new File("Dockerfile", $this->getDockerfile()),
+            new File("configs/xdebug.ini", $this->getXDebugContent()),
+            new File("configs/startup.sh", $this->getStartupContent()),
         ];
     }
 
@@ -78,6 +80,35 @@ class PhpDevMysql
                 ]
             ]
         ];
+    }
+
+    private function getStartupContent(): string
+    {
+        return <<<EOF
+#!/bin/bash
+
+service apache2 start
+while : ; do sleep 1000; done
+EOF;
+    }
+
+    private function getDockerfile(): string
+    {
+        return <<<EOF
+FROM debian:bookworm-slim
+
+RUN apt-get update
+RUN apt-get upgrade -y
+RUN apt-get install curl git zip -y
+RUN apt-get install php php-mysql php-xdebug php-curl php-zip php-xml php-mbstring -y
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
+COPY config/xdebug.ini /etc/php/8.2/mods-available/
+COPY config/000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY config/startup.sh /startup.sh
+RUN chmod +x /startup.sh
+
+CMD /startup.sh
+EOF;
     }
 
     private function getXDebugContent(): string
