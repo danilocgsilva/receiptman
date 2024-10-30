@@ -28,6 +28,8 @@ class ReceiptCreateCommand extends Command
     private $output;
 
     private $questionHelper;
+
+    private PhpDevMysql $receipt;
     
     public function __construct()
     {
@@ -40,35 +42,30 @@ class ReceiptCreateCommand extends Command
         $this->input = $input;
         $this->output = $output;
         $this->questionHelper = $this->getHelper('question');
+        $this->receipt = new PhpDevMysql();
 
         $io = new SymfonyStyle($input, $output);
 
         $baseFolderName = $this->getBaseDateString();
         $dirPath = 'output' . DIRECTORY_SEPARATOR . $baseFolderName;
-        
-        $receipt = new PhpDevMysql();
 
-        $receipt->setName(
-            $this->makeQuestionAndGetAnswer("Write the container name\n")
-        );
+        $this->feedReceipt("setName", "Write the container name\n");
+        $this->feedReceipt("setHttpPortRedirection", "Write the port number redirection for http\n");
+        $this->feedReceipt("setMysqlPortRedirection", "Write the port number redirection for mysql\n");
+        $this->feedReceipt("setMysqlRootPassword", "Write the mysql root password\n");
 
-        $receipt->setHttpPortRedirection(
-            $this->makeQuestionAndGetAnswer("Write the port number redirection for http\n")
-        );
-        
-        $receipt->setMysqlPortRedirection(
-            $this->makeQuestionAndGetAnswer("Write the port number redirection for mysql\n")
-        );
-
-        $receipt->setMysqlRootPassword(
-            $this->makeQuestionAndGetAnswer("Write the mysql root password\n")
-        );
-
-        $this->makerFile($dirPath,$receipt);
+        $this->makerFile($dirPath,$this->receipt);
 
         $io->success(sprintf("Project created in %1\$s.", $dirPath));
 
         return Command::SUCCESS;
+    }
+
+    private function feedReceipt(string $receiptSetterName, string $questionString)
+    {
+        $this->receipt->{$receiptSetterName}(
+            $this->makeQuestionAndGetAnswer($questionString)
+        );
     }
 
     private function getBaseDateString(): string
