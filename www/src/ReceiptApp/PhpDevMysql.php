@@ -45,7 +45,8 @@ class PhpDevMysql
         $this->buildYamlStructure();
         
         return [
-            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2))
+            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2)),
+            new File("configs/xdebug.ini", $this->getXDebugContent())
         ];
     }
 
@@ -77,5 +78,16 @@ class PhpDevMysql
                 ]
             ]
         ];
+    }
+
+    private function getXDebugContent(): string
+    {
+        return <<<EOF
+zend_extension=xdebug.so
+
+xdebug.start_with_request = 1
+xdebug.mode=debug
+xdebug.discover_client_host = 1
+EOF;
     }
 }
