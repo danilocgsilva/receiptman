@@ -5,6 +5,7 @@ services:
     container_name: receiptman
     volumes:
       - ./www:/var/www
+      - ./output:/var/www/output
     ports:
       - 2002:80
   receiptman_db:

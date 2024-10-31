@@ -47,8 +47,9 @@ class PhpDevMysql
         return [
             new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2)),
             new File("Dockerfile", $this->getDockerfile()),
-            new File("configs/xdebug.ini", $this->getXDebugContent()),
-            new File("configs/startup.sh", $this->getStartupContent()),
+            new File("config/xdebug.ini", $this->getXDebugContent()),
+            new File("config/startup.sh", $this->getStartupContent()),
+            new File("www/.gitkeep", "")
         ];
     }
 
@@ -71,12 +72,12 @@ class PhpDevMysql
                 $this->name . '_db' => [
                     'image' => 'mysql:latest',
                     'container_name' => $this->name . '_db',
-                ],
-                'environment' => [
-                    sprintf('MYSQL_ROOT_PASSWORD=%s', $this->mysqlRootPassword)
-                ],
-                'ports' => [
-                    sprintf('%s:3306', $this->mysqlPortRedirection)
+                    'environment' => [
+                        sprintf('MYSQL_ROOT_PASSWORD=%s', $this->mysqlRootPassword)
+                    ],
+                    'ports' => [
+                        sprintf('%s:3306', $this->mysqlPortRedirection)
+                    ]
                 ]
             ]
         ];
@@ -103,7 +104,6 @@ RUN apt-get install curl git zip -y
 RUN apt-get install php php-mysql php-xdebug php-curl php-zip php-xml php-mbstring -y
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
 COPY config/xdebug.ini /etc/php/8.2/mods-available/
-COPY config/000-default.conf /etc/apache2/sites-available/000-default.conf
 COPY config/startup.sh /startup.sh
 RUN chmod +x /startup.sh
 
