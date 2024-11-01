@@ -49,10 +49,9 @@ class ReceiptCreateCommand extends Command
         $baseFolderName = $this->getBaseDateString();
         $dirPath = 'output' . DIRECTORY_SEPARATOR . $baseFolderName;
 
-        $this->feedReceipt("setName", "Write the container name\n");
-        $this->feedReceipt("setHttpPortRedirection", "Write the port number redirection for http\n");
-        $this->feedReceipt("setMysqlPortRedirection", "Write the port number redirection for mysql\n");
-        $this->feedReceipt("setMysqlRootPassword", "Write the mysql root password\n");
+        foreach ($this->receipt->getPropertyQuestionsPairs() as $propertyQuestionPair) {
+            $this->feedReceipt($propertyQuestionPair[0], $propertyQuestionPair[1]);    
+        }
 
         $this->makerFile($dirPath,$this->receipt);
 

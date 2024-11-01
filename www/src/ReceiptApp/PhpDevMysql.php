@@ -16,6 +16,13 @@ class PhpDevMysql
 
     private string $mysqlRootPassword;
 
+    private PhpDevMysqlQuestions $questions;
+
+    public function __construct()
+    {
+        $this->questions = new PhpDevMysqlQuestions();
+    }
+
     public function setMysqlPortRedirection(int $mysqlPortRedirection): static
     {
         $this->mysqlPortRedirection = $mysqlPortRedirection;
@@ -51,6 +58,11 @@ class PhpDevMysql
             new File("config/startup.sh", $this->getStartupContent()),
             new File("www/.gitkeep", "")
         ];
+    }
+
+    public function getPropertyQuestionsPairs(): array
+    {
+        return $this->questions->getPropertyQuestionPair();
     }
 
     private function buildYamlStructure()
