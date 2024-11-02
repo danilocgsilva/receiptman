@@ -16,7 +16,7 @@ use App\ReceiptApp\PhpDevMysql;
 use Symfony\Component\Console\Question\Question;
 
 #[AsCommand(
-    name: 'receipt:create',
+    name: 'receipt:php-full-dev',
     description: 'Add a short description for your command',
 )]
 class ReceiptCreateCommand extends Command
