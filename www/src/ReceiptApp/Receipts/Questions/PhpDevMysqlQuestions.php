@@ -2,10 +2,8 @@
 
 namespace App\ReceiptApp\Receipts\Questions;
 
-class PhpDevMysqlQuestions implements QuestionInterface
+class PhpDevMysqlQuestions extends BaseQuestion implements QuestionInterface
 {
-    private array $propertyQuestionPair;
-    
     public function __construct()
     {
         $this->propertyQuestionPair = [
@@ -14,10 +12,5 @@ class PhpDevMysqlQuestions implements QuestionInterface
             ["setMysqlPortRedirection", "Write the port number redirection for mysql\n"],
             ["setMysqlRootPassword", "Write the mysql root password\n"]
         ];
-    }
-
-    public function getPropertyQuestionPair(): array
-    {
-        return $this->propertyQuestionPair;
     }
 }
