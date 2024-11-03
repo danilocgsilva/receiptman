@@ -6,19 +6,19 @@ use App\ReceiptApp\File;
 use App\ReceiptApp\Receipts\ReceiptInterface;
 use Symfony\Component\Yaml\Yaml;
 use App\ReceiptApp\Receipts\Questions\QuestionInterface;
-use App\ReceiptApp\Receipts\Questions\PythonQuestion;
+use App\ReceiptApp\Receipts\Questions\NodeQuestion;
 
-class PythonReceipt implements ReceiptInterface
+class NodeReceipt implements ReceiptInterface
 {
     private string $name;
 
     private array $yamlStructure;
-    
+
     private QuestionInterface $questions;
 
     public function __construct()
     {
-        $this->questions = new PythonQuestion();
+        $this->questions = new NodeQuestion();
     }
 
     /**
