@@ -2,7 +2,7 @@
 
 namespace App\ReceiptApp\Receipts;
 
-class PhpDevMysqlQuestions
+class PhpDevMysqlQuestions implements QuestionInterface
 {
     private array $propertyQuestionPair;
     

@@ -1,12 +1,15 @@
 #!/usr/bin/env php
 <?php
 
+use App\Command\ReceiptDebianCommand;
 use Symfony\Component\Console\Application;
+use App\ReceiptApp\Receipts\Debian;
 use App\Command\PhpFullDev;
 
 require_once './vendor/autoload.php';
 
 $application = new Application();
 $application->add(new PhpFullDev());
+$application->add(new ReceiptDebianCommand());
 
 $application->run();

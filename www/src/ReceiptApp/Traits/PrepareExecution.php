@@ -7,6 +7,8 @@ use App\ReceiptApp\Receipts\ReceiptInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use DateTime;
+use Symfony\Component\Console\Question\Question;
+use Exception;
 
 trait PrepareExecution
 {
@@ -31,5 +33,31 @@ trait PrepareExecution
     {
         $baseFolderName = $this->getBaseDateString();
         return 'output' . DIRECTORY_SEPARATOR . $baseFolderName;
+    }
+
+    private function feedReceipt(string $receiptSetterName, string $questionString)
+    {
+        $this->receipt->{$receiptSetterName}(
+            $this->makeQuestionAndGetAnswer($questionString)
+        );
+    }
+
+    private function makeQuestionAndGetAnswer(string $questionTitle): string
+    {
+        $question = new Question($questionTitle);
+        return (string) $this->questionHelper->ask($this->input, $this->output, $question);
+    }
+
+    private function makerFile(string $dirPath, ReceiptInterface $receipt)
+    {
+        if ($this->fs->exists($dirPath)) {
+            throw new Exception(sprintf("The path %1\$s exists. Action aborted with exception.", $dirPath));
+        }
+        $this->fs->mkdir($dirPath);
+
+        $files = $receipt->getFiles();
+        foreach ($files as $file) {
+            $file->write($dirPath, $this->fs);
+        }
     }
 }

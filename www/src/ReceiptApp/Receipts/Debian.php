@@ -12,6 +12,11 @@ class Debian implements ReceiptInterface
 
     private string $name;
 
+    public function __construct()
+    {
+        $this->questions = new DebianQuestion();
+    }
+
     public function setName(string $name): static
     {
         $this->name = $name;
@@ -39,6 +44,11 @@ class Debian implements ReceiptInterface
                 ]
             ]
         ];
+    }
+
+    public function getPropertyQuestionsPairs(): array
+    {
+        return $this->questions->getPropertyQuestionPair();
     }
 
     private function getDockerfile(): string

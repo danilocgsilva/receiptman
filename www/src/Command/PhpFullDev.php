@@ -57,32 +57,4 @@ class PhpFullDev extends Command
 
         return Command::SUCCESS;
     }
-
-    private function feedReceipt(string $receiptSetterName, string $questionString)
-    {
-        $this->receipt->{$receiptSetterName}(
-            $this->makeQuestionAndGetAnswer($questionString)
-        );
-    }
-
-    
-
-    private function makeQuestionAndGetAnswer(string $questionTitle): string
-    {
-        $question = new Question($questionTitle);
-        return (string) $this->questionHelper->ask($this->input, $this->output, $question);
-    }
-
-    private function makerFile(string $dirPath, PhpDevMysql $receipt)
-    {
-        if ($this->fs->exists($dirPath)) {
-            throw new Exception(sprintf("The path %1\$s exists. Action aborted with exception.", $dirPath));
-        }
-        $this->fs->mkdir($dirPath);
-
-        $files = $receipt->getFiles();
-        foreach ($files as $file) {
-            $file->write($dirPath, $this->fs);
-        }
-    }
 }

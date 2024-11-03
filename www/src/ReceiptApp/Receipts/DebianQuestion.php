@@ -2,7 +2,7 @@
 
 namespace App\ReceiptApp\Receipts;
 
-class DebianQuestion
+class DebianQuestion implements QuestionInterface
 {
     private array $propertyQuestionPair;
 
