@@ -6,7 +6,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class File
 {
-    public function __construct(private string $path, private string $content) {}
+    public function __construct(public readonly string $path, public readonly string $content) {}
 
     public function write(string $baseDirectory, Filesystem $fs): void
     {

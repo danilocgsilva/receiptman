@@ -8,6 +8,7 @@ services:
       - ./output:/var/www/output
     ports:
       - 2002:80
+    working_dir: /var/www
   receiptman_db:
     image: mysql:latest
     container_name: receiptman_db

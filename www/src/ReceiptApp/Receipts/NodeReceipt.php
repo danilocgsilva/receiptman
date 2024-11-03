@@ -14,6 +14,8 @@ class NodeReceipt implements ReceiptInterface
 
     private array $yamlStructure;
 
+    private bool $infinityLoop = false;
+
     private QuestionInterface $questions;
 
     public function __construct()
@@ -26,12 +28,21 @@ class NodeReceipt implements ReceiptInterface
      */
     public function getFiles(): array
     {
+        if (!isset($this->name)) {
+            throw new NotReadyException();
+        }
+        
         $this->buildYamlStructure();
         
-        return [
-            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2)),
-            new File("Dockerfile", $this->getDockerfile())
+        $files = [
+            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2))
         ];
+
+        if ($this->infinityLoop) {
+            $files[] = new File('Dockerfile', $this->getDockerfileContent());
+        }
+
+        return $files;
     }
 
     public function setName(string $name): static
@@ -40,18 +51,32 @@ class NodeReceipt implements ReceiptInterface
         return $this;
     }
 
+    private function getDockerfileContent(): string
+    {
+        return <<<EOF
+FROM node:latest
+
+CMD while : ; do sleep 1000; done
+EOF;
+    }
+
     private function buildYamlStructure(): void
     {
         $this->yamlStructure = [
             'services' => [
-                $this->name => [
-                    'build' => [
-                        'context' => '.'
-                    ],
-                    'container_name' => $this->name
-                ]
+                $this->name => []
             ]
         ];
+
+        if ($this->infinityLoop) {
+            $this->yamlStructure['services'][$this->name]['build'] = [
+                'context' => '.'
+            ];
+        } else {
+            $this->yamlStructure['services'][$this->name]['image'] = 'node:latest';
+        }
+        
+        $this->yamlStructure['services'][$this->name]['container_name'] = $this->name;
     }
 
     public function getPropertyQuestionsPairs(): array
@@ -59,16 +84,8 @@ class NodeReceipt implements ReceiptInterface
         return $this->questions->getPropertyQuestionPair();
     }
 
-    private function getDockerfile(): string
+    public function setInfinitLoop(): void
     {
-        return <<<EOF
-FROM debian:bookworm-slim
-
-RUN apt-get update
-RUN apt-get upgrade -y
-RUN apt-get install python3
-
-CMD while : ; do sleep 1000; done
-EOF;
+        $this->infinityLoop = true;
     }
 }

@@ -10,6 +10,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use App\ReceiptApp\Traits\PrepareExecution;
 use App\ReceiptApp\Receipts\NodeReceipt;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 #[AsCommand(
     name: 'receipt:node',
@@ -45,6 +46,10 @@ class Node extends Command
 
         foreach ($this->receipt->getPropertyQuestionsPairs() as $propertyQuestionPair) {
             $this->feedReceipt($propertyQuestionPair[0], $propertyQuestionPair[1]);    
+        }
+        $question = new ConfirmationQuestion("Should an infinit loop should be applied, so the container does not halts in initialization?", true);
+        if ($this->questionHelper->ask($this->input, $this->output, $question)) {
+            $this->receipt->setInfinitLoop();
         }
 
         $this->makerFile($dirPath,$this->receipt);
