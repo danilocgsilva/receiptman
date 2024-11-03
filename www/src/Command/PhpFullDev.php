@@ -12,8 +12,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use DateTime;
 use Symfony\Component\Filesystem\Filesystem;
-use App\ReceiptApp\PhpDevMysql;
+use App\ReceiptApp\Receipts\PhpDevMysql;
 use Symfony\Component\Console\Question\Question;
+use App\ReceiptApp\Traits\PrepareExecution;
 
 #[AsCommand(
     name: 'receipt:php-full-dev',
@@ -21,6 +22,8 @@ use Symfony\Component\Console\Question\Question;
 )]
 class PhpFullDev extends Command
 {
+    use PrepareExecution;
+
     private Filesystem $fs;
 
     private $input;
@@ -39,10 +42,7 @@ class PhpFullDev extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->input = $input;
-        $this->output = $output;
-        $this->questionHelper = $this->getHelper('question');
-        $this->receipt = new PhpDevMysql();
+        $this->prepareExecution($input, $output);
 
         $io = new SymfonyStyle($input, $output);
 

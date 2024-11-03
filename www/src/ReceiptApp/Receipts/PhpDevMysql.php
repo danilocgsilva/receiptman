@@ -1,10 +1,12 @@
 <?php
 
-namespace App\ReceiptApp;
+namespace App\ReceiptApp\Receipts;
 
+use App\ReceiptApp\Receipts\ReceiptInterface;
 use Symfony\Component\Yaml\Yaml;
+use App\ReceiptApp\File;
 
-class PhpDevMysql
+class PhpDevMysql implements ReceiptInterface
 {
     private array $yamlStructure;
 
@@ -47,7 +49,10 @@ class PhpDevMysql
         return $this;
     }
     
-    public function getFiles()
+    /**
+     * @inheritDoc
+     */
+    public function getFiles(): array
     {
         $this->buildYamlStructure();
         
@@ -65,10 +70,10 @@ class PhpDevMysql
         return $this->questions->getPropertyQuestionPair();
     }
 
-    private function buildYamlStructure()
+    private function buildYamlStructure(): void
     {
         $this->yamlStructure = [
-            'services' =>[
+            'services' => [
                 $this->name => [
                     'build' => [
                         'context' => '.'

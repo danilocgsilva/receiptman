@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ReceiptApp;
+namespace App\ReceiptApp\Receipts;
 
 interface ReceiptInterface
 {
