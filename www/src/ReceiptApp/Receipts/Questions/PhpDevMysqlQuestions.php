@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ReceiptApp\Receipts;
+namespace App\ReceiptApp\Receipts\Questions;
 
 class PhpDevMysqlQuestions implements QuestionInterface
 {

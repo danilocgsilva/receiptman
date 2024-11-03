@@ -5,6 +5,7 @@ namespace App\ReceiptApp\Receipts;
 use App\ReceiptApp\Receipts\ReceiptInterface;
 use Symfony\Component\Yaml\Yaml;
 use App\ReceiptApp\File;
+use App\ReceiptApp\Receipts\Questions\PhpDevMysqlQuestions;
 
 class PhpDevMysql implements ReceiptInterface
 {

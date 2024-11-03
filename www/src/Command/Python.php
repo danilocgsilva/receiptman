@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\ReceiptApp\Receipts\PythonReceipt;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,10 +13,10 @@ use App\ReceiptApp\Receipts\PhpDevMysql;
 use App\ReceiptApp\Traits\PrepareExecution;
 
 #[AsCommand(
-    name: 'receipt:php-full-dev',
-    description: 'Receipt with PHP with xdebug, Apache and MySQL',
+    name: 'receipt:python',
+    description: 'Receipt with python.',
 )]
-class PhpFullDev extends Command
+class Python extends Command
 {
     use PrepareExecution;
 
@@ -27,7 +28,7 @@ class PhpFullDev extends Command
 
     private $questionHelper;
 
-    private PhpDevMysql $receipt;
+    private PythonReceipt $receipt;
     
     public function __construct()
     {
@@ -37,7 +38,7 @@ class PhpFullDev extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->prepareExecution($input, $output, new PhpDevMysql());
+        $this->prepareExecution($input, $output, new PythonReceipt());
 
         $io = new SymfonyStyle($input, $output);
 
