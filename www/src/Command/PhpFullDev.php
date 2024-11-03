@@ -19,7 +19,7 @@ use Symfony\Component\Console\Question\Question;
     name: 'receipt:php-full-dev',
     description: 'Add a short description for your command',
 )]
-class ReceiptCreateCommand extends Command
+class PhpFullDev extends Command
 {
     private Filesystem $fs;
 
