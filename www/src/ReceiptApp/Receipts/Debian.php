@@ -3,7 +3,7 @@
 namespace App\ReceiptApp\Receipts;
 
 use App\ReceiptApp\File;
-use App\ReceiptApp\ReceiptInterface;
+use App\ReceiptApp\Receipts\ReceiptInterface;
 use Symfony\Component\Yaml\Yaml;
 
 class Debian implements ReceiptInterface

@@ -6,11 +6,10 @@ use Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use DateTime;
 use Symfony\Component\Filesystem\Filesystem;
 use App\ReceiptApp\Receipts\PhpDevMysql;
 use Symfony\Component\Console\Question\Question;
@@ -42,12 +41,11 @@ class PhpFullDev extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->prepareExecution($input, $output);
+        $this->prepareExecution($input, $output, new PhpDevMysql());
 
         $io = new SymfonyStyle($input, $output);
 
-        $baseFolderName = $this->getBaseDateString();
-        $dirPath = 'output' . DIRECTORY_SEPARATOR . $baseFolderName;
+        $dirPath = $this->getDirPath();
 
         foreach ($this->receipt->getPropertyQuestionsPairs() as $propertyQuestionPair) {
             $this->feedReceipt($propertyQuestionPair[0], $propertyQuestionPair[1]);    
@@ -67,10 +65,7 @@ class PhpFullDev extends Command
         );
     }
 
-    private function getBaseDateString(): string
-    {
-        return (new DateTime())->format('Ymd-his');
-    }
+    
 
     private function makeQuestionAndGetAnswer(string $questionTitle): string
     {
