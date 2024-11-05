@@ -1,13 +1,16 @@
 <?php
 
-namespace Tests\ReceiptApp\Receipts;
+namespace App\Tests\ReceiptApp\Receipts;
 
 use App\ReceiptApp\Receipts\NodeReceipt;
 use PHPUnit\Framework\TestCase;
 use App\ReceiptApp\File;
+use App\Tests\Traits\GetSpecificFileTrait;
 
 class NodeReceiptTest extends TestCase
 {
+    use GetSpecificFileTrait;
+
     private NodeReceipt $nodeReceipt;
     
     function setUp(): void
@@ -74,13 +77,8 @@ EOF;
         $this->nodeReceipt->setInfinitLoop();
         $this->nodeReceipt->setName("my-eithy-test");
         $files = $this->nodeReceipt->getFiles();
-        $fileDockerfile = null;
-        foreach ($files as $file) {
-            if ($file->path === "Dockerfile") {
-                $fileDockerfile = $file;
-                break;
-            }
-        }
+
+        $fileDockerfile = $this->getSpecificFile($files, "Dockerfile");
 
         $expectedFileContent = <<<EOF
 FROM node:latest

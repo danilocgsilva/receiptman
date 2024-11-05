@@ -10,6 +10,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use App\ReceiptApp\Receipts\PhpDevMysql;
 use App\ReceiptApp\Traits\PrepareExecution;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 #[AsCommand(
     name: 'receipt:php-full-dev',
@@ -45,6 +46,10 @@ class PhpFullDev extends Command
 
         foreach ($this->receipt->getPropertyQuestionsPairs() as $propertyQuestionPair) {
             $this->feedReceipt($propertyQuestionPair[0], $propertyQuestionPair[1]);    
+        }
+        $questionApp = new ConfirmationQuestion("Should this receipt be hosted in /app?", false);
+        if ($this->questionHelper->ask($this->input, $this->output, $questionApp)) {
+            $this->receipt->setAppFolder();
         }
 
         $this->makerFile($dirPath,$this->receipt);

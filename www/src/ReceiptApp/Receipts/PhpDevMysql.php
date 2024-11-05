@@ -21,6 +21,8 @@ class PhpDevMysql implements ReceiptInterface
 
     private PhpDevMysqlQuestions $questions;
 
+    private bool $appDir = false;
+
     public function __construct()
     {
         $this->questions = new PhpDevMysqlQuestions();
@@ -49,6 +51,12 @@ class PhpDevMysql implements ReceiptInterface
         $this->httpPortRedirection = $httpPortRedirection;
         return $this;
     }
+
+    public function setAppFolder(): self
+    {
+        $this->appDir = true;
+        return $this;
+    }
     
     /**
      * @inheritDoc
@@ -57,13 +65,21 @@ class PhpDevMysql implements ReceiptInterface
     {
         $this->buildYamlStructure();
         
-        return [
+        $files = [
             new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2)),
             new File("Dockerfile", $this->getDockerfile()),
             new File("config/xdebug.ini", $this->getXDebugContent()),
-            new File("config/startup.sh", $this->getStartupContent()),
-            new File("www/.gitkeep", "")
+            new File("config/startup.sh", $this->getStartupContent())
+            //new File("www/.gitkeep", "")
         ];
+
+        if ($this->appDir) {
+            $files[] = new File("www/.gitkeep", "");
+        } else {
+            $files[] = new File("app/.gitkeep", "");
+        }
+
+        return $files;
     }
 
     public function getPropertyQuestionsPairs(): array
@@ -80,12 +96,11 @@ class PhpDevMysql implements ReceiptInterface
                         'context' => '.'
                     ],
                     'container_name' => $this->name,
-                    'volumes' => [
-                        './www:/var/www'
-                    ],
+                    'volumes' => [],
                     'ports' => [
                         sprintf('%s:80', $this->httpPortRedirection)
-                    ]
+                    ],
+                    'working_dir' => ''
                 ],
                 $this->name . '_db' => [
                     'image' => 'mysql:latest',
@@ -99,6 +114,18 @@ class PhpDevMysql implements ReceiptInterface
                 ]
             ]
         ];
+
+        if ($this->appDir) {
+            $this->yamlStructure['services'][$this->name]['volumes'] = [
+                './app:/app'
+            ];
+            $this->yamlStructure['services'][$this->name]['working_dir'] = '/app';
+        } else {
+            $this->yamlStructure['services'][$this->name]['volumes'] = [
+                './www:/var/www'
+            ];
+            $this->yamlStructure['services'][$this->name]['working_dir'] = '/var/www';
+        }
     }
 
     private function getStartupContent(): string
