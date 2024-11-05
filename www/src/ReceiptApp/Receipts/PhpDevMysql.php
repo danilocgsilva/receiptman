@@ -70,13 +70,12 @@ class PhpDevMysql implements ReceiptInterface
             new File("Dockerfile", $this->getDockerfile()),
             new File("config/xdebug.ini", $this->getXDebugContent()),
             new File("config/startup.sh", $this->getStartupContent())
-            //new File("www/.gitkeep", "")
         ];
 
         if ($this->appDir) {
-            $files[] = new File("www/.gitkeep", "");
-        } else {
             $files[] = new File("app/.gitkeep", "");
+        } else {
+            $files[] = new File("www/.gitkeep", "");
         }
 
         return $files;

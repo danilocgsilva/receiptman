@@ -48,7 +48,8 @@ class PhpFullDev extends Command
             $this->feedReceipt($propertyQuestionPair[0], $propertyQuestionPair[1]);    
         }
         $questionApp = new ConfirmationQuestion("Should this receipt be hosted in /app?", false);
-        if ($this->questionHelper->ask($this->input, $this->output, $questionApp)) {
+        $responseQuestion = $this->questionHelper->ask($this->input, $this->output, $questionApp);
+        if ($responseQuestion) {
             $this->receipt->setAppFolder();
         }
 

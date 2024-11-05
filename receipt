@@ -5,5 +5,5 @@ if [ -z $1 ]; then
     exit
 fi
 
-docker exec -it $1 /var/www/receipt
+docker exec -it $1 /var/www/receipt $2
 
