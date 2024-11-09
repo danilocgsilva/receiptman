@@ -7,3 +7,4 @@ fi
 
 docker exec -it $1 /var/www/receipt $2
 
+sudo chown -Rv $(whoami) output
