@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\ReceiptApp\Receipts;
 
 use App\ReceiptApp\Receipts\ReceiptInterface;
@@ -7,7 +9,7 @@ use Symfony\Component\Yaml\Yaml;
 use App\ReceiptApp\File;
 use App\ReceiptApp\Receipts\Questions\PhpDevMysqlQuestions;
 
-class PhpDevMysql implements ReceiptInterface
+class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
 {
     private array $yamlStructure;
 
@@ -124,6 +126,10 @@ class PhpDevMysql implements ReceiptInterface
                 './www:/var/www'
             ];
             $this->yamlStructure['services'][$this->name]['working_dir'] = '/var/www';
+        }
+
+        if ($this->sshVolume) {
+            $this->yamlStructure['services'][$this->name]['volumes'][] = './.ssh/:/root/.ssh';
         }
     }
 

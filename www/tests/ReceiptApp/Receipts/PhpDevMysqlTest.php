@@ -58,7 +58,7 @@ EOF;
             ->setMysqlRootPassword("testing_password")
             ->setAppFolder();
 
-$expectedContent = <<<EOF
+        $expectedContent = <<<EOF
 services:
   testing_env:
     build:
@@ -82,5 +82,40 @@ EOF;
         $fileDockerfile = $this->getSpecificFile($this->phpDevMysql->getFiles(), "docker-compose.yml");
 
         $this->assertSame($expectedContent, $fileDockerfile->content);
+    }
+
+    public function testSsh(): void
+    {
+        $this->phpDevMysql->setName("testing_env2")
+            ->setHttpPortRedirection("4000")
+            ->setMysqlPortRedirection(mysqlPortRedirection: "3333")
+            ->setMysqlRootPassword("opass2")
+            ->setSshVolume();
+
+        $fileDockerCompose = $this->getSpecificFile($this->phpDevMysql->getFiles(), "docker-compose.yml");
+
+        $expectedContent = <<<EOF
+services:
+  testing_env2:
+    build:
+      context: .
+    container_name: testing_env2
+    volumes:
+      - './www:/var/www'
+      - './.ssh/:/root/.ssh'
+    ports:
+      - '4000:80'
+    working_dir: /var/www
+  testing_env2_db:
+    image: 'mysql:latest'
+    container_name: testing_env2_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=opass2
+    ports:
+      - '3333:3306'
+
+EOF;
+
+        $this->assertSame($expectedContent, $fileDockerCompose->content);
     }
 }
