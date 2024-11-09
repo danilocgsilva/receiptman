@@ -47,7 +47,7 @@ class PhpFullDev extends Command
         foreach ($this->receipt->getPropertyQuestionsPairs() as $propertyQuestionPair) {
             $this->feedReceipt($propertyQuestionPair[0], $propertyQuestionPair[1]);    
         }
-        $questionApp = new ConfirmationQuestion("Should this receipt be hosted in /app?", false);
+        $questionApp = new ConfirmationQuestion("Should this receipt be hosted in /app? Type yes or y for yes, or no or n for no. \n", false);
         $responseQuestion = $this->questionHelper->ask($this->input, $this->output, $questionApp);
         if ($responseQuestion) {
             $this->receipt->setAppFolder();
