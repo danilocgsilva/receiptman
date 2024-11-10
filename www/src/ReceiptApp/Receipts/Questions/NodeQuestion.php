@@ -7,7 +7,7 @@ class NodeQuestion extends BaseQuestion implements QuestionInterface
     public function __construct()
     {
         $this->propertyQuestionPair = [
-            ["setName", "Write the container name\n"]
+            ["setName", "Write the container name\n", null]
         ];
     }
 }

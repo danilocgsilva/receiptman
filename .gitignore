@@ -1,3 +1,4 @@
 www/.env
 www/output/*
 output/*
+.ssh/*

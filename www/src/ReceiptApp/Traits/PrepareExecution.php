@@ -35,11 +35,15 @@ trait PrepareExecution
         return 'output' . DIRECTORY_SEPARATOR . $baseFolderName;
     }
 
-    private function feedReceipt(string $receiptSetterName, string $questionString)
+    private function feedReceipt(string $receiptSetterName, string $questionString, string|null $type = null)
     {
-        $this->receipt->{$receiptSetterName}(
-            $this->makeQuestionAndGetAnswer($questionString)
-        );
+        if ($type === null) {
+            $this->receipt->{$receiptSetterName}(
+                $this->makeQuestionAndGetAnswer($questionString)
+            );
+        } else {
+            $this->receipt->{$receiptSetterName}();
+        }
     }
 
     private function makeQuestionAndGetAnswer(string $questionTitle): string

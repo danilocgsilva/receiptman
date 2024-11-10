@@ -88,4 +88,25 @@ EOF;
 
         $this->assertSame($expectedFileContent, $fileDockerfile->content);
     }
+
+    public function testAppVolume(): void
+    {
+        $this->nodeReceipt->setName("must_have_volume_app");
+        $this->nodeReceipt->setVolumeApp();
+
+        $expectedFileContent = <<<EOF
+services:
+  must_have_volume_app:
+    image: 'node:latest'
+    container_name: must_have_volume_app
+    volumes:
+      - './app:/app'
+
+EOF;
+
+        $receiptFiles = $this->nodeReceipt->getFiles();
+        $dockerCompose = $this->getSpecificFile($receiptFiles, 'docker-compose.yml');
+
+        $this->assertSame($expectedFileContent, $dockerCompose->content);
+    }
 }

@@ -20,9 +20,17 @@ class NodeReceipt implements ReceiptInterface
 
     private QuestionInterface $questions;
 
+    private bool $volumeApp = false;
+
     public function __construct()
     {
         $this->questions = new NodeQuestion();
+    }
+
+    public function setVolumeApp(): self
+    {
+        $this->volumeApp = true;
+        return $this;
     }
 
     /**
@@ -79,6 +87,10 @@ EOF;
         }
         
         $this->yamlStructure['services'][$this->name]['container_name'] = $this->name;
+
+        if ($this->volumeApp) {
+            $this->yamlStructure['services'][$this->name]['volumes'][] = './app:/app';
+        }
     }
 
     public function getPropertyQuestionsPairs(): array

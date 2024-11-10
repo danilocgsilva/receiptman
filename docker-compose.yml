@@ -6,6 +6,7 @@ services:
     volumes:
       - ./www:/var/www
       - ./output:/var/www/output
+      - ./.ssh:/root/.ssh
     ports:
       - 2002:80
     working_dir: /var/www
