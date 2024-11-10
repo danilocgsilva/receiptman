@@ -10,12 +10,8 @@ use Symfony\Component\Yaml\Yaml;
 use App\ReceiptApp\Receipts\Questions\QuestionInterface;
 use App\ReceiptApp\Receipts\Questions\PythonQuestion;
 
-class PythonReceipt implements ReceiptInterface
+class PythonReceipt extends ReceiptCommons implements ReceiptInterface
 {
-    private string $name;
-
-    private array $yamlStructure;
-    
     private QuestionInterface $questions;
 
     public function __construct()

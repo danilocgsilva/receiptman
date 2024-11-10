@@ -8,12 +8,8 @@ use Symfony\Component\Yaml\Yaml;
 use App\ReceiptApp\Receipts\Questions\DebianQuestion;
 use App\ReceiptApp\Receipts\Questions\QuestionInterface;
 
-class Debian implements ReceiptInterface
+class Debian extends ReceiptCommons implements ReceiptInterface
 {
-    private array $yamlStructure;
-
-    private string $name;
-
     private QuestionInterface $questions;
 
     public function __construct()

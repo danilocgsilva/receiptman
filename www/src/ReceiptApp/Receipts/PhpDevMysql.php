@@ -11,10 +11,6 @@ use App\ReceiptApp\Receipts\Questions\PhpDevMysqlQuestions;
 
 class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
 {
-    private array $yamlStructure;
-
-    private string $name;
-
     private int $httpPortRedirection;
 
     private int $mysqlPortRedirection;
@@ -128,9 +124,7 @@ class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
             $this->yamlStructure['services'][$this->name]['working_dir'] = '/var/www';
         }
 
-        if ($this->sshVolume) {
-            $this->yamlStructure['services'][$this->name]['volumes'][] = './.ssh/:/root/.ssh';
-        }
+        $this->postYamlProcessing();
     }
 
     private function getStartupContent(): string

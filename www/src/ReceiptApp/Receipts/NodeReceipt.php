@@ -10,12 +10,8 @@ use Symfony\Component\Yaml\Yaml;
 use App\ReceiptApp\Receipts\Questions\QuestionInterface;
 use App\ReceiptApp\Receipts\Questions\NodeQuestion;
 
-class NodeReceipt implements ReceiptInterface
+class NodeReceipt extends ReceiptCommons implements ReceiptInterface
 {
-    private string $name;
-
-    private array $yamlStructure;
-
     private bool $infinityLoop = false;
 
     private QuestionInterface $questions;
