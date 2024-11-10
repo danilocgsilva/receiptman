@@ -7,7 +7,7 @@ use App\ReceiptApp\Receipts\ReceiptInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use DateTime;
-use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Question\{Question, ConfirmationQuestion};
 use Exception;
 
 trait PrepareExecution
@@ -44,8 +44,16 @@ trait PrepareExecution
                 $this->makeQuestionAndGetAnswer($questionString)
             );
         } else {
-            $this->receipt->{$receiptSetterName}();
+            if ($this->askYesOrNo($questionString)) {
+                $this->receipt->{$receiptSetterName}();
+            }
         }
+    }
+
+    private function askYesOrNo(string $questionTitle): bool
+    {
+        $yesOrNoQuestion = new ConfirmationQuestion($questionTitle, false);
+        return $this->questionHelper->ask($this->input, $this->output, $yesOrNoQuestion);
     }
 
     private function makeQuestionAndGetAnswer(string $questionTitle): string

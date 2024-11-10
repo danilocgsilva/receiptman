@@ -27,12 +27,6 @@ class NodeReceipt implements ReceiptInterface
         $this->questions = new NodeQuestion();
     }
 
-    public function setVolumeApp(): self
-    {
-        $this->volumeApp = true;
-        return $this;
-    }
-
     /**
      * @inheritDoc
      */
@@ -101,5 +95,11 @@ EOF;
     public function setInfinitLoop(): void
     {
         $this->infinityLoop = true;
+    }
+
+    public function setVolumeApp(): self
+    {
+        $this->volumeApp = true;
+        return $this;
     }
 }

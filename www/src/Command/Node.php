@@ -44,14 +44,14 @@ class Node extends Command
         $io = new SymfonyStyle($input, $output);
 
         foreach ($this->receipt->getPropertyQuestionsPairs() as $propertyQuestionPair) {
-            $this->feedReceipt($propertyQuestionPair[0], $propertyQuestionPair[1]);    
+            $this->feedReceipt($propertyQuestionPair[0], $propertyQuestionPair[1], $propertyQuestionPair[2]);    
         }
         $questionInfinitLoop = new ConfirmationQuestion("Should an infinit loop should be applied, so the container does not halts in initialization?\n", true);
         if ($this->questionHelper->ask($this->input, $this->output, $questionInfinitLoop)) {
             $this->receipt->setInfinitLoop();
         }
         $questionFolderName = new Question("Would you like to set a name for directory receipt? If so, just type the directory name or keep it blank to set the default directory name. \n");
-        
+
         $responseDirName = $this->questionHelper->ask($this->input, $this->output, $questionFolderName);
         $dirPath = $this->getDirPath($responseDirName);
 
