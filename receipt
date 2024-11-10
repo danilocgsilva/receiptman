@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set +e
+
 if [ -z $1 ]; then
     echo Give the first parameter to be the container id.
     exit
@@ -7,4 +9,4 @@ fi
 
 docker exec -it $1 /var/www/receipt $2
 
-sudo chown -Rv $(whoami) output
+# sudo chown -Rv $(whoami) output

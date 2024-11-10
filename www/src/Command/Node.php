@@ -11,6 +11,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use App\ReceiptApp\Traits\PrepareExecution;
 use App\ReceiptApp\Receipts\NodeReceipt;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Question\Question;
 
 #[AsCommand(
     name: 'receipt:node',
@@ -42,15 +43,17 @@ class Node extends Command
 
         $io = new SymfonyStyle($input, $output);
 
-        $dirPath = $this->getDirPath();
-
         foreach ($this->receipt->getPropertyQuestionsPairs() as $propertyQuestionPair) {
             $this->feedReceipt($propertyQuestionPair[0], $propertyQuestionPair[1]);    
         }
-        $question = new ConfirmationQuestion("Should an infinit loop should be applied, so the container does not halts in initialization?", true);
-        if ($this->questionHelper->ask($this->input, $this->output, $question)) {
+        $questionInfinitLoop = new ConfirmationQuestion("Should an infinit loop should be applied, so the container does not halts in initialization?\n", true);
+        if ($this->questionHelper->ask($this->input, $this->output, $questionInfinitLoop)) {
             $this->receipt->setInfinitLoop();
         }
+        $questionFolderName = new Question("Would you like to set a name for directory receipt? If so, just type the directory name or keep it blank to set the default directory name. \n");
+        
+        $responseDirName = $this->questionHelper->ask($this->input, $this->output, $questionFolderName);
+        $dirPath = $this->getDirPath($responseDirName);
 
         $this->makerFile($dirPath,$this->receipt);
 

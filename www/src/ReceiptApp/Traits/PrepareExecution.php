@@ -29,9 +29,11 @@ trait PrepareExecution
         return (new DateTime())->format('Ymd-his');
     }
 
-    private function getDirPath(): string
+    private function getDirPath(string|null $baseFolderName = null): string
     {
-        $baseFolderName = $this->getBaseDateString();
+        if (!$baseFolderName) {
+            $baseFolderName = $this->getBaseDateString();
+        }
         return 'output' . DIRECTORY_SEPARATOR . $baseFolderName;
     }
 
