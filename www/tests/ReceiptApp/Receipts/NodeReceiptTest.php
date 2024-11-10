@@ -109,4 +109,27 @@ EOF;
 
         $this->assertSame($expectedFileContent, $dockerCompose->content);
     }
+
+    public function testAppVolumeAndLoop(): void
+    {
+        $expectedFileContent = <<<EOF
+services:
+  name_name:
+    build:
+      context: .
+    container_name: name_name
+    volumes:
+      - './app:/app'
+
+EOF;
+
+        $this->nodeReceipt->setName("name_name");
+        $this->nodeReceipt->setVolumeApp();
+        $this->nodeReceipt->setInfinitLoop();
+
+        $receiptFiles = $this->nodeReceipt->getFiles();
+        $dockerCompose = $this->getSpecificFile($receiptFiles, 'docker-compose.yml');
+
+        $this->assertSame($expectedFileContent, $dockerCompose->content);
+    }
 }
