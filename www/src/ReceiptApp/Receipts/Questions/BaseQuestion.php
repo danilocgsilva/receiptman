@@ -10,7 +10,8 @@ class BaseQuestion
     {
         $this->propertyQuestionPair = [
             ["setName", "Write the container name\n", null],
-            ["setNetworkModeHost", "Should the container uses the host network?\n", "yesorno"]
+            ["setNetworkModeHost", "Should the container uses the host network?\n", "yesorno"],
+            ["setSshVolume", "Should I mount the .ssh in a local volume?\n", "yesorno"]
         ];
     }
 
