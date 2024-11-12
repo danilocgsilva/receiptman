@@ -132,4 +132,23 @@ EOF;
 
         $this->assertSame($expectedFileContent, $dockerCompose->content);
     }
+
+    public function testNetworkModeHost(): void
+    {
+        $expectedFileContent = <<<EOF
+services:
+  network_host_mode_container:
+    image: 'node:latest'
+    container_name: network_host_mode_container
+    network_mode: host
+
+EOF;
+
+        $this->nodeReceipt->setName("network_host_mode_container");
+        $this->nodeReceipt->setNetworkModeHost();
+
+        $receiptFiles = $this->nodeReceipt->getFiles();
+        $dockerCompose = $this->getSpecificFile($receiptFiles, 'docker-compose.yml');
+        $this->assertSame($expectedFileContent, $dockerCompose->content);
+    }
 }

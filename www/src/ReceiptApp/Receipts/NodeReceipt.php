@@ -81,6 +81,10 @@ EOF;
         if ($this->volumeApp) {
             $this->yamlStructure['services'][$this->name]['volumes'][] = './app:/app';
         }
+
+        if ($this->networkModeHost) {
+            $this->yamlStructure['services'][$this->name]['network_mode'] = 'host';
+        }
     }
 
     public function getPropertyQuestionsPairs(): array

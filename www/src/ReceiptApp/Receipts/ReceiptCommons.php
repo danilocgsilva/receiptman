@@ -10,11 +10,19 @@ class ReceiptCommons
 
     protected array $yamlStructure;
 
+    protected bool $networkModeHost = false;
+
     protected string $name;
     
     public function setSshVolume(): self
     {
         $this->sshVolume = true;
+        return $this;
+    }
+
+    public function setNetworkModeHost(): self
+    {
+        $this->networkModeHost = true;
         return $this;
     }
 
