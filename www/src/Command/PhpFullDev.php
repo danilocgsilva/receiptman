@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Command\Traits\ReceiptFolder;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,6 +20,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 class PhpFullDev extends Command
 {
     use PrepareExecution;
+    use ReceiptFolder;
 
     private Filesystem $fs;
 
@@ -42,8 +44,6 @@ class PhpFullDev extends Command
 
         $io = new SymfonyStyle($input, $output);
 
-        $dirPath = $this->getDirPath();
-
         foreach ($this->receipt->getPropertyQuestionsPairs() as $propertyQuestionPair) {
             $this->feedReceipt($propertyQuestionPair[0], $propertyQuestionPair[1]);    
         }
@@ -53,7 +53,7 @@ class PhpFullDev extends Command
             $this->receipt->setAppFolder();
         }
 
-        $this->makerFile($dirPath,$this->receipt);
+        $dirPath = $this->askForReceiptFolder();
 
         $io->success(sprintf("Project created in %1\$s.", $dirPath));
 

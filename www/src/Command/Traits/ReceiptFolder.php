@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Command\Traits;
+
+use Symfony\Component\Console\Question\Question;
+
+trait ReceiptFolder
+{
+    private function askForReceiptFolder(): string
+    {
+        $questionFolderName = new Question("Would you like to set a name for directory receipt? If so, just type the directory name or keep it blank to set the default directory name. \n");
+        $responseDirName = $this->questionHelper->ask($this->input, $this->output, $questionFolderName);
+        $dirPath = $this->getDirPath($responseDirName);
+        $this->makerFile($dirPath,$this->receipt);
+        return $dirPath;
+    }
+}
