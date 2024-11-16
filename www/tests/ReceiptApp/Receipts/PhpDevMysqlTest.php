@@ -5,13 +5,14 @@ namespace App\Tests\ReceiptApp\Receipts;
 use App\ReceiptApp\Receipts\PhpDevMysql;
 use PHPUnit\Framework\TestCase;
 use App\Tests\Traits\GetSpecificFileTrait;
+use App\ReceiptApp\File;
 
 class PhpDevMysqlTest extends TestCase
 {
     use GetSpecificFileTrait;
 
     private PhpDevMysql $phpDevMysql;
-    
+
     function setUp(): void
     {
         $this->phpDevMysql = new PhpDevMysql();
@@ -24,7 +25,7 @@ class PhpDevMysqlTest extends TestCase
             ->setMysqlPortRedirection("4006")
             ->setMysqlRootPassword("testing_password");
 
-$expectedContent = <<<EOF
+        $expectedContent = <<<EOF
 services:
   testing_env:
     build:
@@ -117,5 +118,59 @@ services:
 EOF;
 
         $this->assertSame($expectedContent, $fileDockerCompose->content);
+    }
+
+    public function testCountFiles(): void
+    {
+        $this->phpDevMysql->setName("count_me")
+            ->setHttpPortRedirection("5000")
+            ->setMysqlPortRedirection(mysqlPortRedirection: "4333")
+            ->setMysqlRootPassword("opass2");
+
+        $this->assertCount(5, $this->phpDevMysql->getFiles());
+    }
+
+    public function testGetSpecificFiles(): void
+    {
+        $this->phpDevMysql->setName("specific_files")
+            ->setHttpPortRedirection("5000")
+            ->setMysqlPortRedirection(mysqlPortRedirection: "4333")
+            ->setMysqlRootPassword("opass3");
+
+        $receiptFiles = $this->phpDevMysql->getFiles();
+
+        $this->assertInstanceOf(
+            File::class,
+            $this->getSpecificFile($receiptFiles, "docker-compose.yml")
+        );
+        $this->assertInstanceOf(
+            File::class,
+            $this->getSpecificFile($receiptFiles, "Dockerfile")
+        );
+        $this->assertInstanceOf(
+            File::class,
+            $this->getSpecificFile($receiptFiles, "www/html/index.php")
+        );
+        $this->assertInstanceOf(
+            File::class,
+            $this->getSpecificFile($receiptFiles, "config/startup.sh")
+        );
+        $this->assertInstanceOf(
+            File::class,
+            $this->getSpecificFile($receiptFiles, "config/xdebug.ini")
+        );
+    }
+
+    public function testSetPublicFolderAsHost(): void
+    {
+        $this->phpDevMysql->setName("public_root")
+            ->setHttpPortRedirection("5000")
+            ->setMysqlPortRedirection(mysqlPortRedirection: "4333")
+            ->setMysqlRootPassword("opass3")
+            ->setPublicFolderAsHost();
+
+        $receiptFiles = $this->phpDevMysql->getFiles();
+
+        $this->assertCount(6, $receiptFiles);
     }
 }
