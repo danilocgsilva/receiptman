@@ -10,6 +10,8 @@ use Symfony\Component\Yaml\Yaml;
 
 class NginxReceipt extends ReceiptCommons implements ReceiptInterface
 {
+    private int $httpPortRedirection;
+
     public function setName(string $name): static
     {
         $this->name = $name;
@@ -39,6 +41,16 @@ class NginxReceipt extends ReceiptCommons implements ReceiptInterface
                 ]
             ]
         ];
+
+        if (isset($this->httpPortRedirection)) {
+            $this->yamlStructure['services'][$this->name]['ports'][] = sprintf('%s:80', $this->httpPortRedirection);
+        }
+    }
+
+    public function setHttpPortRedirection(int $httpPortRedirection): static
+    {
+        $this->httpPortRedirection = $httpPortRedirection;
+        return $this;
     }
 
     public function getPropertyQuestionsPairs(): array

@@ -34,4 +34,24 @@ EOF;
 
         $this->assertSame($expectedFileContent, $dockerComposeFile->content);
     }
+
+    public function testDockerComposeFilePort(): void
+    {
+        $this->nginxReceipt->setName("nginx_env");
+        $this->nginxReceipt->setHttpPortRedirection(8081);
+
+        $dockerComposeFile = $this->nginxReceipt->getFiles()[0];
+
+        $expectedFileContent = <<<EOF
+services:
+  nginx_env:
+    image: 'nginx:latest'
+    container_name: nginx_env
+    ports:
+      - '8081:80'
+
+EOF;
+
+        $this->assertSame($expectedFileContent, $dockerComposeFile->content);
+    }
 }

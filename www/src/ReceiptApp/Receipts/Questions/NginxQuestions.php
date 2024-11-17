@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\ReceiptApp\Receipts\Questions;
 
-class NodeQuestion extends BaseQuestion implements QuestionInterface
+class NginxQuestions extends BaseQuestion implements QuestionInterface
 {
     public function __construct()
     {
         parent::__construct();
-        
+
         $this->propertyQuestionPair = array_merge(
             $this->propertyQuestionPair,
-            [["setVolumeApp", "Should this receipt have a app folder in volume?\n", "yesorno"]]
+            [["setHttpPortRedirection", "Write the port number redirection for http\n", null]],
         );
     }
 }
