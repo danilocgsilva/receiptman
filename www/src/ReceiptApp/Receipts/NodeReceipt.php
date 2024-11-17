@@ -28,7 +28,7 @@ class NodeReceipt extends ReceiptCommons implements ReceiptInterface
      */
     public function getFiles(): array
     {
-        if (!isset($this->name)) {
+        if (!property_exists($this,"name")) {
             throw new NotReadyException();
         }
         

@@ -12,28 +12,26 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use App\ReceiptApp\Traits\PrepareExecution;
-use App\ReceiptApp\Receipts\NodeReceipt;
+use App\ReceiptApp\Receipts\NginxReceipt;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 #[AsCommand(
-    name: 'receipt:node',
-    description: 'Node Receipt',
+    name: 'receipt:nginx',
+    description: 'Nginx server',
 )]
-class Node extends Command
+class Nginx extends Command
 {
     use PrepareExecution;
     use ReceiptFolder;
-
-    private Filesystem $fs;
 
     private $input;
 
     private $output;
 
-    private $questionHelper;
+    private Filesystem $fs;
 
-    private NodeReceipt $receipt;
-    
+    private NginxReceipt $receipt;
+
     public function __construct()
     {
         parent::__construct();
@@ -42,17 +40,12 @@ class Node extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->prepareExecution($input, $output, new NodeReceipt());
+        $this->prepareExecution($input, $output, new NginxReceipt());
 
         $io = new SymfonyStyle($input, $output);
 
         foreach ($this->receipt->getPropertyQuestionsPairs() as $propertyQuestionPair) {
             $this->feedReceipt($propertyQuestionPair[0], $propertyQuestionPair[1], $propertyQuestionPair[2]);    
-        }
-
-        $questionInfinitLoop = new ConfirmationQuestion("Should an infinit loop should be applied, so the container does not halts in initialization?\n", true);
-        if ($this->questionHelper->ask($this->input, $this->output, $questionInfinitLoop)) {
-            $this->receipt->setInfinitLoop();
         }
 
         $dirPath = $this->askForReceiptFolder();

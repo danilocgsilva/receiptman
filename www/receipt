@@ -2,10 +2,13 @@
 <?php
 
 use Symfony\Component\Console\Application;
-use App\Command\ReceiptDebianCommand;
-use App\Command\PhpFullDev;
-use App\Command\Python;
-use App\Command\Node;
+use App\Command\{
+    ReceiptDebianCommand,
+    PhpFullDev,
+    Python,
+    Node,
+    Nginx
+};
 
 require_once './vendor/autoload.php';
 
@@ -14,5 +17,6 @@ $application->add(new PhpFullDev());
 $application->add(new ReceiptDebianCommand());
 $application->add(new Python());
 $application->add(new Node());
+$application->add(new Nginx());
 
 $application->run();
