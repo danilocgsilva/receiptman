@@ -6,6 +6,7 @@ namespace App\ReceiptApp\Receipts;
 
 use App\ReceiptApp\File;
 use App\ReceiptApp\Receipts\Questions\BaseQuestion;
+use App\ReceiptApp\Receipts\Questions\NginxQuestions;
 use Symfony\Component\Yaml\Yaml;
 
 class NginxReceipt extends ReceiptCommons implements ReceiptInterface
@@ -55,7 +56,7 @@ class NginxReceipt extends ReceiptCommons implements ReceiptInterface
 
     public function getPropertyQuestionsPairs(): array
     {
-        $questionsPairs = new BaseQuestion();
+        $questionsPairs = new NginxQuestions();
         return $questionsPairs->getPropertyQuestionPair();
     }
 }
