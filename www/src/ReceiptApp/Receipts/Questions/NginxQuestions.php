@@ -13,6 +13,7 @@ class NginxQuestions extends BaseQuestion implements QuestionInterface
         $this->propertyQuestionPair = array_merge(
             $this->propertyQuestionPair,
             [["setHttpPortRedirection", "Write the port number redirection for http\n", null]],
+            [["onExposeDefaultServerFile", "Should the default server configuration be exposed?\n", "yesorno"]]
         );
     }
 }
