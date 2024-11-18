@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\ReceiptApp\Receipts;
 
 use App\ReceiptApp\File;
-use App\ReceiptApp\Receipts\Questions\BaseQuestion;
 use App\ReceiptApp\Receipts\Questions\NginxQuestions;
 use Symfony\Component\Yaml\Yaml;
 
 class NginxReceipt extends ReceiptCommons implements ReceiptInterface
 {
     private int $httpPortRedirection;
+
+    private bool $exposeServerDefaultFile = false;
 
     public function setName(string $name): static
     {
@@ -27,25 +28,38 @@ class NginxReceipt extends ReceiptCommons implements ReceiptInterface
         
         $this->buildYamlStructure();
 
-        return [
-            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2)),
+        $files = [
+            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2))
         ];
+
+        if ($this->exposeServerDefaultFile) {
+            $files[] = new File("Dockerfile", "");
+            $files[] = new File("config/default", "");
+        }
+
+        return $files;
     }
 
     public function buildYamlStructure(): void
     {
         $this->yamlStructure = [
             'services' => [
-                $this->name => [
-                    'image' => 'nginx:latest',
-                    'container_name' => $this->name
-                ]
+                $this->name => []
             ]
         ];
+
+        if ($this->exposeServerDefaultFile) {
+            $this->yamlStructure['services'][$this->name]['build']['context'] = '.';
+        } else {
+            $this->yamlStructure['services'][$this->name]['image'] = 'nginx:latest';
+        }
+
+        $this->yamlStructure['services'][$this->name]['container_name'] = $this->name;
 
         if (isset($this->httpPortRedirection)) {
             $this->yamlStructure['services'][$this->name]['ports'][] = sprintf('%s:80', $this->httpPortRedirection);
         }
+
     }
 
     public function setHttpPortRedirection(int $httpPortRedirection): static
@@ -58,6 +72,12 @@ class NginxReceipt extends ReceiptCommons implements ReceiptInterface
     {
         $questionsPairs = new NginxQuestions();
         return $questionsPairs->getPropertyQuestionPair();
+    }
+
+    public function onExposeDefaultServerFile(): self
+    {
+        $this->exposeServerDefaultFile = true;
+        return $this;
     }
 }
 

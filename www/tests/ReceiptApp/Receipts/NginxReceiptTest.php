@@ -54,4 +54,23 @@ EOF;
 
         $this->assertSame($expectedFileContent, $dockerComposeFile->content);
     }
+
+    public function testCountReceiptFiles(): void
+    {
+        $this->nginxReceipt->setName("nginx_env");
+
+        $dockerComposeFile = $this->nginxReceipt->getFiles();
+
+        $this->assertCount(1, $dockerComposeFile);
+    }
+
+    public function testCountReceiptExposingConfigurationFile(): void
+    {
+        $this->nginxReceipt->setName("nginx_env");
+        $this->nginxReceipt->onExposeDefaultServerFile();
+
+        $dockerComposeFile = $this->nginxReceipt->getFiles();
+
+        $this->assertCount(3, $dockerComposeFile);
+    }
 }
