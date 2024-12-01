@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Command\Traits\ReceiptFolder;
 use App\ReceiptApp\Receipts\PythonReceipt;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -19,6 +20,7 @@ use App\ReceiptApp\Traits\PrepareExecution;
 class Python extends Command
 {
     use PrepareExecution;
+    use ReceiptFolder;
 
     private Filesystem $fs;
 
@@ -42,13 +44,11 @@ class Python extends Command
 
         $io = new SymfonyStyle($input, $output);
 
-        $dirPath = $this->getDirPath();
-
         foreach ($this->receipt->getPropertyQuestionsPairs() as $propertyQuestionPair) {
             $this->feedReceipt($propertyQuestionPair[0], $propertyQuestionPair[1]);    
         }
 
-        $this->makerFile($dirPath,$this->receipt);
+        $dirPath = $this->askForReceiptFolder();
 
         $io->success(sprintf("Project created in %1\$s.", $dirPath));
 
