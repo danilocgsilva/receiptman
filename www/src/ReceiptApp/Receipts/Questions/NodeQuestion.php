@@ -12,7 +12,12 @@ class NodeQuestion extends BaseQuestion implements QuestionInterface
         
         $this->propertyQuestionPair = array_merge(
             $this->propertyQuestionPair,
-            [["setVolumeApp", "Should this receipt have a app folder in volume?\n", "yesorno"]]
+            [
+                new QuestionEntry(
+                    methodName: "setVolumeApp", 
+                    textQuestion: "Should this receipt have a app folder in volume?\n", 
+                    inputType: "yesorno")
+            ]
         );
     }
 }
