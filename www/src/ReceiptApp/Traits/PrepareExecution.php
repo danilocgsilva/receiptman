@@ -2,7 +2,6 @@
 
 namespace App\ReceiptApp\Traits;
 
-use App\ReceiptApp\Receipts\PhpDevMysql;
 use App\ReceiptApp\Receipts\Questions\QuestionEntry;
 use App\ReceiptApp\Receipts\ReceiptInterface;
 use Symfony\Component\Console\Input\InputInterface;

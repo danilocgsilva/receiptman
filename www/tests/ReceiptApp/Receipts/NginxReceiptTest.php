@@ -39,7 +39,7 @@ EOF;
     public function testDockerComposeFilePort(): void
     {
         $this->nginxReceipt->setName("nginx_env");
-        $this->nginxReceipt->setHttpPortRedirection(8081);
+        $this->nginxReceipt->setHttpPortRedirection("8081");
 
         $dockerComposeFile = $this->nginxReceipt->getFiles()[0];
 

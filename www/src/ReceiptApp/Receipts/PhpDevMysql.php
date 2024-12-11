@@ -8,11 +8,12 @@ use App\ReceiptApp\Receipts\ReceiptInterface;
 use Symfony\Component\Yaml\Yaml;
 use App\ReceiptApp\File;
 use App\ReceiptApp\Receipts\Questions\PhpDevMysqlQuestions;
+use App\ReceiptApp\Traits\HttpPortRedirection;
 
 class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
 {
-    private string $httpPortRedirection;
-
+    use HttpPortRedirection;
+    
     private string $mysqlPortRedirection;
 
     private string $mysqlRootPassword;
@@ -37,12 +38,6 @@ class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
     public function setMysqlRootPassword(string $mysqRootPassword): static
     {
         $this->mysqlRootPassword = $mysqRootPassword;
-        return $this;
-    }
-
-    public function setHttpPortRedirection(string $httpPortRedirection): static
-    {
-        $this->httpPortRedirection = $httpPortRedirection;
         return $this;
     }
 

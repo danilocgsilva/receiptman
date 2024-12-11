@@ -7,11 +7,12 @@ namespace App\ReceiptApp\Receipts;
 use App\ReceiptApp\File;
 use App\ReceiptApp\Receipts\Questions\NginxQuestions;
 use Symfony\Component\Yaml\Yaml;
+use App\ReceiptApp\Traits\HttpPortRedirection;
 
 class NginxReceipt extends ReceiptCommons implements ReceiptInterface
 {
-    private int $httpPortRedirection;
-
+    use HttpPortRedirection;
+    
     private bool $exposeServerDefaultFile = false;
 
     public function getFiles(): array
@@ -54,12 +55,6 @@ class NginxReceipt extends ReceiptCommons implements ReceiptInterface
             $this->yamlStructure['services'][$this->name]['ports'][] = sprintf('%s:80', $this->httpPortRedirection);
         }
 
-    }
-
-    public function setHttpPortRedirection(int $httpPortRedirection): static
-    {
-        $this->httpPortRedirection = $httpPortRedirection;
-        return $this;
     }
 
     public function getPropertyQuestionsPairs(): array
