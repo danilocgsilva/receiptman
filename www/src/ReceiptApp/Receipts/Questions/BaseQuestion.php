@@ -24,6 +24,9 @@ class BaseQuestion
         ];
     }
 
+    /**
+     * @return QuestionEntry[]
+     */
     public function getPropertyQuestionPair(): array
     {
         return $this->propertyQuestionPair;

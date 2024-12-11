@@ -4,26 +4,12 @@ declare(strict_types=1);
 
 namespace App\ReceiptApp\Receipts;
 
-use App\ReceiptApp\File;
 use Symfony\Component\Yaml\Yaml;
-use App\ReceiptApp\Receipts\Questions\DebianQuestion;
-use App\ReceiptApp\Receipts\Questions\QuestionInterface;
+use App\ReceiptApp\File;
+use App\ReceiptApp\Receipts\Questions\BaseQuestion;
 
-class Debian extends ReceiptCommons implements ReceiptInterface
+class Apache extends ReceiptCommons implements ReceiptInterface
 {
-    private QuestionInterface $questions;
-
-    public function __construct()
-    {
-        $this->questions = new DebianQuestion();
-    }
-
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getFiles(): array
     {
         $this->buildYamlStructure();
@@ -49,18 +35,18 @@ class Debian extends ReceiptCommons implements ReceiptInterface
 
     public function getPropertyQuestionsPairs(): array
     {
-        return $this->questions->getPropertyQuestionPair();
+        return (new BaseQuestion())->getPropertyQuestionPair();
     }
 
     private function getDockerfile(): string
     {
         return <<<EOF
-FROM debian:bookworm-slim
+            FROM debian:bookworm-slim
 
-RUN apt-get update
-RUN apt-get upgrade -y
+            RUN apt-get update
+            RUN apt-get upgrade -y
 
-CMD while : ; do sleep 1000; done
-EOF;
+            CMD while : ; do sleep 1000; done
+            EOF;
     }
 }

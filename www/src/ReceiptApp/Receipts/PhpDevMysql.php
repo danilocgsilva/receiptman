@@ -86,6 +86,10 @@ class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
         return $files;
     }
 
+
+    /**
+     * @return \App\ReceiptApp\Receipts\Questions\QuestionEntry[]
+     */
     public function getPropertyQuestionsPairs(): array
     {
         return $this->questions->getPropertyQuestionPair();
