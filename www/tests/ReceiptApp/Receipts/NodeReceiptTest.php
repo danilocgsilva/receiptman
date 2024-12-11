@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\ReceiptApp\Receipts;
 
 use App\ReceiptApp\Receipts\NodeReceipt;
+use App\ReceiptApp\Receipts\Questions\QuestionEntry;
 use PHPUnit\Framework\TestCase;
 use App\ReceiptApp\File;
 use App\Tests\Traits\GetSpecificFileTrait;
@@ -152,5 +153,14 @@ EOF;
         $receiptFiles = $this->nodeReceipt->getFiles();
         $dockerCompose = $this->getSpecificFile($receiptFiles, 'docker-compose.yml');
         $this->assertSame($expectedFileContent, $dockerCompose->content);
+    }
+
+    public function testTypeOfPropertiesQuestionPairs(): void
+    {
+        $questionsParis = $this->nodeReceipt->getPropertyQuestionsPairs();
+        $this->assertInstanceOf(
+            expected: QuestionEntry::class, 
+            actual: $questionsParis[0]
+        );
     }
 }

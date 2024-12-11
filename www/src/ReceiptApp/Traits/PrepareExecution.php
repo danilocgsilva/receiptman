@@ -3,6 +3,7 @@
 namespace App\ReceiptApp\Traits;
 
 use App\ReceiptApp\Receipts\PhpDevMysql;
+use App\ReceiptApp\Receipts\Questions\QuestionEntry;
 use App\ReceiptApp\Receipts\ReceiptInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -37,15 +38,15 @@ trait PrepareExecution
         return 'output' . DIRECTORY_SEPARATOR . $baseFolderName;
     }
 
-    private function feedReceipt(string $receiptSetterName, string $questionString, string|null $type = null)
+    private function feedReceipt(QuestionEntry $questionEntry)
     {
-        if ($type === null) {
-            $this->receipt->{$receiptSetterName}(
-                $this->makeQuestionAndGetAnswer($questionString)
+        if ($questionEntry->inputType === null) {
+            $this->receipt->{$questionEntry->methodName}(
+                $this->makeQuestionAndGetAnswer($questionEntry->textQuestion)
             );
         } else {
-            if ($this->askYesOrNo($questionString)) {
-                $this->receipt->{$receiptSetterName}();
+            if ($this->askYesOrNo($questionEntry->methodName)) {
+                $this->receipt->{$questionEntry->methodName}();
             }
         }
     }

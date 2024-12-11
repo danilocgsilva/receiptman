@@ -6,6 +6,7 @@ namespace App\Tests\ReceiptApp\Receipts;
 
 use App\Tests\Traits\GetSpecificFileTrait;
 use PHPUnit\Framework\TestCase;
+use App\ReceiptApp\Receipts\Questions\QuestionEntry;
 use App\ReceiptApp\Receipts\NginxReceipt;
 
 class NginxReceiptTest extends TestCase
@@ -72,5 +73,17 @@ EOF;
         $dockerComposeFile = $this->nginxReceipt->getFiles();
 
         $this->assertCount(3, $dockerComposeFile);
+    }
+
+    public function testGetPropertyQuestionsPairs(): void
+    {
+        $questionsParis = $this->nginxReceipt->getPropertyQuestionsPairs();
+        $this->assertIsArray($questionsParis);
+    }
+
+    public function testTypeOfPropertiesQuestionPairs(): void
+    {
+        $questionsParis = $this->nginxReceipt->getPropertyQuestionsPairs();
+        $this->assertInstanceOf(QuestionEntry::class, $questionsParis[0]);
     }
 }

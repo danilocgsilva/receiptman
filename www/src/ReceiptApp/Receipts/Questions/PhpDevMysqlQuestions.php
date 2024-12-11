@@ -12,10 +12,19 @@ class PhpDevMysqlQuestions extends BaseQuestion implements QuestionInterface
 
         $this->propertyQuestionPair = array_merge(
             $this->propertyQuestionPair,
-            [["setHttpPortRedirection", "Write the port number redirection for http\n", null]],
-            [["setMysqlPortRedirection", "Write the port number redirection for mysql\n", null]],
-            [["setMysqlRootPassword", "Write the mysql root password\n", null]],
-            [["setPublicFolderAsHost", "Should the environment root folder have the name \"public\"? (Currently, it is \"html\")\n", "yesorno"]],
+            [new QuestionEntry(
+                methodName: "setHttpPortRedirection", 
+                textQuestion: "Write the port number redirection for http\n")],
+            [new QuestionEntry(
+                methodName: "setMysqlPortRedirection", 
+                textQuestion: "Write the port number redirection for mysql\n")],
+            [new QuestionEntry(
+                methodName: "setMysqlRootPassword", 
+                textQuestion: "Write the mysql root password\n")],
+            [new QuestionEntry(
+                methodName: "setPublicFolderAsHost", 
+                textQuestion: "Should the environment root folder have the name \"public\"? (Currently, it is \"html\")\n", 
+                inputType: "yesorno")],
         );
     }
 }

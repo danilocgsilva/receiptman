@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\ReceiptApp\Receipts;
 
 use App\ReceiptApp\Receipts\PhpDevMysql;
+use App\ReceiptApp\Receipts\Questions\QuestionEntry;
 use PHPUnit\Framework\TestCase;
 use App\Tests\Traits\GetSpecificFileTrait;
 use App\ReceiptApp\File;
@@ -163,14 +166,23 @@ EOF;
 
     public function testSetPublicFolderAsHost(): void
     {
-        $this->phpDevMysql->setName("public_root")
-            ->setHttpPortRedirection("5000")
+        $this->phpDevMysql->setName(name: "public_root")
+            ->setHttpPortRedirection(httpPortRedirection: "5000")
             ->setMysqlPortRedirection(mysqlPortRedirection: "4333")
-            ->setMysqlRootPassword("opass3")
+            ->setMysqlRootPassword(mysqRootPassword: "opass3")
             ->setPublicFolderAsHost();
 
         $receiptFiles = $this->phpDevMysql->getFiles();
 
         $this->assertCount(6, $receiptFiles);
+    }
+
+    public function testTypeOfPropertiesQuestionPairs(): void
+    {
+        $questionsParis = $this->phpDevMysql->getPropertyQuestionsPairs();
+        $this->assertInstanceOf(
+            expected: QuestionEntry::class, 
+            actual: $questionsParis[0]
+        );
     }
 }

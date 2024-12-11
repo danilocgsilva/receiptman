@@ -11,9 +11,9 @@ use App\ReceiptApp\Receipts\Questions\PhpDevMysqlQuestions;
 
 class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
 {
-    private int $httpPortRedirection;
+    private string $httpPortRedirection;
 
-    private int $mysqlPortRedirection;
+    private string $mysqlPortRedirection;
 
     private string $mysqlRootPassword;
 
@@ -28,7 +28,7 @@ class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
         $this->questions = new PhpDevMysqlQuestions();
     }
 
-    public function setMysqlPortRedirection(int $mysqlPortRedirection): static
+    public function setMysqlPortRedirection(string $mysqlPortRedirection): static
     {
         $this->mysqlPortRedirection = $mysqlPortRedirection;
         return $this;
@@ -46,7 +46,7 @@ class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
         return $this;
     }
 
-    public function setHttpPortRedirection(int $httpPortRedirection): static
+    public function setHttpPortRedirection(string $httpPortRedirection): static
     {
         $this->httpPortRedirection = $httpPortRedirection;
         return $this;

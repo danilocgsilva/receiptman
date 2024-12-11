@@ -10,10 +10,3 @@ services:
     ports:
       - 2002:80
     working_dir: /var/www
-  receiptman_db:
-    image: mysql:latest
-    container_name: receiptman_db
-    environment:
-      - MYSQL_ROOT_PASSWORD=receiptmanpassword
-    ports:
-      - 974:3306
