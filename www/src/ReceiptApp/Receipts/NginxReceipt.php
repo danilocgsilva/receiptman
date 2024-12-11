@@ -14,12 +14,6 @@ class NginxReceipt extends ReceiptCommons implements ReceiptInterface
 
     private bool $exposeServerDefaultFile = false;
 
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getFiles(): array
     {
         if (!isset($this->name)) {

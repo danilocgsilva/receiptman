@@ -18,12 +18,6 @@ class Debian extends ReceiptCommons implements ReceiptInterface
         $this->questions = new DebianQuestion();
     }
 
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getFiles(): array
     {
         $this->buildYamlStructure();

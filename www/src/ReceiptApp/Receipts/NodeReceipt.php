@@ -45,12 +45,6 @@ class NodeReceipt extends ReceiptCommons implements ReceiptInterface
         return $files;
     }
 
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     private function getDockerfileContent(): string
     {
         return <<<EOF

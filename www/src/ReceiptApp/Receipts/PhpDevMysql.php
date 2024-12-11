@@ -34,12 +34,6 @@ class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
         return $this;
     }
 
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function setMysqlRootPassword(string $mysqRootPassword): static
     {
         $this->mysqlRootPassword = $mysqRootPassword;

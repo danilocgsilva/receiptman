@@ -20,6 +20,17 @@ class ReceiptCommons
         return $this;
     }
 
+    /**
+     * Set a name for contrainer
+     * @param string $name
+     * @return ReceiptCommons
+     */
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+        return $this;
+    }
+
     public function setNetworkModeHost(): self
     {
         $this->networkModeHost = true;

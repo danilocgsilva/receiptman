@@ -32,11 +32,6 @@ class PythonReceipt extends ReceiptCommons implements ReceiptInterface
         ];
     }
 
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-        return $this;
-    }
 
     private function buildYamlStructure(): void
     {
