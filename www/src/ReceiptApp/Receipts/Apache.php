@@ -6,7 +6,7 @@ namespace App\ReceiptApp\Receipts;
 
 use Symfony\Component\Yaml\Yaml;
 use App\ReceiptApp\File;
-use App\ReceiptApp\Receipts\Questions\BaseQuestion;
+use App\ReceiptApp\Receipts\Questions\ApacheQuestions;
 use App\ReceiptApp\Receipts\Interfaces\{
     HttpReportableInterface,
     ReceiptInterface
@@ -16,6 +16,9 @@ use App\ReceiptApp\Traits\HttpPortRedirection;
 class Apache extends ReceiptCommons implements ReceiptInterface, HttpReportableInterface
 {
     use HttpPortRedirection;
+
+    private bool $exposewww = false;
+
     public function getFiles(): array
     {
         $this->buildYamlStructure();
@@ -23,6 +26,12 @@ class Apache extends ReceiptCommons implements ReceiptInterface, HttpReportableI
         return [
             new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2))
         ];
+    }
+
+    public function onExposeWWW(): static
+    {
+        $this->exposewww = true;
+        return $this;
     }
 
     public function buildYamlStructure(): void
@@ -35,11 +44,19 @@ class Apache extends ReceiptCommons implements ReceiptInterface, HttpReportableI
                 ]
             ]
         ];
+
+        if (isset($this->httpPortRedirection)) {
+            $this->yamlStructure['services'][$this->name]['ports'][] = sprintf('%s:80', $this->httpPortRedirection);
+        }
+
+        if ($this->exposewww) {
+            $this->yamlStructure['services'][$this->name]['volumes'][] = './html:/var/www/html';
+        }
     }
 
     public function getPropertyQuestionsPairs(): array
     {
-        return (new BaseQuestion())->getPropertyQuestionPair();
+        return (new ApacheQuestions())->getPropertyQuestionPair();
     }
 
     private function getDockerfile(): string

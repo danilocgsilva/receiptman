@@ -12,7 +12,13 @@ class ApacheQuestions extends BaseQuestion implements QuestionInterface
 
         $this->propertyQuestionPair = array_merge(
             $this->propertyQuestionPair,
-            [new QuestionEntry("setHttpPortRedirection", "Write the port number redirection for http\n")]
+            [new QuestionEntry(
+                "setHttpPortRedirection", 
+                "Write the port number redirection for http\n")],
+            [new QuestionEntry(
+                "onExposeWWW", 
+                "Should the docker-compose.yml file mount a volume to allow local content editing?\n",
+                "yesorno")]
         );
     }
 }

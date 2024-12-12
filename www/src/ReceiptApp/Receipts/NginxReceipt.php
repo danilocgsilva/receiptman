@@ -58,7 +58,6 @@ class NginxReceipt extends ReceiptCommons implements ReceiptInterface, HttpRepor
         if (isset($this->httpPortRedirection)) {
             $this->yamlStructure['services'][$this->name]['ports'][] = sprintf('%s:80', $this->httpPortRedirection);
         }
-
     }
 
     public function getPropertyQuestionsPairs(): array

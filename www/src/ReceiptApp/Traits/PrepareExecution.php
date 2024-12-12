@@ -44,7 +44,7 @@ trait PrepareExecution
                 $this->makeQuestionAndGetAnswer($questionEntry->textQuestion)
             );
         } else {
-            if ($this->askYesOrNo($questionEntry->methodName)) {
+            if ($this->askYesOrNo($questionEntry->textQuestion)) {
                 $this->receipt->{$questionEntry->methodName}();
             }
         }

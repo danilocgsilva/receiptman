@@ -38,4 +38,48 @@ class ApacheReceiptTest extends TestCase
         $this->assertInstanceOf(File::class, $dockerComposeFile);
         $this->assertSame($dockerComposeFileContent, $dockerComposeFile->content);
     }
+
+    public function testDockerFileWithRedirection(): void
+    {
+        $this->apacheReceipt->setName("apache_redirect");
+        $this->apacheReceipt->setHttpPortRedirection("80");
+
+        $dockerComposeFileContent = <<<EOF
+        services:
+          apache_redirect:
+            image: 'httpd:latest'
+            container_name: apache_redirect
+            ports:
+              - '80:80'
+        
+        EOF;
+
+        $dockerComposeFile = $this->apacheReceipt->getFiles();
+        $dockerComposeFile = $this->getSpecificFile($dockerComposeFile, "docker-compose.yml");
+
+        $this->assertInstanceOf(File::class, $dockerComposeFile);
+        $this->assertSame($dockerComposeFileContent, $dockerComposeFile->content);
+    }
+
+    public function testDockerFileWwwRedirection(): void
+    {
+        $this->apacheReceipt->setName("apache_ewww");
+        $this->apacheReceipt->onExposeWWW();
+
+        $dockerComposeFileContent = <<<EOF
+        services:
+          apache_ewww:
+            image: 'httpd:latest'
+            container_name: apache_ewww
+            volumes:
+              - './html:/var/www/html'
+        
+        EOF;
+
+        $dockerComposeFile = $this->apacheReceipt->getFiles();
+        $dockerComposeFile = $this->getSpecificFile($dockerComposeFile, "docker-compose.yml");
+
+        $this->assertInstanceOf(File::class, $dockerComposeFile);
+        $this->assertSame($dockerComposeFileContent, $dockerComposeFile->content);
+    }
 }
