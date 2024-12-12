@@ -7,16 +7,21 @@ namespace App\ReceiptApp\Receipts;
 use Symfony\Component\Yaml\Yaml;
 use App\ReceiptApp\File;
 use App\ReceiptApp\Receipts\Questions\BaseQuestion;
+use App\ReceiptApp\Receipts\Interfaces\{
+    HttpReportableInterface,
+    ReceiptInterface
+};
+use App\ReceiptApp\Traits\HttpPortRedirection;
 
-class Apache extends ReceiptCommons implements ReceiptInterface
+class Apache extends ReceiptCommons implements ReceiptInterface, HttpReportableInterface
 {
+    use HttpPortRedirection;
     public function getFiles(): array
     {
         $this->buildYamlStructure();
 
         return [
-            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2)),
-            new File("Dockerfile", $this->getDockerfile())
+            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2))
         ];
     }
 
@@ -25,9 +30,8 @@ class Apache extends ReceiptCommons implements ReceiptInterface
         $this->yamlStructure = [
             'services' => [
                 $this->name => [
-                    'build' => [
-                        'context' => '.'
-                    ]
+                    'image' => 'httpd:latest',
+                    'container_name' => $this->name
                 ]
             ]
         ];

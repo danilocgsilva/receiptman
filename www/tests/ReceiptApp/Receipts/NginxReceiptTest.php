@@ -8,6 +8,7 @@ use App\Tests\Traits\GetSpecificFileTrait;
 use PHPUnit\Framework\TestCase;
 use App\ReceiptApp\Receipts\Questions\QuestionEntry;
 use App\ReceiptApp\Receipts\NginxReceipt;
+use App\ReceiptApp\File;
 
 class NginxReceiptTest extends TestCase
 {
@@ -85,5 +86,24 @@ EOF;
     {
         $questionsParis = $this->nginxReceipt->getPropertyQuestionsPairs();
         $this->assertInstanceOf(QuestionEntry::class, $questionsParis[0]);
+    }
+
+    public function testDockerFileContent(): void
+    {
+        $this->nginxReceipt->setName("nginx_env");
+
+        $dockerComposeFileContent = <<<EOF
+        services:
+          nginx_env:
+            image: 'nginx:latest'
+            container_name: nginx_env
+        
+        EOF;
+
+        $dockerComposeFile = $this->nginxReceipt->getFiles();
+        $dockerComposeFile = $this->getSpecificFile($dockerComposeFile, "docker-compose.yml");
+
+        $this->assertInstanceOf(File::class, $dockerComposeFile);
+        $this->assertSame($dockerComposeFileContent, $dockerComposeFile->content);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Tests\Traits;
 
 use App\ReceiptApp\File;
+use Exception;
 
 trait GetSpecificFileTrait
 {
@@ -11,10 +12,9 @@ trait GetSpecificFileTrait
         $fileFound = null;
         foreach ($files as $file) {
             if ($file->path === $fileName) {
-                $fileFound = $file;
-                break;
+                return $file;
             }
         }
-        return $fileFound;
+        throw new Exception("File not beign conteined in the array: {$fileName}.");
     }
 }

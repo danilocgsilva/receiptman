@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\ReceiptApp\Receipts;
 
 use App\ReceiptApp\File;
-use App\ReceiptApp\Receipts\ReceiptInterface;
+use App\ReceiptApp\Receipts\Interfaces\ReceiptInterface;
 use Symfony\Component\Yaml\Yaml;
 use App\ReceiptApp\Receipts\Questions\QuestionInterface;
 use App\ReceiptApp\Receipts\Questions\NodeQuestion;
