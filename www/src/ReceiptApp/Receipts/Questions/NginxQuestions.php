@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\ReceiptApp\Receipts\Questions;
 
+use App\ReceiptApp\Receipts\Questions\QuestionEntry;
+
 class NginxQuestions extends BaseQuestion implements QuestionInterface
 {
     public function __construct()
@@ -12,8 +14,8 @@ class NginxQuestions extends BaseQuestion implements QuestionInterface
 
         $this->propertyQuestionPair = array_merge(
             $this->propertyQuestionPair,
-            [["setHttpPortRedirection", "Write the port number redirection for http\n", null]],
-            [["onExposeDefaultServerFile", "Should the default server configuration be exposed?\n", "yesorno"]]
+            [new QuestionEntry("setHttpPortRedirection", "Write the port number redirection for http\n")],
+            [new QuestionEntry("onExposeDefaultServerFile", "Should the default server configuration be exposed?\n", "yesorno")]
         );
     }
 }
