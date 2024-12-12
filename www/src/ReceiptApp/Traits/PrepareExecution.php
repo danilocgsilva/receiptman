@@ -3,7 +3,7 @@
 namespace App\ReceiptApp\Traits;
 
 use App\ReceiptApp\Receipts\Questions\QuestionEntry;
-use App\ReceiptApp\Receipts\ReceiptInterface;
+use App\ReceiptApp\Receipts\Interfaces\ReceiptInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use DateTime;
