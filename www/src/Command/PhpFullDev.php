@@ -31,7 +31,7 @@ class PhpFullDev extends Command
     private $questionHelper;
 
     private PhpDevMysql $receipt;
-    
+
     public function __construct()
     {
         parent::__construct();
@@ -44,10 +44,19 @@ class PhpFullDev extends Command
 
         $io = new SymfonyStyle($input, $output);
 
-        foreach ($this->receipt->getPropertyQuestionsPairs() as $propertyQuestionPair) {
-            $this->feedReceipt($propertyQuestionPair); 
+        $questionNeedsDb = new ConfirmationQuestion("Should the receipt have a database? \n", true);
+        if (!$this->questionHelper->ask($this->input, $this->output, $questionNeedsDb)) {
+            $this->receipt->setNoDatabase();
         }
-        $questionApp = new ConfirmationQuestion("Should this receipt be hosted in /app? Type yes or y for yes, or no or n for no. Default is no. \n", false);
+
+        foreach ($this->receipt->getPropertyQuestionsPairs() as $propertyQuestionPair) {
+            $this->feedReceipt($propertyQuestionPair);
+        }
+
+        $questionApp = new ConfirmationQuestion(
+            "Should this receipt be hosted in /app? Type yes or y for yes, or no or n for no. Default is no. \n", 
+            false
+        );
         $responseQuestion = $this->questionHelper->ask($this->input, $this->output, $questionApp);
         if ($responseQuestion) {
             $this->receipt->setAppFolder();

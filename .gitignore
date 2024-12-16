@@ -2,3 +2,4 @@ www/.env
 www/output/*
 output/*
 .ssh/*
+www/.vscode/launch.json

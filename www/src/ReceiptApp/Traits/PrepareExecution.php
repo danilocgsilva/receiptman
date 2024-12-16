@@ -9,15 +9,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 use DateTime;
 use Symfony\Component\Console\Question\{Question, ConfirmationQuestion};
 use Exception;
-
+use InvalidArgumentException;
+use App\ReceiptApp\Receipts\Questions\InputType;
 trait PrepareExecution
 {
     private function prepareExecution(
-        InputInterface $input, 
-        OutputInterface $output, 
+        InputInterface $input,
+        OutputInterface $output,
         ReceiptInterface $receipt
-    ): void
-    {
+    ): void {
         $this->input = $input;
         $this->output = $output;
         $this->questionHelper = $this->getHelper('question');
@@ -37,23 +37,45 @@ trait PrepareExecution
         return 'output' . DIRECTORY_SEPARATOR . $baseFolderName;
     }
 
+
+    /**
+     * @param \App\ReceiptApp\Receipts\Questions\QuestionEntry $questionEntry
+     * @throws \InvalidArgumentException
+     * @return void
+     */
     private function feedReceipt(QuestionEntry $questionEntry)
     {
         if ($questionEntry->inputType === null) {
-            $this->receipt->{$questionEntry->methodName}(
-                $this->makeQuestionAndGetAnswer($questionEntry->textQuestion)
-            );
-        } else {
-            if ($this->askYesOrNo($questionEntry->textQuestion)) {
-                $this->receipt->{$questionEntry->methodName}();
-            }
+            $answer = $this->makeQuestionAndGetAnswer($questionEntry->textQuestion);
+            $this->receipt->{$questionEntry->methodName}($answer);
+            return;
+        }
+
+        switch ($questionEntry->inputType) {
+            case InputType::yesorno:
+                if ($this->askYesOrNo($questionEntry->textQuestion)) {
+                    $this->receipt->{$questionEntry->methodName}();
+                }
+                break;
+
+            case InputType::yesornoinverse:
+                if (!$this->askYesOrNo($questionEntry->textQuestion)) {
+                    $this->receipt->{$questionEntry->methodName}();
+                }
+                break;
+
+            default:
+                throw new InvalidArgumentException(
+                    "Unsupported input type: " . (string) $questionEntry->inputType
+                );
         }
     }
 
     private function askYesOrNo(string $questionTitle): bool
     {
-        $yesOrNoQuestion = new ConfirmationQuestion($questionTitle, false);
-        return $this->questionHelper->ask($this->input, $this->output, $yesOrNoQuestion);
+        $yesOrNoQuestion = new ConfirmationQuestion($questionTitle);
+        $response = $this->questionHelper->ask($this->input, $this->output, $yesOrNoQuestion);
+        return $response;
     }
 
     private function makeQuestionAndGetAnswer(string $questionTitle): string

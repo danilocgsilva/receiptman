@@ -193,7 +193,7 @@ class PhpDevMysqlTest extends TestCase
     public function testQuestionsAvailable(): void
     {
         $questionsPairs = $this->phpDevMysql->getPropertyQuestionsPairs();
-        $this->assertCount(8, $questionsPairs);
+        $this->assertCount(7, $questionsPairs);
     }
 
     public function testCheckEachQuestion(): void
@@ -204,7 +204,6 @@ class PhpDevMysqlTest extends TestCase
         $this->assertTrue($this->hasQuestionWithMethod("setNetworkModeHost", $questionsPairs));
         $this->assertTrue($this->hasQuestionWithMethod("setSshVolume", $questionsPairs));
         $this->assertTrue($this->hasQuestionWithMethod("setHttpPortRedirection", $questionsPairs));
-        $this->assertTrue($this->hasQuestionWithMethod("setNoDatabase", $questionsPairs));
         $this->assertTrue($this->hasQuestionWithMethod("setMysqlPortRedirection", $questionsPairs));
         $this->assertTrue($this->hasQuestionWithMethod("setMysqlRootPassword", $questionsPairs));
         $this->assertTrue($this->hasQuestionWithMethod("setPublicFolderAsHost", $questionsPairs));
@@ -220,6 +219,6 @@ class PhpDevMysqlTest extends TestCase
         $this->assertTrue($this->hasQuestionWithMethod("setSshVolume", $questionsPairs));
         $this->assertTrue($this->hasQuestionWithMethod("setHttpPortRedirection", $questionsPairs));
         $this->assertTrue($this->hasQuestionWithMethod("setPublicFolderAsHost", $questionsPairs));
-        $this->assertCount(6, $questionsPairs);
+        $this->assertCount(5, $questionsPairs);
     }
 }

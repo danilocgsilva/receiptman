@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\ReceiptApp\Receipts\Questions;
 
+use App\ReceiptApp\Receipts\Questions\InputType;
+
 class PhpDevMysqlQuestions extends BaseQuestion implements QuestionInterface
 {
     public function __construct()
@@ -20,16 +22,9 @@ class PhpDevMysqlQuestions extends BaseQuestion implements QuestionInterface
             ],
             [
                 new QuestionEntry(
-                    methodName: "setNoDatabase",
-                    textQuestion: "Shoud the receipt have one receipt for relational database?\n",
-                    inputType: "yesorno"
-                )
-            ],
-            [
-                new QuestionEntry(
                     methodName: "setPublicFolderAsHost",
                     textQuestion: "Should the environment root folder have the name \"public\"? (Currently, it is \"html\")\n",
-                    inputType: "yesorno"
+                    inputType: InputType::yesorno
                 )
             ],
             [
