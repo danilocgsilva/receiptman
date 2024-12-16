@@ -33,25 +33,25 @@ class PhpDevMysqlTest extends TestCase
             ->setMysqlRootPassword("testing_password");
 
         $expectedContent = <<<EOF
-services:
-  testing_env:
-    build:
-      context: .
-    container_name: testing_env
-    volumes:
-      - './www:/var/www'
-    ports:
-      - '6000:80'
-    working_dir: /var/www
-  testing_env_db:
-    image: 'mysql:latest'
-    container_name: testing_env_db
-    environment:
-      - MYSQL_ROOT_PASSWORD=testing_password
-    ports:
-      - '4006:3306'
+            services:
+              testing_env:
+                build:
+                  context: .
+                container_name: testing_env
+                volumes:
+                  - './www:/var/www'
+                ports:
+                  - '6000:80'
+                working_dir: /var/www
+              testing_env_db:
+                image: 'mysql:latest'
+                container_name: testing_env_db
+                environment:
+                  - MYSQL_ROOT_PASSWORD=testing_password
+                ports:
+                  - '4006:3306'
 
-EOF;
+            EOF;
 
         $fileDockerfile = $this->getSpecificFile($this->phpDevMysql->getFiles(), "docker-compose.yml");
 
@@ -67,25 +67,25 @@ EOF;
             ->setAppFolder();
 
         $expectedContent = <<<EOF
-services:
-  testing_env:
-    build:
-      context: .
-    container_name: testing_env
-    volumes:
-      - './app:/app'
-    ports:
-      - '6000:80'
-    working_dir: /app
-  testing_env_db:
-    image: 'mysql:latest'
-    container_name: testing_env_db
-    environment:
-      - MYSQL_ROOT_PASSWORD=testing_password
-    ports:
-      - '4006:3306'
+            services:
+              testing_env:
+                build:
+                  context: .
+                container_name: testing_env
+                volumes:
+                  - './app:/app'
+                ports:
+                  - '6000:80'
+                working_dir: /app
+              testing_env_db:
+                image: 'mysql:latest'
+                container_name: testing_env_db
+                environment:
+                  - MYSQL_ROOT_PASSWORD=testing_password
+                ports:
+                  - '4006:3306'
 
-EOF;
+            EOF;
 
         $fileDockerfile = $this->getSpecificFile($this->phpDevMysql->getFiles(), "docker-compose.yml");
 
@@ -103,26 +103,26 @@ EOF;
         $fileDockerCompose = $this->getSpecificFile($this->phpDevMysql->getFiles(), "docker-compose.yml");
 
         $expectedContent = <<<EOF
-services:
-  testing_env2:
-    build:
-      context: .
-    container_name: testing_env2
-    volumes:
-      - './www:/var/www'
-      - './.ssh/:/root/.ssh'
-    ports:
-      - '4000:80'
-    working_dir: /var/www
-  testing_env2_db:
-    image: 'mysql:latest'
-    container_name: testing_env2_db
-    environment:
-      - MYSQL_ROOT_PASSWORD=opass2
-    ports:
-      - '3333:3306'
+            services:
+              testing_env2:
+                build:
+                  context: .
+                container_name: testing_env2
+                volumes:
+                  - './www:/var/www'
+                  - './.ssh/:/root/.ssh'
+                ports:
+                  - '4000:80'
+                working_dir: /var/www
+              testing_env2_db:
+                image: 'mysql:latest'
+                container_name: testing_env2_db
+                environment:
+                  - MYSQL_ROOT_PASSWORD=opass2
+                ports:
+                  - '3333:3306'
 
-EOF;
+            EOF;
 
         $this->assertSame($expectedContent, $fileDockerCompose->content);
     }
@@ -193,18 +193,33 @@ EOF;
     public function testQuestionsAvailable(): void
     {
         $questionsPairs = $this->phpDevMysql->getPropertyQuestionsPairs();
-        $this->assertCount(7, $questionsPairs);
+        $this->assertCount(8, $questionsPairs);
     }
 
     public function testCheckEachQuestion(): void
     {
         $questionsPairs = $this->phpDevMysql->getPropertyQuestionsPairs();
+
         $this->assertTrue($this->hasQuestionWithMethod("setName", $questionsPairs));
         $this->assertTrue($this->hasQuestionWithMethod("setNetworkModeHost", $questionsPairs));
         $this->assertTrue($this->hasQuestionWithMethod("setSshVolume", $questionsPairs));
         $this->assertTrue($this->hasQuestionWithMethod("setHttpPortRedirection", $questionsPairs));
+        $this->assertTrue($this->hasQuestionWithMethod("setNoDatabase", $questionsPairs));
         $this->assertTrue($this->hasQuestionWithMethod("setMysqlPortRedirection", $questionsPairs));
         $this->assertTrue($this->hasQuestionWithMethod("setMysqlRootPassword", $questionsPairs));
         $this->assertTrue($this->hasQuestionWithMethod("setPublicFolderAsHost", $questionsPairs));
+    }
+
+    public function testQuestionsNoMysql(): void 
+    {
+        $this->phpDevMysql->setNoDatabase();
+        $questionsPairs = $this->phpDevMysql->getPropertyQuestionsPairs();
+
+        $this->assertTrue($this->hasQuestionWithMethod("setName", $questionsPairs));
+        $this->assertTrue($this->hasQuestionWithMethod("setNetworkModeHost", $questionsPairs));
+        $this->assertTrue($this->hasQuestionWithMethod("setSshVolume", $questionsPairs));
+        $this->assertTrue($this->hasQuestionWithMethod("setHttpPortRedirection", $questionsPairs));
+        $this->assertTrue($this->hasQuestionWithMethod("setPublicFolderAsHost", $questionsPairs));
+        $this->assertCount(6, $questionsPairs);
     }
 }

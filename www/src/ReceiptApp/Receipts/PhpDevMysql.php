@@ -8,26 +8,24 @@ use App\ReceiptApp\Receipts\Interfaces\ReceiptInterface;
 use Symfony\Component\Yaml\Yaml;
 use App\ReceiptApp\File;
 use App\ReceiptApp\Receipts\Questions\PhpDevMysqlQuestions;
-use App\ReceiptApp\Traits\HttpPortRedirection;
+use App\ReceiptApp\Traits\{
+    HttpPortRedirection,
+    RemoveQuestionByMethod
+};
 
 class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
 {
     use HttpPortRedirection;
-    
+    use RemoveQuestionByMethod;
     private string $mysqlPortRedirection;
 
     private string $mysqlRootPassword;
-
-    private PhpDevMysqlQuestions $questions;
 
     private bool $appDir = false;
 
     private bool $rootNameAsPublic = false;
 
-    public function __construct()
-    {
-        $this->questions = new PhpDevMysqlQuestions();
-    }
+    private bool $onDatabase = true;
 
     public function setMysqlPortRedirection(string $mysqlPortRedirection): static
     {
@@ -81,12 +79,26 @@ class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
      */
     public function getPropertyQuestionsPairs(): array
     {
-        return $this->questions->getPropertyQuestionPair();
+        $questions = (new PhpDevMysqlQuestions())->getPropertyQuestionPair();
+
+        if (!$this->onDatabase) {
+            $this->removeQuestionByMethod("setMysqlPortRedirection", $questions);
+            $this->removeQuestionByMethod("setMysqlRootPassword", $questions);
+        }
+
+        return $questions;
     }
 
     public function setPublicFolderAsHost(): self
     {
         $this->rootNameAsPublic = true;
+        return $this;
+    }
+
+    public function setNoDatabase(): static
+    {
+        $this->onDatabase = false;
+        
         return $this;
     }
 
@@ -104,19 +116,24 @@ class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
                         sprintf('%s:80', $this->httpPortRedirection)
                     ],
                     'working_dir' => ''
-                ],
-                $this->name . '_db' => [
-                    'image' => 'mysql:latest',
-                    'container_name' => $this->name . '_db',
-                    'environment' => [
-                        sprintf('MYSQL_ROOT_PASSWORD=%s', $this->mysqlRootPassword)
-                    ],
-                    'ports' => [
-                        sprintf('%s:3306', $this->mysqlPortRedirection)
-                    ]
                 ]
             ]
         ];
+
+        if ($this->onDatabase) {
+            $databaseReceipt = [
+                'image' => 'mysql:latest',
+                'container_name' => $this->name . '_db',
+                'environment' => [
+                    sprintf('MYSQL_ROOT_PASSWORD=%s', $this->mysqlRootPassword)
+                ],
+                'ports' => [
+                    sprintf('%s:3306', $this->mysqlPortRedirection)
+                ]
+            ];
+
+            $this->yamlStructure['services'][$this->name . '_db'] = $databaseReceipt;
+        }
 
         if ($this->appDir) {
             $this->yamlStructure['services'][$this->name]['volumes'] = [
@@ -136,75 +153,75 @@ class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
     private function getStartupContent(): string
     {
         return <<<EOF
-#!/bin/bash
+        #!/bin/bash
 
-service apache2 start
-while : ; do sleep 1000; done
-EOF;
+        service apache2 start
+        while : ; do sleep 1000; done
+        EOF;
     }
 
     private function getDockerfile(): string
     {
         return <<<EOF
-FROM debian:bookworm-slim
+        FROM debian:bookworm-slim
 
-RUN apt-get update
-RUN apt-get upgrade -y
-RUN apt-get install curl git zip -y
-RUN apt-get install php php-mysql php-xdebug php-curl php-zip php-xml php-mbstring -y
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
-COPY config/xdebug.ini /etc/php/8.2/mods-available/
-COPY config/startup.sh /startup.sh
-RUN chmod +x /startup.sh
+        RUN apt-get update
+        RUN apt-get upgrade -y
+        RUN apt-get install curl git zip -y
+        RUN apt-get install php php-mysql php-xdebug php-curl php-zip php-xml php-mbstring -y
+        RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
+        COPY config/xdebug.ini /etc/php/8.2/mods-available/
+        COPY config/startup.sh /startup.sh
+        RUN chmod +x /startup.sh
 
-CMD /startup.sh
-EOF;
+        CMD /startup.sh
+        EOF;
     }
 
     private function getXDebugContent(): string
     {
         return <<<EOF
-zend_extension=xdebug.so
+        zend_extension=xdebug.so
 
-xdebug.start_with_request = 1
-xdebug.mode=debug
-xdebug.discover_client_host = 1
-EOF;
+        xdebug.start_with_request = 1
+        xdebug.mode=debug
+        xdebug.discover_client_host = 1
+        EOF;
     }
 
     private function get000defaultFileContent(): string
     {
         return <<<EOF
-<VirtualHost *:80>
-	# The ServerName directive sets the request scheme, hostname and port that
-	# the server uses to identify itself. This is used when creating
-	# redirection URLs. In the context of virtual hosts, the ServerName
-	# specifies what hostname must appear in the request's Host: header to
-	# match this virtual host. For the default virtual host (this file) this
-	# value is not decisive as it is used as a last resort host regardless.
-	# However, you must set it for any further virtual host explicitly.
-	#ServerName www.example.com
+        <VirtualHost *:80>
+            # The ServerName directive sets the request scheme, hostname and port that
+            # the server uses to identify itself. This is used when creating
+            # redirection URLs. In the context of virtual hosts, the ServerName
+            # specifies what hostname must appear in the request's Host: header to
+            # match this virtual host. For the default virtual host (this file) this
+            # value is not decisive as it is used as a last resort host regardless.
+            # However, you must set it for any further virtual host explicitly.
+            #ServerName www.example.com
 
-	ServerAdmin webmaster@localhost
-	DocumentRoot /var/www/public
+            ServerAdmin webmaster@localhost
+            DocumentRoot /var/www/public
 
-	# Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
-	# error, crit, alert, emerg.
-	# It is also possible to configure the loglevel for particular
-	# modules, e.g.
-	#LogLevel info ssl:warn
+            # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+            # error, crit, alert, emerg.
+            # It is also possible to configure the loglevel for particular
+            # modules, e.g.
+            #LogLevel info ssl:warn
 
-	ErrorLog \${APACHE_LOG_DIR}/error.log
-	CustomLog \${APACHE_LOG_DIR}/access.log combined
+            ErrorLog \${APACHE_LOG_DIR}/error.log
+            CustomLog \${APACHE_LOG_DIR}/access.log combined
 
-	# For most configuration files from conf-available/, which are
-	# enabled or disabled at a global level, it is possible to
-	# include a line for only one particular virtual host. For example the
-	# following line enables the CGI configuration for this host only
-	# after it has been globally disabled with "a2disconf".
-	#Include conf-available/serve-cgi-bin.conf
-</VirtualHost>
+            # For most configuration files from conf-available/, which are
+            # enabled or disabled at a global level, it is possible to
+            # include a line for only one particular virtual host. For example the
+            # following line enables the CGI configuration for this host only
+            # after it has been globally disabled with "a2disconf".
+            #Include conf-available/serve-cgi-bin.conf
+        </VirtualHost>
 
-EOF;
+        EOF;
     }
 }
