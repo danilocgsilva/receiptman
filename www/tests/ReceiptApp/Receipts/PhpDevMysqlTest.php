@@ -7,12 +7,16 @@ namespace App\Tests\ReceiptApp\Receipts;
 use App\ReceiptApp\Receipts\PhpDevMysql;
 use App\ReceiptApp\Receipts\Questions\QuestionEntry;
 use PHPUnit\Framework\TestCase;
-use App\Tests\Traits\GetSpecificFileTrait;
+use App\Tests\Traits\{
+    GetSpecificFileTrait,
+    HasQuestionWithMethod
+};
 use App\ReceiptApp\File;
 
 class PhpDevMysqlTest extends TestCase
 {
     use GetSpecificFileTrait;
+    use HasQuestionWithMethod;
 
     private PhpDevMysql $phpDevMysql;
 
@@ -184,5 +188,23 @@ EOF;
             expected: QuestionEntry::class, 
             actual: $questionsParis[0]
         );
+    }
+
+    public function testQuestionsAvailable(): void
+    {
+        $questionsPairs = $this->phpDevMysql->getPropertyQuestionsPairs();
+        $this->assertCount(7, $questionsPairs);
+    }
+
+    public function testCheckEachQuestion(): void
+    {
+        $questionsPairs = $this->phpDevMysql->getPropertyQuestionsPairs();
+        $this->assertTrue($this->hasQuestionWithMethod("setName", $questionsPairs));
+        $this->assertTrue($this->hasQuestionWithMethod("setNetworkModeHost", $questionsPairs));
+        $this->assertTrue($this->hasQuestionWithMethod("setSshVolume", $questionsPairs));
+        $this->assertTrue($this->hasQuestionWithMethod("setHttpPortRedirection", $questionsPairs));
+        $this->assertTrue($this->hasQuestionWithMethod("setMysqlPortRedirection", $questionsPairs));
+        $this->assertTrue($this->hasQuestionWithMethod("setMysqlRootPassword", $questionsPairs));
+        $this->assertTrue($this->hasQuestionWithMethod("setPublicFolderAsHost", $questionsPairs));
     }
 }
