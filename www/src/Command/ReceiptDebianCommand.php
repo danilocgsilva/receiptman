@@ -38,7 +38,7 @@ class ReceiptDebianCommand extends Command
         $dirPath = $this->getDirPath();
 
         foreach ($this->receipt->getPropertyQuestionsPairs() as $propertyQuestionPair) {
-            $this->feedReceipt($propertyQuestionPair[0], $propertyQuestionPair[1]);    
+            $this->feedReceipt($propertyQuestionPair);    
         }
 
         $this->makerFile($dirPath,$this->receipt);

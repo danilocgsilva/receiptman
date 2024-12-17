@@ -44,7 +44,7 @@ class Nginx extends Command
         $io = new SymfonyStyle($input, $output);
 
         foreach ($this->receipt->getPropertyQuestionsPairs() as $propertyQuestionPair) {
-            $this->feedReceipt($propertyQuestionPair[0], $propertyQuestionPair[1], $propertyQuestionPair[2]);    
+            $this->feedReceipt($propertyQuestionPair);    
         }
 
         $dirPath = $this->askForReceiptFolder();
