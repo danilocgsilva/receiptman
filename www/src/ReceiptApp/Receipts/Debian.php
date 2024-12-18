@@ -8,6 +8,10 @@ use App\ReceiptApp\File;
 use Symfony\Component\Yaml\Yaml;
 use App\ReceiptApp\Receipts\Questions\DebianQuestion;
 use App\ReceiptApp\Receipts\Questions\QuestionInterface;
+use App\ReceiptApp\Receipts\Interfaces\{
+    HttpReportableInterface,
+    ReceiptInterface
+};
 
 class Debian extends ReceiptCommons implements ReceiptInterface
 {

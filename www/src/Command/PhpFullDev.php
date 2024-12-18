@@ -57,6 +57,7 @@ class PhpFullDev extends Command
             "Should this receipt be hosted in /app? Type yes or y for yes, or no or n for no. Default is no. \n", 
             false
         );
+
         $responseQuestion = $this->questionHelper->ask($this->input, $this->output, $questionApp);
         if ($responseQuestion) {
             $this->receipt->setAppFolder();
