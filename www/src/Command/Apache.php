@@ -34,10 +34,6 @@ class Apache extends ReceiptmanCommand
 
         $io = new SymfonyStyle($input, $output);
 
-        // foreach ($this->receipt->getPropertyQuestionsPairs() as $propertyQuestionPair) {
-        //     $this->feedReceipt($propertyQuestionPair);    
-        // }
-
         while ($propertyQuestionPair = $this->receipt->getNextQuestionPair()) {
             $this->feedReceipt($propertyQuestionPair);
         }

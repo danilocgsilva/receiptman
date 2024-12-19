@@ -82,4 +82,24 @@ class ApacheReceiptTest extends TestCase
         $this->assertInstanceOf(File::class, $dockerComposeFile);
         $this->assertSame($dockerComposeFileContent, $dockerComposeFile->content);
     }
+
+    public function testDockerComposeFileContentWithHostMode(): void
+    {
+        $this->apacheReceipt->setName("apache_ewww");
+        $this->apacheReceipt->setNetworkModeHost();
+
+        $dockerFileContentExpected = <<<EOF
+        services:
+          apache_ewww:
+            image: 'httpd:latest'
+            container_name: apache_ewww
+            network_mode: host
+        
+        EOF;
+
+        $dockerComposeFile = $this->apacheReceipt->getFiles();
+        $dockerComposeFile = $this->getSpecificFile($dockerComposeFile, "docker-compose.yml");
+
+        $this->assertSame($dockerFileContentExpected, $dockerComposeFile->content);
+    }
 }

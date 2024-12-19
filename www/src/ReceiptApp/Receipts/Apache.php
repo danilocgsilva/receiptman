@@ -57,6 +57,10 @@ class Apache extends ReceiptCommons implements ReceiptInterface, HttpReportableI
         if ($this->exposewww) {
             $this->yamlStructure['services'][$this->name]['volumes'][] = './html:/var/www/html';
         }
+
+        if ($this->networkModeHost) {
+            $this->yamlStructure['services'][$this->name]['network_mode'] = 'host';
+        }
     }
 
     private function getDockerfile(): string

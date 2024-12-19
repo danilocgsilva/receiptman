@@ -6,6 +6,8 @@ namespace App\ReceiptApp\Receipts\Questions;
 
 use App\ReceiptApp\Receipts\Interfaces\QuestionInterface;
 
+use App\ReceiptApp\Receipts\Questions\InputType;
+
 class BaseQuestion implements QuestionInterface
 {
     /** @var QuestionEntry[] */
@@ -20,7 +22,8 @@ class BaseQuestion implements QuestionInterface
             ),
             new QuestionEntry(
                 methodName: "setNetworkModeHost",
-                textQuestion: "Should the container uses the host network?\n"
+                textQuestion: "Should the container uses the host network?\n",
+                inputType: InputType::yesorno
             ),
             new QuestionEntry(
                 methodName: "setSshVolume",
