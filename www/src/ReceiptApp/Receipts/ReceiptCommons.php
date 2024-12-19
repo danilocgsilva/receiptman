@@ -51,6 +51,15 @@ class ReceiptCommons
     public function setNetworkModeHost(): self
     {
         $this->networkModeHost = true;
+        
+        $arrayPosition = array_search(
+            "setHttpPortRedirection", 
+            array_map(fn (QuestionEntry $questionEntry) => $questionEntry->methodName, $this->questionsPairs),
+             true
+        );
+        unset($this->questionsPairs[$arrayPosition]);
+        $this->questionsPairs = array_values($this->questionsPairs);
+
         return $this;
     }
 
