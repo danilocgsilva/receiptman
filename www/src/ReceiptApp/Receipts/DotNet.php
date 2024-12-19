@@ -11,6 +11,10 @@ use App\ReceiptApp\Receipts\Interfaces\ReceiptInterface;
 
 class DotNet extends ReceiptCommons implements ReceiptInterface
 {
+    public function __construct()
+    {
+        $this->questionsPairs = (new BaseQuestion())->getPropertyQuestionPair();
+    }
     public function getFiles(): array
     {
         $this->buildYamlStructure();
@@ -33,12 +37,6 @@ class DotNet extends ReceiptCommons implements ReceiptInterface
                 ]
             ]
         ];
-    }
-
-    public function getPropertyQuestionsPairs(): array
-    {
-        $question = new BaseQuestion();
-        return $question->getPropertyQuestionPair();
     }
 
     private function getDockerfileContent(): string

@@ -16,7 +16,7 @@ class PythonReceipt extends ReceiptCommons implements ReceiptInterface
 
     public function __construct()
     {
-        $this->questions = new PythonQuestion();
+        $this->questionsPairs = (new PythonQuestion())->getPropertyQuestionPair();
     }
 
     /**

@@ -49,7 +49,7 @@ class PhpFullDev extends Command
             $this->receipt->setNoDatabase();
         }
 
-        foreach ($this->receipt->getPropertyQuestionsPairs() as $propertyQuestionPair) {
+        while ($propertyQuestionPair = $this->receipt->getNextQuestionPair()) {
             $this->feedReceipt($propertyQuestionPair);
         }
 

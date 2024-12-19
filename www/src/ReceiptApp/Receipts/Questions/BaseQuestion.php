@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\ReceiptApp\Receipts\Questions;
 
-class BaseQuestion
+use App\ReceiptApp\Receipts\Interfaces\QuestionInterface;
+
+class BaseQuestion implements QuestionInterface
 {
     /** @var QuestionEntry[] */
     protected array $propertyQuestionPair;

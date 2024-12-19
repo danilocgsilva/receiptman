@@ -48,7 +48,7 @@ class DotNet extends Command
         $this->prepareExecution($input, $output, new DotNetReceipt());
         $io = new SymfonyStyle($input, $output);
 
-        foreach ($this->receipt->getPropertyQuestionsPairs() as $propertyQuestionPair) {
+        while ($propertyQuestionPair = $this->receipt->getNextQuestionPair()) {
             $this->feedReceipt($propertyQuestionPair);
         }
 

@@ -19,6 +19,11 @@ class NginxReceipt extends ReceiptCommons implements ReceiptInterface, HttpRepor
     
     private bool $exposeServerDefaultFile = false;
 
+    public function __construct()
+    {
+        $this->questionsPairs = (new NginxQuestions())->getPropertyQuestionPair();
+    }
+
     public function getFiles(): array
     {
         if (!isset($this->name)) {
@@ -58,12 +63,6 @@ class NginxReceipt extends ReceiptCommons implements ReceiptInterface, HttpRepor
         if (isset($this->httpPortRedirection)) {
             $this->yamlStructure['services'][$this->name]['ports'][] = sprintf('%s:80', $this->httpPortRedirection);
         }
-    }
-
-    public function getPropertyQuestionsPairs(): array
-    {
-        $questionsPairs = new NginxQuestions();
-        return $questionsPairs->getPropertyQuestionPair();
     }
 
     public function onExposeDefaultServerFile(): self

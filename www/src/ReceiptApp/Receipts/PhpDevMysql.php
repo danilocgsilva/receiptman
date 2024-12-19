@@ -27,6 +27,11 @@ class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
 
     private bool $onDatabase = true;
 
+    public function __construct()
+    {
+        $this->questionsPairs = (new PhpDevMysqlQuestions())->getPropertyQuestionPair();
+    }
+
     public function setMysqlPortRedirection(string $mysqlPortRedirection): static
     {
         $this->mysqlPortRedirection = $mysqlPortRedirection;
@@ -73,20 +78,17 @@ class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
         return $files;
     }
 
-
     /**
      * @return \App\ReceiptApp\Receipts\Questions\QuestionEntry[]
      */
     public function getPropertyQuestionsPairs(): array
     {
-        $questions = (new PhpDevMysqlQuestions())->getPropertyQuestionPair();
-
         if (!$this->onDatabase) {
-            $this->removeQuestionByMethod("setMysqlPortRedirection", $questions);
-            $this->removeQuestionByMethod("setMysqlRootPassword", $questions);
+            $this->removeQuestionByMethod("setMysqlPortRedirection", $this->questionsPairs);
+            $this->removeQuestionByMethod("setMysqlRootPassword", $this->questionsPairs);
         }
 
-        return $questions;
+        return $this->questionsPairs;
     }
 
     public function setPublicFolderAsHost(): self

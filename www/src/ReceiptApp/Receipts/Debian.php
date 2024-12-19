@@ -19,7 +19,7 @@ class Debian extends ReceiptCommons implements ReceiptInterface
 
     public function __construct()
     {
-        $this->questions = new DebianQuestion();
+        $this->questionsPairs = (new DebianQuestion())->getPropertyQuestionPair();
     }
 
     public function getFiles(): array
@@ -43,11 +43,6 @@ class Debian extends ReceiptCommons implements ReceiptInterface
                 ]
             ]
         ];
-    }
-
-    public function getPropertyQuestionsPairs(): array
-    {
-        return $this->questions->getPropertyQuestionPair();
     }
 
     private function getDockerfile(): string

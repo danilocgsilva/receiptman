@@ -1,0 +1,10 @@
+{
+    "php.problems.exclude": {
+        "src/Command/PhpFullDev.php": [
+            "PHP0406"
+        ],
+        "src/Command/DotNet.php" : [
+            "PHP0406"
+        ]
+    }
+}

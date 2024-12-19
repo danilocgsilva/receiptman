@@ -20,7 +20,7 @@ class NodeReceipt extends ReceiptCommons implements ReceiptInterface
 
     public function __construct()
     {
-        $this->questions = new NodeQuestion();
+        $this->questionsPairs = (new NodeQuestion())->getPropertyQuestionPair();
     }
 
     /**

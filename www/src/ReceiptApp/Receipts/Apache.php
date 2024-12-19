@@ -19,6 +19,11 @@ class Apache extends ReceiptCommons implements ReceiptInterface, HttpReportableI
 
     private bool $exposewww = false;
 
+    public function __construct()
+    {
+        $this->questionsPairs = (new ApacheQuestions())->getPropertyQuestionPair();
+    }
+
     public function getFiles(): array
     {
         $this->buildYamlStructure();
@@ -52,11 +57,6 @@ class Apache extends ReceiptCommons implements ReceiptInterface, HttpReportableI
         if ($this->exposewww) {
             $this->yamlStructure['services'][$this->name]['volumes'][] = './html:/var/www/html';
         }
-    }
-
-    public function getPropertyQuestionsPairs(): array
-    {
-        return (new ApacheQuestions())->getPropertyQuestionPair();
     }
 
     private function getDockerfile(): string

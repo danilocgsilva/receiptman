@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\ReceiptApp\Receipts\Interfaces;
 
+use App\ReceiptApp\Receipts\Questions\QuestionEntry;
+
 /**
  * @template T
  */
@@ -17,4 +19,6 @@ interface ReceiptInterface
     public function getPropertyQuestionsPairs(): array;
 
     public function setName(string $name): static;
+
+    public function getNextQuestionPair(): QuestionEntry|null;
 }
