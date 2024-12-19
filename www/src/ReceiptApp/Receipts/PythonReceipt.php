@@ -49,19 +49,19 @@ class PythonReceipt extends ReceiptCommons implements ReceiptInterface
 
     public function getPropertyQuestionsPairs(): array
     {
-        return $this->questions->getPropertyQuestionPair();
+        return $this->questionsPairs;
     }
 
     private function getDockerfile(): string
     {
         return <<<EOF
-FROM debian:bookworm-slim
+        FROM debian:bookworm-slim
 
-RUN apt-get update
-RUN apt-get upgrade -y
-RUN apt-get install python3
+        RUN apt-get update
+        RUN apt-get upgrade -y
+        RUN apt-get install python3
 
-CMD while : ; do sleep 1000; done
-EOF;
+        CMD while : ; do sleep 1000; done
+        EOF;
     }
 }

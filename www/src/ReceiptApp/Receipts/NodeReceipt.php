@@ -83,7 +83,7 @@ EOF;
 
     public function getPropertyQuestionsPairs(): array
     {
-        return $this->questions->getPropertyQuestionPair();
+        return $this->questionsPairs;
     }
 
     public function setInfinitLoop(): void

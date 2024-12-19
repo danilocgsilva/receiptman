@@ -18,17 +18,12 @@ class ReceiptCommons
     protected string $name;
 
     protected int $currentQuestion = 0;
-
+    
     /**
-     * @var \App\ReceiptApp\Receipts\QuestionInterface[];
+     * @var \App\ReceiptApp\Receipts\Questions\QuestionEntry[]
      */
     protected array $questionsPairs;
 
-    // public function __construct()
-    // {
-    //     $this->currentQuestion = 0;
-    // }
-    
     public function setSshVolume(): self
     {
         $this->sshVolume = true;
@@ -47,7 +42,7 @@ class ReceiptCommons
     }
 
     /**
-     * @return \App\ReceiptApp\Receipts\QuestionInterface[]
+     * @return \App\ReceiptApp\Receipts\Questions\QuestionEntry[]
      */
     public function getPropertyQuestionsPairs(): array
     {

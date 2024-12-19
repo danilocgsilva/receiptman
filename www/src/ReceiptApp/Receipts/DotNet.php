@@ -5,16 +5,19 @@ declare(strict_types=1);
 namespace App\ReceiptApp\Receipts;
 
 use App\ReceiptApp\File;
+use App\ReceiptApp\Receipts\Questions\DotNetQuestions;
 use Symfony\Component\Yaml\Yaml;
-use App\ReceiptApp\Receipts\Questions\BaseQuestion;
 use App\ReceiptApp\Receipts\Interfaces\ReceiptInterface;
 
 class DotNet extends ReceiptCommons implements ReceiptInterface
 {
+    private bool $hostMountVolume = false;
+    
     public function __construct()
     {
-        $this->questionsPairs = (new BaseQuestion())->getPropertyQuestionPair();
+        $this->questionsPairs = (new DotNetQuestions())->getPropertyQuestionPair();
     }
+
     public function getFiles(): array
     {
         $this->buildYamlStructure();
@@ -37,6 +40,16 @@ class DotNet extends ReceiptCommons implements ReceiptInterface
                 ]
             ]
         ];
+
+        if ($this->hostMountVolume) {
+            $this->yamlStructure['services'][$this->name]['volumes'][] = './app:/app';
+        }
+    }
+
+    public function setHostMountVolume(): static
+    {
+        $this->hostMountVolume = true;
+        return $this;
     }
 
     private function getDockerfileContent(): string
@@ -48,4 +61,5 @@ class DotNet extends ReceiptCommons implements ReceiptInterface
 
         EOF;
     }
+    
 }
