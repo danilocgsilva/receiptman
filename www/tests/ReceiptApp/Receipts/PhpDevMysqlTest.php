@@ -12,6 +12,7 @@ use App\Tests\Traits\{
     HasQuestionWithMethod
 };
 use App\ReceiptApp\File;
+use Error;
 
 class PhpDevMysqlTest extends TestCase
 {
@@ -185,7 +186,7 @@ class PhpDevMysqlTest extends TestCase
     {
         $questionsParis = $this->phpDevMysql->getPropertyQuestionsPairs();
         $this->assertInstanceOf(
-            expected: QuestionEntry::class, 
+            expected: QuestionEntry::class,
             actual: $questionsParis[0]
         );
     }
@@ -209,7 +210,7 @@ class PhpDevMysqlTest extends TestCase
         $this->assertTrue($this->hasQuestionWithMethod("setPublicFolderAsHost", $questionsPairs));
     }
 
-    public function testQuestionsNoMysql(): void 
+    public function testQuestionsNoMysql(): void
     {
         $this->phpDevMysql->setNoDatabase();
         $questionsPairs = $this->phpDevMysql->getPropertyQuestionsPairs();
@@ -219,6 +220,73 @@ class PhpDevMysqlTest extends TestCase
         $this->assertTrue($this->hasQuestionWithMethod("setSshVolume", $questionsPairs));
         $this->assertTrue($this->hasQuestionWithMethod("setHttpPortRedirection", $questionsPairs));
         $this->assertTrue($this->hasQuestionWithMethod("setPublicFolderAsHost", $questionsPairs));
+        $this->assertFalse($this->hasQuestionWithMethod("setMysqlPortRedirection", $questionsPairs));
+        $this->assertFalse($this->hasQuestionWithMethod("setMysqlRootPassword", $questionsPairs));
         $this->assertCount(5, $questionsPairs);
+    }
+
+    public function testGetFiles(): void
+    {
+        $this->phpDevMysql
+            ->setName(name: "the_beloved_environment.")
+            ->setHttpPortRedirection("2013")
+            ->setMysqlPortRedirection(mysqlPortRedirection: "3433")
+            ->setMysqlRootPassword("mysupersecurepassword");
+
+        $files = $this->phpDevMysql->getFiles();
+
+        $this->assertCount(5, $files);
+    }
+
+    public function testGetFilesWithoutRequiringDatabase(): void
+    {
+        $this->phpDevMysql
+            ->setName(name: "the_beloved_environment.")
+            ->setHttpPortRedirection("2013")
+            ->setNoDatabase();
+
+        $files = $this->phpDevMysql->getFiles();
+
+        $this->assertCount(5, $files);
+    }
+
+    public function testForgetSetContainerNameAndGetFiles(): void
+    {
+        $this->expectException(Error::class);
+        
+        $this->phpDevMysql
+            ->setName(name: "the_beloved_environment.");
+
+        $this->phpDevMysql->getFiles();
+    }
+
+    public function testGetDockerFile()
+    {
+        $expectedContent = <<<EOF
+        FROM debian:bookworm-slim
+
+        RUN apt-get update
+        RUN apt-get upgrade -y
+        RUN apt-get install curl git zip -y
+        RUN apt-get install php php-mysql php-xdebug php-curl php-zip php-xml php-mbstring -y
+        RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
+        COPY config/xdebug.ini /etc/php/8.2/mods-available/
+        COPY config/startup.sh /startup.sh
+        COPY config/000-default /etc/apache2/sites-available/
+        RUN chmod +x /startup.sh
+
+        CMD /startup.sh
+        EOF;
+
+        $this->phpDevMysql
+            ->setName(name: "docker_file_content_test.")
+            ->setHttpPortRedirection("2024")
+            ->setNoDatabase();
+
+        $receiptFiles = $this->phpDevMysql->getFiles();
+
+        $dockerFile = $this->getSpecificFile($receiptFiles, "Dockerfile");
+
+        $this->assertSame($expectedContent, $dockerFile->content);
     }
 }

@@ -191,6 +191,7 @@ class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
         RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
         COPY config/xdebug.ini /etc/php/8.2/mods-available/
         COPY config/startup.sh /startup.sh
+        COPY config/000-default /etc/apache2/sites-available/
         RUN chmod +x /startup.sh
 
         CMD /startup.sh
