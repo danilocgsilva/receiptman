@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\ReceiptApp\Receipts;
 
 use App\ReceiptApp\Receipts\Questions\QuestionEntry;
-use App\ReceiptApp\Receipts\Interfaces\HttpReportableInterface;
 
 class ReceiptCommons
 {
@@ -48,6 +47,7 @@ class ReceiptCommons
     {
         return $this->questionsPairs;
     }
+
     public function setNetworkModeHost(): self
     {
         $this->networkModeHost = true;

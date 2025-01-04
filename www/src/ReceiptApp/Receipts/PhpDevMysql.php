@@ -12,6 +12,7 @@ use App\ReceiptApp\Traits\{
     HttpPortRedirection,
     RemoveQuestionByMethod
 };
+use App\ReceiptApp\Receipts\Questions\QuestionEntry;
 
 class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
 {
@@ -100,6 +101,22 @@ class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
     public function setNoDatabase(): static
     {
         $this->onDatabase = false;
+
+        $arrayPosition = array_search(
+            "setMysqlPortRedirection", 
+            array_map(fn (QuestionEntry $questionEntry) => $questionEntry->methodName, $this->questionsPairs),
+             true
+        );
+        unset($this->questionsPairs[$arrayPosition]);
+        $this->questionsPairs = array_values($this->questionsPairs);
+
+        $arrayPosition = array_search(
+            "setMysqlRootPassword", 
+            array_map(fn (QuestionEntry $questionEntry) => $questionEntry->methodName, $this->questionsPairs),
+             true
+        );
+        unset($this->questionsPairs[$arrayPosition]);
+        $this->questionsPairs = array_values($this->questionsPairs);
         
         return $this;
     }
