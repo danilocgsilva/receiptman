@@ -181,7 +181,7 @@ class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
 
     private function getDockerfile(): string
     {
-        return <<<EOF
+        $dockerContent = <<<EOF
         FROM debian:bookworm-slim
 
         RUN apt-get update
@@ -191,11 +191,20 @@ class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
         RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
         COPY config/xdebug.ini /etc/php/8.2/mods-available/
         COPY config/startup.sh /startup.sh
-        COPY config/000-default.conf /etc/apache2/sites-available/
+        EOF;
+
+        if ($this->rootNameAsPublic) {
+            $dockerContent .= "\nCOPY config/000-default.conf /etc/apache2/sites-available/";
+        }
+
+        $dockerContent .= "\n";
+        $dockerContent .= <<<EOF
         RUN chmod +x /startup.sh
 
         CMD /startup.sh
         EOF;
+
+        return $dockerContent;
     }
 
     private function getXDebugContent(): string
