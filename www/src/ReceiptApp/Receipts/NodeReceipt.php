@@ -48,10 +48,10 @@ class NodeReceipt extends ReceiptCommons implements ReceiptInterface
     private function getDockerfileContent(): string
     {
         return <<<EOF
-FROM node:latest
+        FROM node:latest
 
-CMD while : ; do sleep 1000; done
-EOF;
+        CMD while : ; do sleep 1000; done
+        EOF;
     }
 
     private function buildYamlStructure(): void

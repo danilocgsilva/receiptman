@@ -12,6 +12,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 #[AsCommand(
     name: 'receipt:debian',
@@ -40,6 +41,11 @@ class ReceiptDebianCommand extends Command
         foreach ($this->receipt->getPropertyQuestionsPairs() as $propertyQuestionPair) {
             $this->feedReceipt($propertyQuestionPair);    
         }
+
+        $questionApp = new ConfirmationQuestion(
+            "Should this receipt be hosted in /app? Type yes or y for yes, or no or n for no. Default is no. \n", 
+            false
+        );
 
         $this->makerFile($dirPath,$this->receipt);
         

@@ -55,7 +55,7 @@ class Node extends Command
             $this->receipt->setInfinitLoop();
         }
 
-        $dirPath = $this->askForReceiptFolder();
+        $dirPath = $this->askForReceiptFolderAndWriteFiles();
 
         $io->success(sprintf("Project created in %1\$s.", $dirPath));
 

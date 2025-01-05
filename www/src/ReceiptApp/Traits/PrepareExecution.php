@@ -91,8 +91,7 @@ trait PrepareExecution
         }
         $this->fs->mkdir($dirPath);
 
-        $files = $receipt->getFiles();
-        foreach ($files as $file) {
+        foreach ($receipt->getFiles() as $file) {
             $file->write($dirPath, $this->fs);
         }
     }

@@ -9,7 +9,8 @@ use App\Command\{
     Node,
     Nginx,
     Apache,
-    DotNet
+    DotNet,
+    PhpCommand
 };
 
 require_once './vendor/autoload.php';
@@ -22,5 +23,6 @@ $application->add(new Node());
 $application->add(new Nginx());
 $application->add(new Apache());
 $application->add(new DotNet());
+$application->add(new PhpCommand());
 
 $application->run();

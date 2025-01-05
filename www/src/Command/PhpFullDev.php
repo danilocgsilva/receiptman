@@ -63,7 +63,7 @@ class PhpFullDev extends Command
             $this->receipt->setAppFolder();
         }
 
-        $dirPath = $this->askForReceiptFolder();
+        $dirPath = $this->askForReceiptFolderAndWriteFiles();
 
         $io->success(sprintf("Project created in %1\$s.", $dirPath));
 

@@ -52,7 +52,7 @@ class DotNet extends Command
             $this->feedReceipt($propertyQuestionPair);
         }
 
-        $dirPath = $this->askForReceiptFolder();
+        $dirPath = $this->askForReceiptFolderAndWriteFiles();
 
         $io->success(sprintf("Project created in %1\$s.", $dirPath));
 
