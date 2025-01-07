@@ -29,6 +29,13 @@ class PhpDevMysqlQuestions extends BaseQuestion implements QuestionInterface
             ],
             [
                 new QuestionEntry(
+                    methodName: "addNode",
+                    textQuestion: "Includes node installation? \n",
+                    inputType: InputType::yesorno
+                )
+            ],
+            [
+                new QuestionEntry(
                     methodName: "setMysqlPortRedirection",
                     textQuestion: "Write the port number redirection for mysql\n"
                 )

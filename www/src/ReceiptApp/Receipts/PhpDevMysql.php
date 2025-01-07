@@ -26,6 +26,8 @@ class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
 
     private bool $rootNameAsPublic = false;
 
+    private bool $node = false;
+
     private bool $onDatabase = true;
 
     public function __construct()
@@ -121,6 +123,13 @@ class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
         return $this;
     }
 
+    public function addNode(): static
+    {
+        $this->node = true;
+        
+        return $this;
+    }
+
     private function buildYamlStructure(): void
     {
         $this->yamlStructure = [
@@ -188,7 +197,20 @@ class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
         RUN apt-get upgrade -y
         RUN apt-get install curl git zip -y
         RUN apt-get install php php-mysql php-xdebug php-curl php-zip php-xml php-mbstring -y
-        RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
+        RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer\n
+        EOF;
+
+        if ($this->node) {
+            $nodePartReceipt = <<<EOF
+            RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - 
+            RUN apt-get install -y nodejs
+            
+            EOF;
+
+            $dockerContent .= $nodePartReceipt;
+        }
+
+        $dockerContent .= <<<EOF
         COPY config/xdebug.ini /etc/php/8.2/mods-available/
         COPY config/startup.sh /startup.sh
         EOF;
