@@ -18,17 +18,11 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
     name: 'receipt:debian',
     description: 'Generate the most simple debian container',
 )]
-class ReceiptDebianCommand extends Command
+class ReceiptDebianCommand extends ReceiptmanCommand
 {
     use PrepareExecution;
 
     private Debian $receipt;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->fs = new Filesystem();
-    }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

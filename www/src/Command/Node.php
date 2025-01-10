@@ -19,12 +19,12 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
     name: 'receipt:node',
     description: 'Node Receipt',
 )]
-class Node extends Command
+class Node extends ReceiptmanCommand
 {
     use PrepareExecution;
     use ReceiptFolder;
 
-    private Filesystem $fs;
+    protected Filesystem $fs;
 
     private $input;
 
@@ -33,12 +33,6 @@ class Node extends Command
     private $questionHelper;
 
     private NodeReceipt $receipt;
-    
-    public function __construct()
-    {
-        parent::__construct();
-        $this->fs = new Filesystem();
-    }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

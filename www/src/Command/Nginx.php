@@ -20,24 +20,18 @@ use App\ReceiptApp\Receipts\NginxReceipt;
     name: 'receipt:nginx',
     description: 'Nginx server',
 )]
-class Nginx extends Command
+class Nginx extends ReceiptmanCommand
 {
     use PrepareExecution;
     use ReceiptFolder;
+
+    protected Filesystem $fs;
 
     private $input;
 
     private $output;
 
-    private Filesystem $fs;
-
     private NginxReceipt $receipt;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->fs = new Filesystem();
-    }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

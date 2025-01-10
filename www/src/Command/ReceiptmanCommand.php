@@ -7,7 +7,7 @@ namespace App\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Filesystem\Filesystem;
 
-class ReceiptmanCommand extends Command
+abstract class ReceiptmanCommand extends Command
 {
     public function __construct()
     {

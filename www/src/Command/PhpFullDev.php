@@ -17,12 +17,12 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
     name: 'receipt:php-full-dev',
     description: 'Receipt with PHP with xdebug, Apache and MySQL',
 )]
-class PhpFullDev extends Command
+class PhpFullDev extends ReceiptmanCommand
 {
     use PrepareExecution;
     use ReceiptFolder;
 
-    private Filesystem $fs;
+    protected Filesystem $fs;
 
     private $input;
 
@@ -31,12 +31,6 @@ class PhpFullDev extends Command
     private $questionHelper;
 
     private PhpDevMysql $receipt;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->fs = new Filesystem();
-    }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

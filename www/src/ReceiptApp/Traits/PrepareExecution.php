@@ -11,6 +11,7 @@ use Symfony\Component\Console\Question\{Question, ConfirmationQuestion};
 use Exception;
 use InvalidArgumentException;
 use App\ReceiptApp\Receipts\Questions\InputType;
+
 trait PrepareExecution
 {
     private function prepareExecution(

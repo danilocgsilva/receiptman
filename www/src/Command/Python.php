@@ -17,12 +17,12 @@ use App\ReceiptApp\Traits\PrepareExecution;
     name: 'receipt:python',
     description: 'Receipt with python.',
 )]
-class Python extends Command
+class Python extends ReceiptmanCommand
 {
     use PrepareExecution;
     use ReceiptFolder;
 
-    private Filesystem $fs;
+    protected Filesystem $fs;
 
     private $input;
 
@@ -31,12 +31,6 @@ class Python extends Command
     private $questionHelper;
 
     private PythonReceipt $receipt;
-    
-    public function __construct()
-    {
-        parent::__construct();
-        $this->fs = new Filesystem();
-    }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
