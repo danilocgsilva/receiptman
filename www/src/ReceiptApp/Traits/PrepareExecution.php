@@ -38,7 +38,6 @@ trait PrepareExecution
         return 'output' . DIRECTORY_SEPARATOR . $baseFolderName;
     }
 
-
     /**
      * @param \App\ReceiptApp\Receipts\Questions\QuestionEntry $questionEntry
      * @throws \InvalidArgumentException

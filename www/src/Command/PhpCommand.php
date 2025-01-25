@@ -16,7 +16,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'receipt:php',
     description: 'Php receipt',
 )]
-class PhpCommand extends Command
+class PhpCommand extends ReceiptmanCommand
 {
     use PrepareExecution;
 

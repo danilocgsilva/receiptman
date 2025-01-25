@@ -22,7 +22,7 @@ use Symfony\Component\Filesystem\Filesystem;
     name: 'receipt:dotnet',
     description: '.NET server',
 )]
-class DotNet extends Command
+class DotNet extends ReceiptmanCommand
 {
     use PrepareExecution;
     use ReceiptFolder;
@@ -37,12 +37,6 @@ class DotNet extends Command
 
     private DotNetReceipt $receipt;
 
-    public function __construct()
-    {
-        parent::__construct();
-        $this->fs = new Filesystem();
-    }
-    
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->prepareExecution($input, $output, new DotNetReceipt());

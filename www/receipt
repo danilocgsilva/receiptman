@@ -13,18 +13,21 @@ use App\Command\{
     PhpCommand
 };
 use App\Command\Dev\AddNew;
+use Symfony\Component\Filesystem\Filesystem;
 
 require_once './vendor/autoload.php';
 
+$fileSystem = new Filesystem();
+
 $application = new Application();
-$application->add(new PhpFullDev());
-$application->add(new ReceiptDebianCommand());
-$application->add(new Python());
-$application->add(new Node());
-$application->add(new Nginx());
-$application->add(new Apache());
-$application->add(new DotNet());
-$application->add(new PhpCommand());
+$application->add(new PhpFullDev($fileSystem));
+$application->add(new ReceiptDebianCommand($fileSystem));
+$application->add(new Python($fileSystem));
+$application->add(new Node($fileSystem));
+$application->add(new Nginx($fileSystem));
+$application->add(new Apache($fileSystem));
+$application->add(new DotNet($fileSystem));
+$application->add(new PhpCommand($fileSystem));
 $application->add(new AddNew());
 
 $application->run();

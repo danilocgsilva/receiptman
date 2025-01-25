@@ -8,16 +8,33 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use App\Command\PhpFullDev;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Filesystem\Filesystem;
 
 class PhpFullDevTest extends TestCase
 {
     public function testPhpFullDev()
     {
-        // $application = new Application();
-        // $application->add(new PhpFullDev());
+        $application = new Application();
 
-        // $command = $application->find("receipt:php-full-dev");
-        // $commandTester = new CommandTester($command);
-        // $commandTester->execute([]);
+        $fileSystemMocked = $this->getMockBuilder(Filesystem::class)->getMock();
+        $fileSystemMocked
+            ->expects($this->once())
+            ->method('mkdir')
+            ->with("output/the_container_test2");
+
+        $application->add(new PhpFullDev($fileSystemMocked));
+
+        $command = $application->find("receipt:php-full-dev");
+        $commandTester = new CommandTester($command);
+
+        $commandTester->setInputs([
+            "no", "the_container_test2", 
+            "no", "no", 
+            "3306", "no", 
+            "no", "no",
+            "the_container_test2"
+        ]);
+
+        $commandTester->execute([]);
     }
 }
