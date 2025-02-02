@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\ReceiptApp\Traits;
 
 use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;

@@ -32,7 +32,6 @@ class PythonReceipt extends ReceiptCommons implements ReceiptInterface
         ];
     }
 
-
     private function buildYamlStructure(): void
     {
         $this->yamlStructure = [

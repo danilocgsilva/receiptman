@@ -17,18 +17,33 @@ class DotNetTestCommandTest extends TestCase
     public function amountQuestionsDone()
     {
         $application = new Application();
-
         $fileSystemMocked = $this->getFileSystemMocked(path: "output/my_dotnet_first_container");
-
         $application->add(new DotNetCommand($fileSystemMocked));
-
         $command = $application->find("receipt:dotnet");
-
         $commandTester = new CommandTester($command);
-
         $commandTester->setInputs([
             "my_dotnet_first_container", "no",
-            "no", "no", "my_dotnet_first_container"
+            "no", "no", 
+            "no", "my_dotnet_first_container"
+        ]);
+
+        $commandTester->execute([]);
+    }
+
+
+    #[Test]
+    public function amountQuestionsDoneWithDatabase()
+    {
+        $application = new Application();
+        $fileSystemMocked = $this->getFileSystemMocked(path: "output/my_dotnet_first_container");
+        $application->add(new DotNetCommand($fileSystemMocked));
+        $command = $application->find("receipt:dotnet");
+        $commandTester = new CommandTester($command);
+        $commandTester->setInputs([
+            "my_dotnet_first_container", "no",
+            "no", "no", 
+            "yes", "3306",
+            "somestrongpassword", "my_dotnet_first_container"
         ]);
 
         $commandTester->execute([]);

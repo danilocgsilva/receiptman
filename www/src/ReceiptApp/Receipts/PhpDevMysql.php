@@ -104,21 +104,8 @@ class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
     {
         $this->onDatabase = false;
 
-        $arrayPosition = array_search(
-            "setMysqlPortRedirection", 
-            array_map(fn (QuestionEntry $questionEntry) => $questionEntry->methodName, $this->questionsPairs),
-             true
-        );
-        unset($this->questionsPairs[$arrayPosition]);
-        $this->questionsPairs = array_values($this->questionsPairs);
-
-        $arrayPosition = array_search(
-            "setMysqlRootPassword", 
-            array_map(fn (QuestionEntry $questionEntry) => $questionEntry->methodName, $this->questionsPairs),
-             true
-        );
-        unset($this->questionsPairs[$arrayPosition]);
-        $this->questionsPairs = array_values($this->questionsPairs);
+        $this->removeQuestionByMethod("setMysqlPortRedirection", $this->questionsPairs);
+        $this->removeQuestionByMethod("setMysqlRootPassword", $this->questionsPairs);
         
         return $this;
     }

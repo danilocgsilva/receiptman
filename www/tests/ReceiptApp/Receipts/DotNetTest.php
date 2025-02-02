@@ -13,7 +13,7 @@ class DotNetTest extends TestCase
     use GetSpecificFileTrait;
 
     private DotNet $receipt;
-    
+
     function setUp(): void
     {
         $this->receipt = new DotNet();
@@ -25,7 +25,7 @@ class DotNetTest extends TestCase
         while ($question = $this->receipt->getNextQuestionPair()) {
             $questions[] = $question;
         }
-        $this->assertCount(4, $questions);
+        $this->assertCount(5, $questions);
     }
 
     public function testDockerComposeFileContent(): void
