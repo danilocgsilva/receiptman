@@ -6,7 +6,8 @@ namespace App\ReceiptApp\Receipts\Questions;
 
 use App\ReceiptApp\Receipts\Interfaces\QuestionInterface;
 
-use App\ReceiptApp\Receipts\Questions\InputType;
+use App\ReceiptApp\Receipts\Questions\Types\InputType;
+use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
 
 class BaseQuestion implements QuestionInterface
 {

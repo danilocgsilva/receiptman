@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\ReceiptApp\Receipts\Questions;
+namespace App\ReceiptApp\Receipts\Questions\Types;
+
+use App\ReceiptApp\Receipts\Questions\Types\InputType;
 
 class QuestionEntry
 {

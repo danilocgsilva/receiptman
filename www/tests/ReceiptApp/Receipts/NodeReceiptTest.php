@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\ReceiptApp\Receipts;
 
 use App\ReceiptApp\Receipts\NodeReceipt;
-use App\ReceiptApp\Receipts\Questions\QuestionEntry;
+use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
 use PHPUnit\Framework\TestCase;
 use App\ReceiptApp\File;
 use App\Tests\Traits\GetSpecificFileTrait;

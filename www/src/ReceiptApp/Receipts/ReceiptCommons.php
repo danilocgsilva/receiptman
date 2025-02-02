@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\ReceiptApp\Receipts;
 
-use App\ReceiptApp\Receipts\Questions\QuestionEntry;
+use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
 
 class ReceiptCommons
 {
@@ -19,7 +19,7 @@ class ReceiptCommons
     protected int $currentQuestion = 0;
     
     /**
-     * @var \App\ReceiptApp\Receipts\Questions\QuestionEntry[]
+     * @var \App\ReceiptApp\Receipts\Questions\Types\QuestionEntry[]
      */
     protected array $questionsPairs;
 
@@ -41,7 +41,7 @@ class ReceiptCommons
     }
 
     /**
-     * @return \App\ReceiptApp\Receipts\Questions\QuestionEntry[]
+     * @return \App\ReceiptApp\Receipts\Questions\Types\QuestionEntry[]
      */
     public function getPropertyQuestionsPairs(): array
     {
@@ -64,7 +64,7 @@ class ReceiptCommons
     }
 
     /**
-     * @return \App\ReceiptApp\Receipts\Questions\QuestionEntry|null
+     * @return \App\ReceiptApp\Receipts\Questions\Types\QuestionEntry|null
      */
     public function getNextQuestionPair(): QuestionEntry|null
     {

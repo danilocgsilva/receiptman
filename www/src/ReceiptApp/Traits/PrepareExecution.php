@@ -2,7 +2,7 @@
 
 namespace App\ReceiptApp\Traits;
 
-use App\ReceiptApp\Receipts\Questions\QuestionEntry;
+use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
 use App\ReceiptApp\Receipts\Interfaces\ReceiptInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -10,7 +10,7 @@ use DateTime;
 use Symfony\Component\Console\Question\{Question, ConfirmationQuestion};
 use Exception;
 use InvalidArgumentException;
-use App\ReceiptApp\Receipts\Questions\InputType;
+use App\ReceiptApp\Receipts\Questions\Types\InputType;
 
 trait PrepareExecution
 {
@@ -39,7 +39,7 @@ trait PrepareExecution
     }
 
     /**
-     * @param \App\ReceiptApp\Receipts\Questions\QuestionEntry $questionEntry
+     * @param \App\ReceiptApp\Receipts\Questions\Types\QuestionEntry $questionEntry
      * @throws \InvalidArgumentException
      * @return void
      */

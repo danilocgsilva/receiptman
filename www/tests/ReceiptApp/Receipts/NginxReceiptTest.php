@@ -6,7 +6,7 @@ namespace App\Tests\ReceiptApp\Receipts;
 
 use App\Tests\Traits\GetSpecificFileTrait;
 use PHPUnit\Framework\TestCase;
-use App\ReceiptApp\Receipts\Questions\QuestionEntry;
+use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
 use App\ReceiptApp\Receipts\NginxReceipt;
 use App\ReceiptApp\File;
 

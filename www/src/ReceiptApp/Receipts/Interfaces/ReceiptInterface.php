@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\ReceiptApp\Receipts\Interfaces;
 
-use App\ReceiptApp\Receipts\Questions\QuestionEntry;
+use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
 
 /**
  * @template T

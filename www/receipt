@@ -9,7 +9,7 @@ use App\Command\{
     Node,
     Nginx,
     Apache,
-    DotNet,
+    DotNetCommand,
     PhpCommand
 };
 use App\Command\Dev\AddNew;
@@ -26,7 +26,7 @@ $application->add(new Python($fileSystem));
 $application->add(new Node($fileSystem));
 $application->add(new Nginx($fileSystem));
 $application->add(new Apache($fileSystem));
-$application->add(new DotNet($fileSystem));
+$application->add(new DotNetCommand($fileSystem));
 $application->add(new PhpCommand($fileSystem));
 $application->add(new AddNew());
 

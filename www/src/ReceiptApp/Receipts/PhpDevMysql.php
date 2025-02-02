@@ -12,7 +12,7 @@ use App\ReceiptApp\Traits\{
     HttpPortRedirection,
     RemoveQuestionByMethod
 };
-use App\ReceiptApp\Receipts\Questions\QuestionEntry;
+use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
 
 class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
 {
@@ -82,7 +82,7 @@ class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
     }
 
     /**
-     * @return \App\ReceiptApp\Receipts\Questions\QuestionEntry[]
+     * @return \App\ReceiptApp\Receipts\Questions\Types\QuestionEntry[]
      */
     public function getPropertyQuestionsPairs(): array
     {

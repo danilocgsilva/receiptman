@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\ReceiptApp\Receipts\Questions;
 
-use App\ReceiptApp\Receipts\Questions\QuestionEntry;
+use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
 use PHPUnit\Framework\TestCase;
 use App\ReceiptApp\Receipts\Questions\NginxQuestions;
 

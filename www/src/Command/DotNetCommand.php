@@ -22,12 +22,12 @@ use Symfony\Component\Filesystem\Filesystem;
     name: 'receipt:dotnet',
     description: '.NET server',
 )]
-class DotNet extends ReceiptmanCommand
+class DotNetCommand extends ReceiptmanCommand
 {
     use PrepareExecution;
     use ReceiptFolder;
 
-    private Filesystem $fs;
+    protected Filesystem $fs;
 
     private $input;
 

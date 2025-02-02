@@ -10,7 +10,7 @@ trait RemoveQuestionByMethod
 {
     /**
      * @param string $method
-     * @param \App\ReceiptApp\Receipts\Questions\QuestionEntry[] $question
+     * @param \App\ReceiptApp\Receipts\Questions\Types\QuestionEntry[] $question
      * @return bool
      */
     private function removeQuestionByMethod(string $method, array &$questions): bool

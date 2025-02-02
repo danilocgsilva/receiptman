@@ -7,20 +7,19 @@ namespace App\Tests\Command;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use App\Command\PhpFullDev;
+use App\Tests\Traits\MockFileSystemTrait;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\Filesystem\Filesystem;
+
 
 class PhpFullDevTest extends TestCase
 {
+    use MockFileSystemTrait;
+
     public function testPhpFullDev()
     {
         $application = new Application();
 
-        $fileSystemMocked = $this->getMockBuilder(Filesystem::class)->getMock();
-        $fileSystemMocked
-            ->expects($this->once())
-            ->method('mkdir')
-            ->with("output/the_container_test2");
+        $fileSystemMocked = $this->getFileSystemMocked("output/the_container_test2");
 
         $application->add(new PhpFullDev($fileSystemMocked));
 

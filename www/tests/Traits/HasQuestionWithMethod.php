@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Tests\Traits;
+declare(strict_types=1);
 
-use App\ReceiptApp\File;
-use App\ReceiptApp\Receipts\Questions\QuestionEntry;
+namespace App\Tests\Traits;
 
 trait HasQuestionWithMethod
 {
     /**
      * @param string $methodName
-     * @param \App\ReceiptApp\Receipts\Questions\QuestionEntry[] $questions
+     * @param \App\ReceiptApp\Receipts\Questions\Types\QuestionEntry[] $questions
      * @return bool
      */
     private function hasQuestionWithMethod(string $methodName, array $questions): bool
