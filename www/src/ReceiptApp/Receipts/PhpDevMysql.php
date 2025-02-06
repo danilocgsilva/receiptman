@@ -198,19 +198,19 @@ class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
         }
 
         $dockerContent .= <<<EOF
-        COPY config/xdebug.ini /etc/php/8.2/mods-available/
-        COPY config/startup.sh /startup.sh
+        COPY /config/xdebug.ini /etc/php/8.2/mods-available/
+        COPY /config/startup.sh /startup.sh
         EOF;
 
         if ($this->rootNameAsPublic) {
-            $dockerContent .= "\nCOPY config/000-default.conf /etc/apache2/sites-available/";
+            $dockerContent .= "\nCOPY /config/000-default.conf /etc/apache2/sites-available/";
         }
 
         $dockerContent .= "\n";
         $dockerContent .= <<<EOF
         RUN chmod +x /startup.sh
 
-        CMD /startup.sh
+        CMD sh /startup.sh
         EOF;
 
         return $dockerContent;
