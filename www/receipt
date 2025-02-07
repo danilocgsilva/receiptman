@@ -10,7 +10,8 @@ use App\Command\{
     Nginx,
     Apache,
     DotNetCommand,
-    PhpCommand
+    PhpCommand,
+    PostgreCommand
 };
 use App\Command\Dev\AddNew;
 use Symfony\Component\Filesystem\Filesystem;
@@ -28,6 +29,7 @@ $application->add(new Nginx($fileSystem));
 $application->add(new Apache($fileSystem));
 $application->add(new DotNetCommand($fileSystem));
 $application->add(new PhpCommand($fileSystem));
+$application->add(new PostgreCommand($fileSystem));
 $application->add(new AddNew());
 
 $application->run();
