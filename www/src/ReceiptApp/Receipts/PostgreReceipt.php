@@ -7,9 +7,17 @@ namespace App\ReceiptApp\Receipts;
 use App\ReceiptApp\Receipts\Interfaces\ReceiptInterface;
 use App\ReceiptApp\File;
 use Symfony\Component\Yaml\Yaml;
-
+use App\ReceiptApp\Receipts\Questions\PostgreQuestions;
+use App\ReceiptApp\Traits\DatabaseRootPasswordReceiptTrait;
 class PostgreReceipt extends ReceiptCommons implements ReceiptInterface
 {
+    use DatabaseRootPasswordReceiptTrait;
+    
+    public function __construct()
+    {
+        $this->questionsPairs = (new PostgreQuestions())->getPropertyQuestionPair();
+    }
+
     /**
      * @inheritDoc
      */
@@ -31,8 +39,11 @@ class PostgreReceipt extends ReceiptCommons implements ReceiptInterface
                 $this->name => [
                     'image' => 'postgres',
                     'container_name' => $this->name,
+                    'ports' => [
+                        '5432:5432'
+                    ],
                     'environment' => [
-                        "POSTGRES_PASSWORD" => "postgresstrongpassword"
+                        "POSTGRES_PASSWORD" => $this->databaseRootPassword
                     ]
                 ]
             ]

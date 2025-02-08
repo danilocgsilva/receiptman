@@ -97,7 +97,7 @@ class PhpDevMysqlTest extends TestCase
     {
         $this->phpDevMysql->setName("testing_env2")
             ->setHttpPortRedirection("4000")
-            ->setMysqlPortRedirection(mysqlPortRedirection: "3333")
+            ->setMysqlPortRedirection("3333")
             ->setMysqlRootPassword("opass2")
             ->setSshVolume();
 
@@ -132,7 +132,7 @@ class PhpDevMysqlTest extends TestCase
     {
         $this->phpDevMysql->setName("count_me")
             ->setHttpPortRedirection("5000")
-            ->setMysqlPortRedirection(mysqlPortRedirection: "4333")
+            ->setMysqlPortRedirection("4333")
             ->setMysqlRootPassword("opass2");
 
         $this->assertCount(5, $this->phpDevMysql->getFiles());
@@ -142,7 +142,7 @@ class PhpDevMysqlTest extends TestCase
     {
         $this->phpDevMysql->setName("specific_files")
             ->setHttpPortRedirection("5000")
-            ->setMysqlPortRedirection(mysqlPortRedirection: "4333")
+            ->setMysqlPortRedirection("4333")
             ->setMysqlRootPassword("opass3");
 
         $receiptFiles = $this->phpDevMysql->getFiles();
@@ -173,8 +173,8 @@ class PhpDevMysqlTest extends TestCase
     {
         $this->phpDevMysql->setName(name: "public_root")
             ->setHttpPortRedirection(httpPortRedirection: "5000")
-            ->setMysqlPortRedirection(mysqlPortRedirection: "4333")
-            ->setMysqlRootPassword(mysqRootPassword: "opass3")
+            ->setMysqlPortRedirection("4333")
+            ->setMysqlRootPassword("opass3")
             ->setPublicFolderAsHost();
 
         $receiptFiles = $this->phpDevMysql->getFiles();
@@ -230,7 +230,7 @@ class PhpDevMysqlTest extends TestCase
         $this->phpDevMysql
             ->setName(name: "the_beloved_environment.")
             ->setHttpPortRedirection("2013")
-            ->setMysqlPortRedirection(mysqlPortRedirection: "3433")
+            ->setMysqlPortRedirection("3433")
             ->setMysqlRootPassword("mysupersecurepassword");
 
         $files = $this->phpDevMysql->getFiles();
