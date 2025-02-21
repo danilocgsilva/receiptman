@@ -135,7 +135,7 @@ class PhpDevMysqlTest extends TestCase
             ->setMysqlPortRedirection("4333")
             ->setMysqlRootPassword("opass2");
 
-        $this->assertCount(5, $this->phpDevMysql->getFiles());
+        $this->assertCount(6, $this->phpDevMysql->getFiles());
     }
 
     public function testGetSpecificFiles(): void
@@ -179,7 +179,7 @@ class PhpDevMysqlTest extends TestCase
 
         $receiptFiles = $this->phpDevMysql->getFiles();
 
-        $this->assertCount(6, $receiptFiles);
+        $this->assertCount(7, $receiptFiles);
     }
 
     public function testTypeOfPropertiesQuestionPairs(): void
@@ -235,7 +235,7 @@ class PhpDevMysqlTest extends TestCase
 
         $files = $this->phpDevMysql->getFiles();
 
-        $this->assertCount(5, $files);
+        $this->assertCount(6, $files);
     }
 
     public function testGetFilesWithoutRequiringDatabase(): void
@@ -247,7 +247,7 @@ class PhpDevMysqlTest extends TestCase
 
         $files = $this->phpDevMysql->getFiles();
 
-        $this->assertCount(5, $files);
+        $this->assertCount(6, $files);
     }
 
     public function testForgetSetContainerNameAndGetFiles(): void
@@ -272,6 +272,7 @@ class PhpDevMysqlTest extends TestCase
         RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
         COPY /config/xdebug.ini /etc/php/8.2/mods-available/
         COPY /config/startup.sh /startup.sh
+        COPY /config/apache2.conf /etc/apache2/
         RUN chmod +x /startup.sh
 
         CMD sh /startup.sh
@@ -301,6 +302,7 @@ class PhpDevMysqlTest extends TestCase
         RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
         COPY /config/xdebug.ini /etc/php/8.2/mods-available/
         COPY /config/startup.sh /startup.sh
+        COPY /config/apache2.conf /etc/apache2/
         COPY /config/000-default.conf /etc/apache2/sites-available/
         RUN chmod +x /startup.sh
 
@@ -334,6 +336,7 @@ class PhpDevMysqlTest extends TestCase
         RUN apt-get install -y nodejs
         COPY /config/xdebug.ini /etc/php/8.2/mods-available/
         COPY /config/startup.sh /startup.sh
+        COPY /config/apache2.conf /etc/apache2/
         RUN chmod +x /startup.sh
 
         CMD sh /startup.sh
