@@ -53,15 +53,16 @@ trait PrepareExecution
             return;
         }
 
+        $answer = $this->askYesOrNo($questionEntry->textQuestion);
         switch ($questionEntry->inputType) {
             case InputType::yesorno:
-                if ($this->askYesOrNo($questionEntry->textQuestion)) {
+                if ($answer) {
                     $this->receipt->{$questionEntry->methodName}();
                 }
                 break;
 
             case InputType::yesornoinverse:
-                if (!$this->askYesOrNo($questionEntry->textQuestion)) {
+                if (!$answer) {
                     $this->receipt->{$questionEntry->methodName}();
                 }
                 break;

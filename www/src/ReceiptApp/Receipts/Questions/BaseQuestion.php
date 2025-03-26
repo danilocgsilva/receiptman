@@ -28,7 +28,8 @@ class BaseQuestion implements QuestionInterface
             ),
             new QuestionEntry(
                 methodName: "setSshVolume",
-                textQuestion: "Should I mount the .ssh in a local volume?\n"
+                textQuestion: "Should I mount the .ssh in a local volume?\n",
+                inputType: InputType::yesorno
             ),
         ];
     }
