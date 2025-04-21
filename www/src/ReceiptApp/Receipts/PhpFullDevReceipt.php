@@ -12,9 +12,8 @@ use App\ReceiptApp\Traits\{
     HttpPortRedirection,
     RemoveQuestionByMethod
 };
-use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
 
-class PhpDevMysql extends ReceiptCommons implements ReceiptInterface
+class PhpFullDevReceipt extends ReceiptCommons implements ReceiptInterface
 {
     use HttpPortRedirection;
     use RemoveQuestionByMethod;

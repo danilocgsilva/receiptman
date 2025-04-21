@@ -3,7 +3,7 @@
 
 use Symfony\Component\Console\Application;
 use App\Command\{
-    ReceiptDebianCommand,
+    DebianCommand,
     PhpFullDevCommand,
     PythonCommand,
     NodeCommand,
@@ -22,7 +22,7 @@ $fileSystem = new Filesystem();
 
 $application = new Application();
 $application->add(new PhpFullDevCommand($fileSystem));
-$application->add(new ReceiptDebianCommand($fileSystem));
+$application->add(new DebianCommand($fileSystem));
 $application->add(new PythonCommand($fileSystem));
 $application->add(new NodeCommand($fileSystem));
 $application->add(new NginxCommand($fileSystem));

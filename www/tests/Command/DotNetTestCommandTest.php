@@ -30,7 +30,6 @@ class DotNetTestCommandTest extends TestCase
         $commandTester->execute([]);
     }
 
-
     #[Test]
     public function amountQuestionsDoneWithDatabase()
     {

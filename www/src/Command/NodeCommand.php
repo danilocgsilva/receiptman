@@ -10,7 +10,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Filesystem\Filesystem;
 use App\ReceiptApp\Traits\PrepareExecution;
 use App\ReceiptApp\Receipts\NodeReceipt;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
@@ -23,8 +22,6 @@ class NodeCommand extends ReceiptmanCommand
 {
     use PrepareExecution;
     use ReceiptFolder;
-
-    protected Filesystem $fs;
 
     private $input;
 

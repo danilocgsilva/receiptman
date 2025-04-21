@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\ReceiptApp\Receipts;
 
-use App\ReceiptApp\Receipts\PhpDevMysql;
+use App\ReceiptApp\Receipts\PhpFullDevReceipt;
 use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
 use PHPUnit\Framework\TestCase;
 use App\Tests\Traits\{
@@ -19,11 +19,11 @@ class PhpDevMysqlTest extends TestCase
     use GetSpecificFileTrait;
     use HasQuestionWithMethod;
 
-    private PhpDevMysql $phpDevMysql;
+    private PhpFullDevReceipt $phpDevMysql;
 
     function setUp(): void
     {
-        $this->phpDevMysql = new PhpDevMysql();
+        $this->phpDevMysql = new PhpFullDevReceipt();
     }
 
     public function testDockerComposeContent(): void

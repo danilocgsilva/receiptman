@@ -12,7 +12,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use App\ReceiptApp\Traits\PrepareExecution;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Filesystem\Filesystem;
 
 #[AsCommand(
     name: 'receipt:postgre',
@@ -26,8 +25,6 @@ class PostgreCommand extends ReceiptmanCommand
     private $input;
 
     private $output;
-
-    protected Filesystem $fs;
 
     private $questionHelper;
 

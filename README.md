@@ -1,17 +1,82 @@
 # Receiptman
 
-A command line application that automatically generates Docker environment.
+[Development patterns](#Development-patterns)
 
-## How to use
+The application is a *Docker receipt maker*.
 
-**I assume that the user environment already have a Docker installed locally**
+To make a Docker receipt, that are some steps by which the application flows.
 
-1. Navigate to the folder root.
-2. Run `docker compose up -d --build`
-3. Make the root file `receipt` executable: type in terminal `chmod +x receipt`
-4. Run the receipt script: type in terminal `./receipt`
+Know that this is a command line application.
 
-The las command will give you hints how to use. It will present you everything that the script can currently do. For exemple, if you want to create a php environment, execute in terminal:
+This application uses the Symfony as a framework.
+
+The application startup happens right in the project root, through rhe `receipt` file. To start the program, you have a few options:
+
+**1. Through bash access**
+
+The first line from `receipt` have the sign to bash that this is a PHP script.
+
 ```
-./receipt receipt:php-full-dev
+#!/usr/bin/env php
+```
+
+This allow to use as a normal bash script. To run the application, do in command line:
+
+```
+./receipt
+```
+
+**2. Explicitly accessing the php interpreter through the command line**
+
+Once inside the environmento, run:
+
+```
+php receipt
+```
+
+**3. Through local machine**
+
+You can use the script outside the container. Just run:
+
+```
+docker exec -it receiptman /var/www/receipt
+```
+**4. Through local machine using convenient shell**
+
+(Possible only on a Unix like system, eg. Mac, Linux)
+
+In the project root, you can run outside the container the following script located in the project root:
+```
+./receiptman
+```
+
+## Development patterns
+
+The application flow starts at the `receipt` script, which is based on Symfony.
+
+### First flow layer: *Commands*
+
+The lowest level relies on *Commands*, which are the references all loaded in the very first file. They are based on `Symfony\Component\Console\Command\Command`. So it depends upon commands patterns provided by the framework and represents the *gate* to the application rules.
+
+#### Available commands:
+
+* [PhpFullDevCommand](www/src/Command/PhpCommand.php)
+* [PhpCommand](www/src/Command/PhpCommand.php)
+* [PythonCommand](www/src/Command/PythonCommand.php)
+* [NodeCommand](www/src/Command/NodeCommand.php)
+* [NginxCommand](www/src/Command/NginxCommand.php)
+* [ApacheCommand](www/src/Command/ApacheCommand.php)
+* [DotNetCommand](www/src/Command/DotNetCommand.php)
+* [PostgreCommand](www/src/Command/PostgreCommand.php)
+
+### Second flow layer: *Receipts*
+
+**Couped to the *commands***, we have the *receipts*. Those are the objects responsible to the environment rules. They are responsible to the details of receipts, and privides method to allow the environment customization.
+
+### Glue layer: *Questions*
+
+Another important type of object for the application flow are the *Questions*. These are the classes that link the Symfony command interface to the *receipts*. In another words, the questions translates Symfony question into their respective receipt methods, allowing the user customize the receipt through the questions interface provided by Symfony. It' is also worth to mention that Questions are *tightly coupled with Commands and Receitps. So for each environment, we have the trio that must works and exists together:
+
+```
+Commands <--- Questions ---> Receipt
 ```

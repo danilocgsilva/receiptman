@@ -10,7 +10,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
-use App\ReceiptApp\Receipts\PhpDevMysql;
 use App\ReceiptApp\Traits\PrepareExecution;
 
 #[AsCommand(
@@ -21,8 +20,6 @@ class PythonCommand extends ReceiptmanCommand
 {
     use PrepareExecution;
     use ReceiptFolder;
-
-    protected Filesystem $fs;
 
     private $input;
 

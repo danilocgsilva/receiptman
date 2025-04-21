@@ -7,16 +7,10 @@ namespace App\ReceiptApp\Receipts;
 use App\ReceiptApp\File;
 use Symfony\Component\Yaml\Yaml;
 use App\ReceiptApp\Receipts\Questions\DebianQuestion;
-use App\ReceiptApp\Receipts\Questions\QuestionInterface;
-use App\ReceiptApp\Receipts\Interfaces\{
-    HttpReportableInterface,
-    ReceiptInterface
-};
+use App\ReceiptApp\Receipts\Interfaces\ReceiptInterface;
 
-class Debian extends ReceiptCommons implements ReceiptInterface
+class DebianReceipt extends ReceiptCommons implements ReceiptInterface
 {
-    private QuestionInterface $questions;
-
     public function __construct()
     {
         $this->questionsPairs = (new DebianQuestion())->getPropertyQuestionPair();

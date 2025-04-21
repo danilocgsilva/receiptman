@@ -8,8 +8,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Filesystem\Filesystem;
-use App\ReceiptApp\Receipts\PhpDevMysql;
+use App\ReceiptApp\Receipts\PhpFullDevReceipt;
 use App\ReceiptApp\Traits\PrepareExecution;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
@@ -22,19 +21,17 @@ class PhpFullDevCommand extends ReceiptmanCommand
     use PrepareExecution;
     use ReceiptFolder;
 
-    protected Filesystem $fs;
-
     private $input;
 
     private $output;
 
     private $questionHelper;
 
-    private PhpDevMysql $receipt;
+    private PhpFullDevReceipt $receipt;
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->prepareExecution($input, $output, new PhpDevMysql());
+        $this->prepareExecution($input, $output, new PhpFullDevReceipt());
 
         $io = new SymfonyStyle($input, $output);
 

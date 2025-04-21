@@ -16,7 +16,6 @@ use Symfony\Component\Console\{
 use App\ReceiptApp\Receipts\DotNet as DotNetReceipt;
 use App\ReceiptApp\Traits\PrepareExecution;
 use App\Command\Traits\ReceiptFolder;
-use Symfony\Component\Filesystem\Filesystem;
 
 #[AsCommand(
     name: 'receipt:dotnet',
@@ -26,8 +25,6 @@ class DotNetCommand extends ReceiptmanCommand
 {
     use PrepareExecution;
     use ReceiptFolder;
-
-    protected Filesystem $fs;
 
     private $input;
 
