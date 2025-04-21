@@ -19,7 +19,7 @@ use App\Command\Traits\ReceiptFolder;
     name: 'receipt:apache',
     description: 'Apache server',
 )]
-class Apache extends ReceiptmanCommand
+class ApacheCommand extends ReceiptmanCommand
 {
     use PrepareExecution;
     use ReceiptFolder;

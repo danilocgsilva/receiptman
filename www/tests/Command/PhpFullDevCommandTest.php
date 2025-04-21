@@ -6,12 +6,11 @@ namespace App\Tests\Command;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
-use App\Command\PhpFullDev;
+use App\Command\PhpFullDevCommand;
 use App\Tests\Traits\MockFileSystemTrait;
 use Symfony\Component\Console\Tester\CommandTester;
 
-
-class PhpFullDevTest extends TestCase
+class PhpFullDevCommandTest extends TestCase
 {
     use MockFileSystemTrait;
 
@@ -21,7 +20,7 @@ class PhpFullDevTest extends TestCase
 
         $fileSystemMocked = $this->getFileSystemMocked("output/the_container_test2");
 
-        $application->add(new PhpFullDev($fileSystemMocked));
+        $application->add(new PhpFullDevCommand($fileSystemMocked));
 
         $command = $application->find("receipt:php-full-dev");
         $commandTester = new CommandTester($command);

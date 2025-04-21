@@ -1,23 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use App\Command\Traits\ReceiptFolder;
-use App\ReceiptApp\Receipts\PythonReceipt;
+use App\ReceiptApp\Traits\PrepareExecution;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\{
+    Input\InputInterface,
+    Output\OutputInterface
+};
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
-use App\ReceiptApp\Receipts\PhpDevMysql;
-use App\ReceiptApp\Traits\PrepareExecution;
+use App\ReceiptApp\Receipts\NginxReceipt;
 
 #[AsCommand(
-    name: 'receipt:python',
-    description: 'Receipt with python.',
+    name: 'receipt:nginx',
+    description: 'Nginx server',
 )]
-class Python extends ReceiptmanCommand
+class NginxCommand extends ReceiptmanCommand
 {
     use PrepareExecution;
     use ReceiptFolder;
@@ -28,13 +31,11 @@ class Python extends ReceiptmanCommand
 
     private $output;
 
-    private $questionHelper;
-
-    private PythonReceipt $receipt;
+    private NginxReceipt $receipt;
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->prepareExecution($input, $output, new PythonReceipt());
+        $this->prepareExecution($input, $output, new NginxReceipt());
 
         $io = new SymfonyStyle($input, $output);
 

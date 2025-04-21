@@ -4,11 +4,11 @@
 use Symfony\Component\Console\Application;
 use App\Command\{
     ReceiptDebianCommand,
-    PhpFullDev,
-    Python,
-    Node,
-    Nginx,
-    Apache,
+    PhpFullDevCommand,
+    PythonCommand,
+    NodeCommand,
+    NginxCommand,
+    ApacheCommand,
     DotNetCommand,
     PhpCommand,
     PostgreCommand
@@ -21,12 +21,12 @@ require_once './vendor/autoload.php';
 $fileSystem = new Filesystem();
 
 $application = new Application();
-$application->add(new PhpFullDev($fileSystem));
+$application->add(new PhpFullDevCommand($fileSystem));
 $application->add(new ReceiptDebianCommand($fileSystem));
-$application->add(new Python($fileSystem));
-$application->add(new Node($fileSystem));
-$application->add(new Nginx($fileSystem));
-$application->add(new Apache($fileSystem));
+$application->add(new PythonCommand($fileSystem));
+$application->add(new NodeCommand($fileSystem));
+$application->add(new NginxCommand($fileSystem));
+$application->add(new ApacheCommand($fileSystem));
 $application->add(new DotNetCommand($fileSystem));
 $application->add(new PhpCommand($fileSystem));
 $application->add(new PostgreCommand($fileSystem));

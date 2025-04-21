@@ -17,7 +17,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
     name: 'receipt:php-full-dev',
     description: 'Receipt with PHP with xdebug, Apache and MySQL',
 )]
-class PhpFullDev extends ReceiptmanCommand
+class PhpFullDevCommand extends ReceiptmanCommand
 {
     use PrepareExecution;
     use ReceiptFolder;
