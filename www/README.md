@@ -54,3 +54,5 @@ In the project root, you can run outside the container the following script loca
 ## Development patterns
 
 The application flow starts at the `receipt` script, which is based on Symfony.
+
+The lowest level relies on *Commands*, which are the references all loaded in the very first file. They are based on `Symfony\Component\Console\Command\Command`. So it depends upon commands patterns provided by the framework and represents the *gate* to the application rules.
