@@ -17,7 +17,7 @@ class DebianCommandTest extends TestCase
     public function amountQuestionsDone()
     {
         $application = new Application();
-        $fileSystemMocked = $this->getFileSystemMocked(path: "output/my_debian_container");
+        $fileSystemMocked = $this->getFileSystemMocked("output/my_debian_container", 3);
         $application->add(new DebianCommand($fileSystemMocked));
         $command = $application->find("receipt:debian");
         $commandTester = new CommandTester($command);

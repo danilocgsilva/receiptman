@@ -12,6 +12,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use App\Command\Traits\ReceiptFolder;
+use Symfony\Component\Filesystem\Filesystem;
 
 #[AsCommand(
     name: 'receipt:debian',
@@ -24,6 +25,8 @@ class DebianCommand extends ReceiptmanCommand
 
     private $input;
 
+    protected Filesystem $fs;
+
     private $output;
 
     private $questionHelper;
@@ -32,7 +35,7 @@ class DebianCommand extends ReceiptmanCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->prepareExecution($input, $output, new DebianReceipt());
+        $this->prepareExecution($input, $output, new DebianReceipt($this->fs));
         
         $io = new SymfonyStyle($input, $output);
 

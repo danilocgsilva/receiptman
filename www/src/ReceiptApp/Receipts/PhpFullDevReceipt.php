@@ -12,6 +12,7 @@ use App\ReceiptApp\Traits\{
     HttpPortRedirection,
     RemoveQuestionByMethod
 };
+use Symfony\Component\Filesystem\Filesystem;
 
 class PhpFullDevReceipt extends ReceiptCommons implements ReceiptInterface
 {
@@ -29,8 +30,9 @@ class PhpFullDevReceipt extends ReceiptCommons implements ReceiptInterface
 
     private bool $onDatabase = true;
 
-    public function __construct()
+    public function __construct(Filesystem $fs)
     {
+        parent::__construct($fs);
         $this->questionsPairs = (new PhpDevMysqlQuestions())->getPropertyQuestionPair();
     }
 
@@ -60,21 +62,21 @@ class PhpFullDevReceipt extends ReceiptCommons implements ReceiptInterface
         $this->buildYamlStructure();
         
         $files = [
-            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2)),
-            new File("Dockerfile", $this->getDockerfile()),
-            new File("config/xdebug.ini", $this->getXDebugContent()),
-            new File("config/startup.sh", $this->getStartupContent()),
-            new File("config/apache2.conf", $this->getApacheConfigs())
+            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs),
+            new File("Dockerfile", $this->getDockerfile(), $this->fs),
+            new File("config/xdebug.ini", $this->getXDebugContent(), $this->fs),
+            new File("config/startup.sh", $this->getStartupContent(), $this->fs),
+            new File("config/apache2.conf", $this->getApacheConfigs(), $this->fs)
         ];
 
         if ($this->appDir) {
-            $files[] = new File("app/.gitkeep", "");
+            $files[] = new File("app/.gitkeep", "", $this->fs);
         } else {
             if ($this->rootNameAsPublic) {
-                $files[] = new File("config/000-default.conf", $this->get000defaultFileContent());
-                $files[] = new File("www/public/index.php", "<?php\necho \"Be happy!\";");
+                $files[] = new File("config/000-default.conf", $this->get000defaultFileContent(), $this->fs);
+                $files[] = new File("www/public/index.php", "<?php\necho \"Be happy!\";", $this->fs);
             } else {
-                $files[] = new File("www/html/index.php", "<?php\necho \"Be happy!\";");
+                $files[] = new File("www/html/index.php", "<?php\necho \"Be happy!\";", $this->fs);
             }
         }
 

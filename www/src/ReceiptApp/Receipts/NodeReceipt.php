@@ -9,6 +9,7 @@ use App\ReceiptApp\Receipts\Interfaces\ReceiptInterface;
 use Symfony\Component\Yaml\Yaml;
 use App\ReceiptApp\Receipts\Questions\QuestionInterface;
 use App\ReceiptApp\Receipts\Questions\NodeQuestion;
+use Symfony\Component\Filesystem\Filesystem;
 
 class NodeReceipt extends ReceiptCommons implements ReceiptInterface
 {
@@ -18,8 +19,9 @@ class NodeReceipt extends ReceiptCommons implements ReceiptInterface
 
     private bool $volumeApp = false;
 
-    public function __construct()
+    public function __construct(Filesystem $fs)
     {
+        parent::__construct($fs);
         $this->questionsPairs = (new NodeQuestion())->getPropertyQuestionPair();
     }
 
@@ -35,11 +37,11 @@ class NodeReceipt extends ReceiptCommons implements ReceiptInterface
         $this->buildYamlStructure();
         
         $files = [
-            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2))
+            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs)
         ];
 
         if ($this->infinityLoop) {
-            $files[] = new File('Dockerfile', $this->getDockerfileContent());
+            $files[] = new File('Dockerfile', $this->getDockerfileContent(), $this->fs);
         }
 
         return $files;

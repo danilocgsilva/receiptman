@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Command\Dev\FilesContentScaffold;
 
-class QuestionsScaffold
+class QuestionsScaffold implements CommandScaffoldInterface
 {
-    public static function getContent(): string
+    public static function getContent(string $baseName): string
     {
         return <<<EOF
         <?php
@@ -18,7 +18,7 @@ class QuestionsScaffold
         use App\ReceiptApp\Receipts\Questions\Types\InputType;
         use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
 
-        class REPLACEMEQuestions extends BaseQuestion implements QuestionInterface
+        class {$baseName}Questions extends BaseQuestion implements QuestionInterface
         {
             public function __construct()
             {

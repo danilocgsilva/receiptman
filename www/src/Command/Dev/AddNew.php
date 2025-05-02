@@ -15,7 +15,8 @@ use Symfony\Component\Filesystem\Filesystem;
 use App\Command\Dev\FilesContentScaffold\{
     ReceiptScaffold, 
     CommandScaffold,
-    QuestionsScaffold
+    QuestionsScaffold,
+    FilesContent
 };
 
 #[AsCommand(
@@ -44,20 +45,10 @@ class AddNew extends Command
     {
         $this->injectInputOutput(input: $input, output: $output);
         
-        $newReceiptName = $this->ask("What is the name of the new receipt? ");
+        $newReceiptName = $this->ask("Writes the name of the new receipt: ");
 
-        $this->createFileAndOutput(
-            "src/Command/{$newReceiptName}Command.php",
-            CommandScaffold::getContent()
-        );
-        $this->createFileAndOutput(
-            "src/ReceiptApp/Receipts/{$newReceiptName}Receipt.php",
-            ReceiptScaffold::getContent()
-        );
-        $this->createFileAndOutput(
-            "src/ReceiptApp/Receipts/Questions/{$newReceiptName}Questions.php",
-            QuestionsScaffold::getContent()
-        );
+        $this->createFiles($newReceiptName);
+
         $this->io->writeln("Now it is required to custom the file content to match your needs. Find all occurrences of REPLACEME on each created file.");
 
         return Command::SUCCESS;
@@ -71,10 +62,10 @@ class AddNew extends Command
         $this->io = new SymfonyStyle($input, $output);
     }
 
-    private function ask(string $question): string
+    private function ask(string $questionString): string
     {
         $helper = $this->getHelper('question');
-        $question = new Question('Writes the name of the new receipt: ');
+        $question = new Question($questionString);
         return $helper->ask(input: $this->input, output: $this->output, question: $question);
     }
 
@@ -87,5 +78,23 @@ class AddNew extends Command
         )->write(self::BASE_DIRECTORY, $this->fs);
         
         $this->io->writeln("* The file {$fullPathName} has just beign created.");
+    }
+
+    private function createFiles(string $newReceiptName)
+    {
+        $filesContent = new FilesContent($newReceiptName);
+
+        $this->createFileAndOutput(
+            "src/Command/{$newReceiptName}Command.php",
+            $filesContent->getCommandContent()
+        );
+        $this->createFileAndOutput(
+            "src/ReceiptApp/Receipts/{$newReceiptName}Receipt.php",
+            $filesContent->getReceiptContent()
+        );
+        $this->createFileAndOutput(
+            "src/ReceiptApp/Receipts/Questions/{$newReceiptName}Questions.php",
+            $filesContent->getQuestionsContent()
+        );
     }
 }

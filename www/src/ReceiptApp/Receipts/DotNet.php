@@ -10,6 +10,7 @@ use Symfony\Component\Yaml\Yaml;
 use App\ReceiptApp\Receipts\Interfaces\ReceiptInterface;
 use App\ReceiptApp\Traits\PutGenericDatabase;
 use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
+use Symfony\Component\Filesystem\Filesystem;
 
 class DotNet extends ReceiptCommons implements ReceiptInterface
 {
@@ -23,8 +24,9 @@ class DotNet extends ReceiptCommons implements ReceiptInterface
 
     private string $mysqlPortRedirection;
 
-    public function __construct()
+    public function __construct(Filesystem $fs)
     {
+        parent::__construct($fs);
         $this->questionsPairs = (new DotNetQuestions())->getPropertyQuestionPair();
     }
 
@@ -33,8 +35,8 @@ class DotNet extends ReceiptCommons implements ReceiptInterface
         $this->buildYamlStructure();
 
         return [
-            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2)),
-            new File("Dockerfile", $this->getDockerfileContent())
+            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs),
+            new File("Dockerfile", $this->getDockerfileContent(), $this->fs)
         ];
     }
 

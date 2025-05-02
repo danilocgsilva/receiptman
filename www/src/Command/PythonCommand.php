@@ -25,13 +25,15 @@ class PythonCommand extends ReceiptmanCommand
 
     private $output;
 
+    protected Filesystem $fs;
+
     private $questionHelper;
 
     private PythonReceipt $receipt;
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->prepareExecution($input, $output, new PythonReceipt());
+        $this->prepareExecution($input, $output, new PythonReceipt($this->fs));
 
         $io = new SymfonyStyle($input, $output);
 

@@ -8,16 +8,20 @@ use App\ReceiptApp\Receipts\PythonReceipt;
 use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
 use PHPUnit\Framework\TestCase;
 use App\Tests\Traits\GetSpecificFileTrait;
+use App\Tests\Traits\MockFileSystemTrait;
 
 class PythonReceiptTest extends TestCase
 {
     use GetSpecificFileTrait;
+    use MockFileSystemTrait;
 
     private PythonReceipt $pythonReceipt;
 
     function setUp(): void
     {
-        $this->pythonReceipt = new PythonReceipt();
+        $this->pythonReceipt = new PythonReceipt(
+            $this->getFileSystemMocked("", 0)
+        );
     }
 
     public function testTypeOfPropertiesQuestionPairs(): void

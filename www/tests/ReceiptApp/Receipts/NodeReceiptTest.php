@@ -9,16 +9,20 @@ use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
 use PHPUnit\Framework\TestCase;
 use App\ReceiptApp\File;
 use App\Tests\Traits\GetSpecificFileTrait;
+use App\Tests\Traits\MockFileSystemTrait;
 
 class NodeReceiptTest extends TestCase
 {
     use GetSpecificFileTrait;
+    use MockFileSystemTrait;
 
     private NodeReceipt $nodeReceipt;
     
     function setUp(): void
     {
-        $this->nodeReceipt = new NodeReceipt();
+        $this->nodeReceipt = new NodeReceipt(
+            $this->getFileSystemMocked("", 0)
+        );
     }
     
     public function testCountFiles(): void

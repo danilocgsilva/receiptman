@@ -17,7 +17,7 @@ class DotNetTestCommandTest extends TestCase
     public function amountQuestionsDone()
     {
         $application = new Application();
-        $fileSystemMocked = $this->getFileSystemMocked(path: "output/my_dotnet_first_container");
+        $fileSystemMocked = $this->getFileSystemMocked("output/my_dotnet_first_container", 3);
         $application->add(new DotNetCommand($fileSystemMocked));
         $command = $application->find("receipt:dotnet");
         $commandTester = new CommandTester($command);
@@ -34,7 +34,7 @@ class DotNetTestCommandTest extends TestCase
     public function amountQuestionsDoneWithDatabase()
     {
         $application = new Application();
-        $fileSystemMocked = $this->getFileSystemMocked(path: "output/my_dotnet_first_container");
+        $fileSystemMocked = $this->getFileSystemMocked("output/my_dotnet_first_container", 3);
         $application->add(new DotNetCommand($fileSystemMocked));
         $command = $application->find("receipt:dotnet");
         $commandTester = new CommandTester($command);

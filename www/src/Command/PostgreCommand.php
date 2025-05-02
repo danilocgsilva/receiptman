@@ -12,6 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use App\ReceiptApp\Traits\PrepareExecution;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\Filesystem;
 
 #[AsCommand(
     name: 'receipt:postgre',
@@ -24,6 +25,8 @@ class PostgreCommand extends ReceiptmanCommand
 
     private $input;
 
+    protected Filesystem $fs;
+
     private $output;
 
     private $questionHelper;
@@ -32,7 +35,7 @@ class PostgreCommand extends ReceiptmanCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->prepareExecution($input, $output, new PostgreReceipt());
+        $this->prepareExecution($input, $output, new PostgreReceipt($this->fs));
 
         $io = new SymfonyStyle($input, $output);
 

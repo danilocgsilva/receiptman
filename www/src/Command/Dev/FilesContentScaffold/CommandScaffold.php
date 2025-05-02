@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Command\Dev\FilesContentScaffold;
 
-class CommandScaffold
+class CommandScaffold implements CommandScaffoldInterface
 {
-    public static function getContent(): string
+    public static function getContent(string $baseName): string
     {
         return <<<EOF
         <?php
@@ -27,7 +27,7 @@ class CommandScaffold
             name: 'REPLACEME1',
             description: 'REPPLACEME2',
         )]
-        class REPLACEME3 extends ReceiptmanCommand
+        class {$baseName}Command extends ReceiptmanCommand
         {
             use PrepareExecution;
 

@@ -16,6 +16,7 @@ use Symfony\Component\Console\{
 use App\ReceiptApp\Receipts\DotNet as DotNetReceipt;
 use App\ReceiptApp\Traits\PrepareExecution;
 use App\Command\Traits\ReceiptFolder;
+use Symfony\Component\Filesystem\Filesystem;
 
 #[AsCommand(
     name: 'receipt:dotnet',
@@ -26,6 +27,8 @@ class DotNetCommand extends ReceiptmanCommand
     use PrepareExecution;
     use ReceiptFolder;
 
+    protected Filesystem $fs;
+    
     private $input;
 
     private $output;
@@ -36,7 +39,7 @@ class DotNetCommand extends ReceiptmanCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->prepareExecution($input, $output, new DotNetReceipt());
+        $this->prepareExecution($input, $output, new DotNetReceipt($this->fs));
         $io = new SymfonyStyle($input, $output);
 
         while ($propertyQuestionPair = $this->receipt->getNextQuestionPair()) {

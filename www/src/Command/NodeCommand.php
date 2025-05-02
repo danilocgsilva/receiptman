@@ -13,6 +13,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use App\ReceiptApp\Traits\PrepareExecution;
 use App\ReceiptApp\Receipts\NodeReceipt;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Filesystem\Filesystem;
 
 #[AsCommand(
     name: 'receipt:node',
@@ -22,6 +23,8 @@ class NodeCommand extends ReceiptmanCommand
 {
     use PrepareExecution;
     use ReceiptFolder;
+
+    protected Filesystem $fs;
 
     private $input;
 
@@ -33,7 +36,7 @@ class NodeCommand extends ReceiptmanCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->prepareExecution($input, $output, new NodeReceipt());
+        $this->prepareExecution($input, $output, new NodeReceipt($this->fs));
 
         $io = new SymfonyStyle($input, $output);
 

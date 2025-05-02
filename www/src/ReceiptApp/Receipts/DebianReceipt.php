@@ -8,11 +8,13 @@ use App\ReceiptApp\File;
 use Symfony\Component\Yaml\Yaml;
 use App\ReceiptApp\Receipts\Questions\DebianQuestion;
 use App\ReceiptApp\Receipts\Interfaces\ReceiptInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 class DebianReceipt extends ReceiptCommons implements ReceiptInterface
 {
-    public function __construct()
+    public function __construct(Filesystem $fs)
     {
+        parent::__construct($fs);
         $this->questionsPairs = (new DebianQuestion())->getPropertyQuestionPair();
     }
 
@@ -21,8 +23,8 @@ class DebianReceipt extends ReceiptCommons implements ReceiptInterface
         $this->buildYamlStructure();
 
         return [
-            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2)),
-            new File("Dockerfile", $this->getDockerfile())
+            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs),
+            new File("Dockerfile", $this->getDockerfile(), $this->fs)
         ];
     }
 

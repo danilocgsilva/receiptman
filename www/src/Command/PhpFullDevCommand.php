@@ -11,6 +11,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use App\ReceiptApp\Receipts\PhpFullDevReceipt;
 use App\ReceiptApp\Traits\PrepareExecution;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Filesystem\Filesystem;
 
 #[AsCommand(
     name: 'receipt:php-full-dev',
@@ -20,6 +21,8 @@ class PhpFullDevCommand extends ReceiptmanCommand
 {
     use PrepareExecution;
     use ReceiptFolder;
+
+    protected Filesystem $fs;
 
     private $input;
 
@@ -31,7 +34,7 @@ class PhpFullDevCommand extends ReceiptmanCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->prepareExecution($input, $output, new PhpFullDevReceipt());
+        $this->prepareExecution($input, $output, new PhpFullDevReceipt($this->fs));
 
         $io = new SymfonyStyle($input, $output);
 

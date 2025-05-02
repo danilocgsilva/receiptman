@@ -8,17 +8,20 @@ use App\ReceiptApp\Receipts\PostgreReceipt;
 use PHPUnit\Framework\TestCase;
 use App\Tests\Traits\GetSpecificFileTrait;
 use PHPUnit\Framework\Attributes\Test;
-
+use App\Tests\Traits\MockFileSystemTrait;
 
 class PostgreReceiptTest extends TestCase
 {
     use GetSpecificFileTrait;
+    use MockFileSystemTrait;
 
     private PostgreReceipt $postgreReceipt;
     
     function setUp(): void
     {
-        $this->postgreReceipt = new PostgreReceipt();
+        $this->postgreReceipt = new PostgreReceipt(
+            $this->getFileSystemMocked("", 0)
+        );
     }
 
     #[Test]

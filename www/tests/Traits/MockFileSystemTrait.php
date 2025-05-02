@@ -8,11 +8,11 @@ use Symfony\Component\Filesystem\Filesystem;
 
 trait MockFileSystemTrait
 {
-    public function getFileSystemMocked(string $path): mixed
+    public function getFileSystemMocked(string $path, int $expectedMkdirInvokations): mixed
     {
         $fileSystemMocked = $this->getMockBuilder(Filesystem::class)->getMock();
         $fileSystemMocked
-            ->expects($this->once())
+            ->expects($this->exactly($expectedMkdirInvokations))
             ->method('mkdir')
             ->with($path);
         return $fileSystemMocked;

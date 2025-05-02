@@ -14,24 +14,18 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 
 #[AsCommand(
-    name: 'receipt:php',
-    description: 'Php receipt',
+    name: 'receipt:mysql',
+    description: 'Mysql database receipt',
 )]
-class PhpCommand extends ReceiptmanCommand
+class MySQLCommand extends ReceiptmanCommand
 {
     use PrepareExecution;
-
-    private PhpReceipt $receipt;
 
     protected Filesystem $fs;
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->prepareExecution($input, $output, new PhpReceipt($this->fs));
-
-        while ($propertyQuestionPair = $this->receipt->getNextQuestionPair()) {
-            $this->feedReceipt($propertyQuestionPair);
-        }
 
         $io = new SymfonyStyle($input, $output);
 

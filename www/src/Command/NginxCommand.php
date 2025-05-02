@@ -14,6 +14,7 @@ use Symfony\Component\Console\{
 };
 use Symfony\Component\Console\Style\SymfonyStyle;
 use App\ReceiptApp\Receipts\NginxReceipt;
+use Symfony\Component\Filesystem\Filesystem;
 
 #[AsCommand(
     name: 'receipt:nginx',
@@ -26,13 +27,15 @@ class NginxCommand extends ReceiptmanCommand
 
     private $input;
 
+    protected Filesystem $fs;
+
     private $output;
 
     private NginxReceipt $receipt;
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->prepareExecution($input, $output, new NginxReceipt());
+        $this->prepareExecution($input, $output, new NginxReceipt($this->fs));
 
         $io = new SymfonyStyle($input, $output);
 

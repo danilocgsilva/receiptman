@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\ReceiptApp\Receipts;
 
+use App\ReceiptApp\File;
 use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
+use Symfony\Component\Filesystem\Filesystem;
 
 class ReceiptCommons
 {
@@ -22,6 +24,10 @@ class ReceiptCommons
      * @var \App\ReceiptApp\Receipts\Questions\Types\QuestionEntry[]
      */
     protected array $questionsPairs;
+
+    public function __construct(protected Filesystem $fs)
+    {
+    }
 
     public function setSshVolume(): self
     {

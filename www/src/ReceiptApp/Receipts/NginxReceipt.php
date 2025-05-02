@@ -12,6 +12,7 @@ use App\ReceiptApp\Receipts\Interfaces\{
     ReceiptInterface,
     HttpReportableInterface
 };
+use Symfony\Component\Filesystem\Filesystem;
 
 class NginxReceipt extends ReceiptCommons implements ReceiptInterface, HttpReportableInterface
 {
@@ -19,8 +20,9 @@ class NginxReceipt extends ReceiptCommons implements ReceiptInterface, HttpRepor
     
     private bool $exposeServerDefaultFile = false;
 
-    public function __construct()
+    public function __construct(Filesystem $fs)
     {
+        parent::__construct($fs);
         $this->questionsPairs = (new NginxQuestions())->getPropertyQuestionPair();
     }
 
@@ -33,12 +35,12 @@ class NginxReceipt extends ReceiptCommons implements ReceiptInterface, HttpRepor
         $this->buildYamlStructure();
 
         $files = [
-            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2))
+            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs)
         ];
 
         if ($this->exposeServerDefaultFile) {
-            $files[] = new File("Dockerfile", $this->getDockerfileContent());
-            $files[] = new File("config/default.conf", $this->getDefaultServerConf());
+            $files[] = new File("Dockerfile", $this->getDockerfileContent(), $this->fs);
+            $files[] = new File("config/default.conf", $this->getDefaultServerConf(), $this->fs);
         }
 
         return $files;

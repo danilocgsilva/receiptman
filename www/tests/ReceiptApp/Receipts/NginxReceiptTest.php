@@ -9,16 +9,20 @@ use PHPUnit\Framework\TestCase;
 use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
 use App\ReceiptApp\Receipts\NginxReceipt;
 use App\ReceiptApp\File;
+use App\Tests\Traits\MockFileSystemTrait;
 
 class NginxReceiptTest extends TestCase
 {
     use GetSpecificFileTrait;
+    use MockFileSystemTrait;
 
     private NginxReceipt $nginxReceipt;
     
     function setUp(): void
     {
-        $this->nginxReceipt = new NginxReceipt();
+        $this->nginxReceipt = new NginxReceipt(
+            $this->getFileSystemMocked("", 0)
+        );
     }
 
     public function testDockerComposeFileContent(): void

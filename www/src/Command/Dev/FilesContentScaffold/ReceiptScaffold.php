@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Command\Dev\FilesContentScaffold;
 
-class ReceiptScaffold
+class ReceiptScaffold implements CommandScaffoldInterface
 {
-    public static function getContent(): string
+    public static function getContent(string $baseName): string
     {
         return <<<EOF
         <?php
@@ -19,7 +19,7 @@ class ReceiptScaffold
         use App\ReceiptApp\File;
         use Symfony\Component\Yaml\Yaml;
 
-        class REPLACEME1 extends ReceiptCommons implements ReceiptInterface
+        class {$baseName}Receipt extends ReceiptCommons implements ReceiptInterface
         {
             /**
              * @inheritDoc
@@ -34,7 +34,7 @@ class ReceiptScaffold
                 \$this->yamlStructure = [
                     'services' => [
                         \$this->name => [
-                            'image' => 'REPLACEME2',
+                            'image' => 'REPLACEME1',
                             'container_name' => \$this->name
                         ]
                     ]

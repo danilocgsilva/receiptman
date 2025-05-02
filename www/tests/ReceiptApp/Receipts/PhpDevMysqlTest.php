@@ -13,17 +13,20 @@ use App\Tests\Traits\{
 };
 use App\ReceiptApp\File;
 use Error;
+use Symfony\Component\Filesystem\Filesystem;
+use App\Tests\Traits\MockFileSystemTrait;
 
 class PhpDevMysqlTest extends TestCase
 {
     use GetSpecificFileTrait;
     use HasQuestionWithMethod;
+    use MockFileSystemTrait;
 
     private PhpFullDevReceipt $phpDevMysql;
 
     function setUp(): void
     {
-        $this->phpDevMysql = new PhpFullDevReceipt();
+        $this->phpDevMysql = new PhpFullDevReceipt($this->getFileSystemMocked("output/the_container_test2", 0));
     }
 
     public function testDockerComposeContent(): void

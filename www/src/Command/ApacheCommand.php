@@ -14,6 +14,7 @@ use App\ReceiptApp\Traits\PrepareExecution;
 use App\ReceiptApp\Receipts\Apache as ApacheReceipt;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use App\Command\Traits\ReceiptFolder;
+use Symfony\Component\Filesystem\Filesystem;
 
 #[AsCommand(
     name: 'receipt:apache',
@@ -26,11 +27,13 @@ class ApacheCommand extends ReceiptmanCommand
 
     private ApacheReceipt $receipt;
 
+    protected Filesystem $fs;
+
     private $questionHelper;
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->prepareExecution($input, $output, new ApacheReceipt());
+        $this->prepareExecution($input, $output, new ApacheReceipt($this->fs));
 
         $io = new SymfonyStyle($input, $output);
 

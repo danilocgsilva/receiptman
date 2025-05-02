@@ -7,16 +7,20 @@ namespace App\Tests\ReceiptApp\Receipts;
 use PHPUnit\Framework\TestCase;
 use App\ReceiptApp\Receipts\DotNet;
 use App\Tests\Traits\GetSpecificFileTrait;
+use App\Tests\Traits\MockFileSystemTrait;
 
 class DotNetTest extends TestCase
 {
     use GetSpecificFileTrait;
+    use MockFileSystemTrait;
 
     private DotNet $receipt;
 
     function setUp(): void
     {
-        $this->receipt = new DotNet();
+        $this->receipt = new DotNet(
+            $this->getFileSystemMocked("", 0)
+        );
     }
 
     public function testNextQuestions(): void

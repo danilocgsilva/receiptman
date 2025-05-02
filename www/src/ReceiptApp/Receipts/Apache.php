@@ -12,6 +12,7 @@ use App\ReceiptApp\Receipts\Interfaces\{
     ReceiptInterface
 };
 use App\ReceiptApp\Traits\HttpPortRedirection;
+use Symfony\Component\Filesystem\Filesystem;
 
 class Apache extends ReceiptCommons implements ReceiptInterface, HttpReportableInterface
 {
@@ -19,8 +20,9 @@ class Apache extends ReceiptCommons implements ReceiptInterface, HttpReportableI
 
     private bool $exposewww = false;
 
-    public function __construct()
+    public function __construct(Filesystem $fs)
     {
+        parent::__construct($fs);
         $this->questionsPairs = (new ApacheQuestions())->getPropertyQuestionPair();
     }
 
@@ -29,7 +31,11 @@ class Apache extends ReceiptCommons implements ReceiptInterface, HttpReportableI
         $this->buildYamlStructure();
 
         return [
-            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2))
+            new File(
+                "docker-compose.yml", 
+                Yaml::dump($this->yamlStructure, 4, 2),
+                $this->fs
+            )
         ];
     }
 

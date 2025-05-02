@@ -8,16 +8,20 @@ use App\Tests\Traits\GetSpecificFileTrait;
 use PHPUnit\Framework\TestCase;
 use App\ReceiptApp\Receipts\Apache;
 use App\ReceiptApp\File;
+use App\Tests\Traits\MockFileSystemTrait;
 
 class ApacheReceiptTest extends TestCase
 {
     use GetSpecificFileTrait;
+    use MockFileSystemTrait;
 
     private Apache $apacheReceipt;
     
     function setUp(): void
     {
-        $this->apacheReceipt = new Apache();
+        $this->apacheReceipt = new Apache(
+            $this->getFileSystemMocked("", 0)
+        );
     }
 
     public function testDockerFileContent(): void

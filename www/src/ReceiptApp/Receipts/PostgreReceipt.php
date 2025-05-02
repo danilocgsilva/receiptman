@@ -9,12 +9,15 @@ use App\ReceiptApp\File;
 use Symfony\Component\Yaml\Yaml;
 use App\ReceiptApp\Receipts\Questions\PostgreQuestions;
 use App\ReceiptApp\Traits\DatabaseRootPasswordReceiptTrait;
+use Symfony\Component\Filesystem\Filesystem;
+
 class PostgreReceipt extends ReceiptCommons implements ReceiptInterface
 {
     use DatabaseRootPasswordReceiptTrait;
     
-    public function __construct()
+    public function __construct(Filesystem $fs)
     {
+        parent::__construct($fs);
         $this->questionsPairs = (new PostgreQuestions())->getPropertyQuestionPair();
     }
 
@@ -26,7 +29,7 @@ class PostgreReceipt extends ReceiptCommons implements ReceiptInterface
         $this->buildYamlStructure();
 
         $files = [
-            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2))
+            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs)
         ];
         
         return $files;
