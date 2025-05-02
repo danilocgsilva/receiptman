@@ -8,9 +8,16 @@ use App\ReceiptApp\Receipts\Interfaces\ReceiptInterface;
 use App\ReceiptApp\File;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Filesystem\Filesystem;
+use App\ReceiptApp\Receipts\Questions\MySQLQuestions;
 
 class MySQLReceipt extends ReceiptCommons implements ReceiptInterface
 {
+    public function __construct(Filesystem $fs)
+    {
+        parent::__construct($fs);
+        $this->questionsPairs = (new MySQLQuestions())->getPropertyQuestionPair();
+    }
+
     /**
      * @inheritDoc
      */

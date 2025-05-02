@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use App\ReceiptApp\Receipts\MySQLReceipt;
 use App\Tests\Traits\GetSpecificFileTrait;
 use App\Tests\Traits\MockFileSystemTrait;
+use App\ReceiptApp\File;
 
 class MySQLReceiptTest extends TestCase
 {

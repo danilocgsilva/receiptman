@@ -11,7 +11,8 @@ use App\Command\{
     ApacheCommand,
     DotNetCommand,
     PhpCommand,
-    PostgreCommand
+    PostgreCommand,
+    MySQLCommand
 };
 use App\Command\Dev\AddNew;
 use Symfony\Component\Filesystem\Filesystem;
@@ -30,6 +31,7 @@ $application->add(new ApacheCommand($fileSystem));
 $application->add(new DotNetCommand($fileSystem));
 $application->add(new PhpCommand($fileSystem));
 $application->add(new PostgreCommand($fileSystem));
+$application->add(new MySQLCommand($fileSystem));
 $application->add(new AddNew());
 
 $application->run();
