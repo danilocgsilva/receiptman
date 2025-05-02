@@ -9,9 +9,12 @@ use App\ReceiptApp\File;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Filesystem\Filesystem;
 use App\ReceiptApp\Receipts\Questions\MySQLQuestions;
+use App\ReceiptApp\Receipts\Traits\MySQLMethodsTrait;
 
 class MySQLReceipt extends ReceiptCommons implements ReceiptInterface
 {
+    use MySQLMethodsTrait;
+
     public function __construct(Filesystem $fs)
     {
         parent::__construct($fs);
@@ -38,7 +41,13 @@ class MySQLReceipt extends ReceiptCommons implements ReceiptInterface
             'services' => [
                 $this->name => [
                     'image' => 'mysql:latest',
-                    'container_name' => $this->name
+                    'container_name' => $this->name,
+                    'environment' => [
+                        sprintf('MYSQL_ROOT_PASSWORD=%s', $this->mysqlRootPassword)
+                    ],
+                    'ports' => [
+                        sprintf('%s:3306', $this->mysqlPortRedirection)
+                    ]
                 ]
             ]
         ];

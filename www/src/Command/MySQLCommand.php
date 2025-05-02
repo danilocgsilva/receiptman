@@ -27,6 +27,12 @@ class MySQLCommand extends ReceiptmanCommand
 
     private MySQLReceipt $receipt;
 
+    private InputInterface $input;
+
+    private OutputInterface $output;
+
+    private $questionHelper;
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->prepareExecution($input, $output, new MySQLReceipt($this->fs));

@@ -17,10 +17,27 @@ class PhpFullDevCommandTest extends TestCase
 
     public function testPhpFullDev()
     {
+        $fileSystemMocked = $this->getFileSystemMocked();
+        
         $application = new Application();
+        $application->add(new PhpFullDevCommand($fileSystemMocked));
+        $command = $application->find("receipt:php-full-dev");
+        $commandTester = new CommandTester($command);
 
+        $commandTester->setInputs([
+            "no", "the_container_test2", 
+            "no", "no", 
+            "3306", "no", 
+            "no", "no",
+            "the_container_test2"
+        ]);
+
+        $commandTester->execute([]);
+    }
+
+    private function getFileSystemMocked(): Filesystem
+    {
         $fileSystemMocked = $this->getMockBuilder(Filesystem::class)->getMock();
-
         $matcher = $this->exactly(6);
         $fileSystemMocked
             ->expects($matcher)
@@ -36,19 +53,6 @@ class PhpFullDevCommandTest extends TestCase
                 };
             });
 
-        $application->add(new PhpFullDevCommand($fileSystemMocked));
-
-        $command = $application->find("receipt:php-full-dev");
-        $commandTester = new CommandTester($command);
-
-        $commandTester->setInputs([
-            "no", "the_container_test2", 
-            "no", "no", 
-            "3306", "no", 
-            "no", "no",
-            "the_container_test2"
-        ]);
-
-        $commandTester->execute([]);
+        return $fileSystemMocked;
     }
 }
