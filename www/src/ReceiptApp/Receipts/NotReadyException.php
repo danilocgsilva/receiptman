@@ -5,13 +5,20 @@ declare(strict_types=1);
 namespace App\ReceiptApp\Receipts;
 
 use Exception;
+use App\ReceiptApp\Receipts\Interfaces\ReceiptInterface;
 
 class NotReadyException extends Exception
 {
-    public function __construct()
+    private array $missingData = [];
+
+    public function __construct(ReceiptInterface $receipt)
     {
-        $message = "The receipt still is not ready. Plase, set a name for it.";
-        
-        parent::__construct($message);
+        try {
+            $receipt->getName();
+        } catch (Exception $e) {
+            $this->missingData[] = "name";
+        }
+
+        parent::__construct("The receipt still is not ready.");
     }
 }

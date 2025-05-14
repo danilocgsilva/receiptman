@@ -256,6 +256,7 @@ class PhpDevMysqlTest extends TestCase
     public function testForgetSetContainerNameAndGetFiles(): void
     {
         $this->expectException(NotReadyException::class);
+        $this->expectExceptionMessage("The receipt still is not ready. There are missing data: name.");
         
         $this->phpDevMysql
             ->setName(name: "the_beloved_environment.");

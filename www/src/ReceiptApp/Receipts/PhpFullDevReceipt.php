@@ -66,7 +66,7 @@ class PhpFullDevReceipt extends ReceiptCommons implements ReceiptInterface
             !isset($this->httpPortRedirection) ||
             !isset($this->name)
         ) {
-            throw new NotReadyException();
+            throw new NotReadyException($this);
         }
 
         $this->buildYamlStructure();
