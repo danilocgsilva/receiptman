@@ -256,6 +256,7 @@ class PhpDevMysqlTest extends TestCase
     public function testForgetSetContainerNameAndGetFiles(): void
     {
         $this->expectException(NotReadyException::class);
+        $this->expectExceptionMessage("The receipt still is not ready. Missing data: httpPortRedirection.");
         
         $this->phpDevMysql
             ->setName(name: "the_beloved_environment.");
@@ -382,8 +383,9 @@ class PhpDevMysqlTest extends TestCase
         EOF;
 
         $this->phpDevMysql
-            ->setName(name: "container_php_version_8_4_7")
+            ->setName("container_php_version_8_4_7")
             ->setNoDatabase()
+            ->setHttpPortRedirection("3306")
             ->setPhpVersion("8.4");
 
         $receiptFiles = $this->phpDevMysql->getFiles();

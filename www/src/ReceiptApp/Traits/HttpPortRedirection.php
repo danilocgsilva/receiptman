@@ -13,4 +13,9 @@ trait HttpPortRedirection
         $this->httpPortRedirection = $httpPortRedirection;
         return $this;
     }
+
+    public function getHttpPortRedirection(): string
+    {
+        return $this->httpPortRedirection;
+    }
 }
