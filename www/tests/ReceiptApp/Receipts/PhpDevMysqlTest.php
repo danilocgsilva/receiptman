@@ -13,8 +13,8 @@ use App\Tests\Traits\{
 };
 use App\ReceiptApp\File;
 use Error;
-use Symfony\Component\Filesystem\Filesystem;
 use App\Tests\Traits\MockFileSystemTrait;
+use App\ReceiptApp\Receipts\NotReadyException;
 
 class PhpDevMysqlTest extends TestCase
 {
@@ -255,7 +255,7 @@ class PhpDevMysqlTest extends TestCase
 
     public function testForgetSetContainerNameAndGetFiles(): void
     {
-        $this->expectException(Error::class);
+        $this->expectException(NotReadyException::class);
         
         $this->phpDevMysql
             ->setName(name: "the_beloved_environment.");
@@ -355,6 +355,41 @@ class PhpDevMysqlTest extends TestCase
 
         $dockerFile = $this->getSpecificFile($receiptFiles, "Dockerfile");
     
+        $this->assertSame($expectedContent, $dockerFile->content);
+    }
+
+    public function testMissPortRedirection(): void
+    {
+        $this->expectException(NotReadyException::class);
+        $this->phpDevMysql
+            ->setName(name: "receipt_without_port_redirection")
+            ->setNoDatabase()
+            ->getFiles();
+    }
+
+    public function testPhpVersion_8_4_7(): void
+    {
+        $expectedContent = <<<EOF
+        FROM php:8.4.7-apache-bookworm
+
+        RUN apt-get update
+        RUN apt-get upgrade -y
+        RUN apt-get install curl git zip -y
+        RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
+        COPY /config/startup.sh /startup.sh
+
+        CMD sh /startup.sh
+        EOF;
+
+        $this->phpDevMysql
+            ->setName(name: "container_php_version_8_4_7")
+            ->setNoDatabase()
+            ->setPhpVersion("8.4");
+
+        $receiptFiles = $this->phpDevMysql->getFiles();
+
+        $dockerFile = $this->getSpecificFile($receiptFiles, "Dockerfile");
+
         $this->assertSame($expectedContent, $dockerFile->content);
     }
 }

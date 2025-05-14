@@ -13,6 +13,7 @@ use App\ReceiptApp\Traits\{
     RemoveQuestionByMethod
 };
 use Symfony\Component\Filesystem\Filesystem;
+use App\ReceiptApp\Receipts\NotReadyException;
 
 class PhpFullDevReceipt extends ReceiptCommons implements ReceiptInterface
 {
@@ -29,6 +30,8 @@ class PhpFullDevReceipt extends ReceiptCommons implements ReceiptInterface
     private bool $node = false;
 
     private bool $onDatabase = true;
+
+    private string $phpVersion = "8.2";
 
     public function __construct(Filesystem $fs)
     {
@@ -59,6 +62,13 @@ class PhpFullDevReceipt extends ReceiptCommons implements ReceiptInterface
      */
     public function getFiles(): array
     {
+        if (
+            !isset($this->httpPortRedirection) ||
+            !isset($this->name)
+        ) {
+            throw new NotReadyException();
+        }
+
         $this->buildYamlStructure();
         
         $files = [
@@ -116,6 +126,12 @@ class PhpFullDevReceipt extends ReceiptCommons implements ReceiptInterface
     {
         $this->node = true;
         
+        return $this;
+    }
+
+    public function setPhpVersion(string $phpVersion): static
+    {
+        $this->phpVersion = $phpVersion;
         return $this;
     }
 
