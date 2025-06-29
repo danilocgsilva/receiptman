@@ -16,6 +16,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use App\ReceiptApp\Receipts\NotReadyException;
 use App\ReceiptApp\Receipts\ConfigurationsDataTraits\ApacheConfigurationContentGeneratorTrait;
 use Exception;
+use App\Utilities\DockerReceiptWritter;
 
 class PhpFullDevReceipt extends ReceiptCommons implements ReceiptInterface
 {
@@ -210,23 +211,24 @@ class PhpFullDevReceipt extends ReceiptCommons implements ReceiptInterface
 
     private function getDockerfile(): string
     {
-
-        $dockerContent = "";
+        $dockerReceiptWritter = new DockerReceiptWritter();
         switch ($this->phpVersion) {
             case "8.2":
-                $dockerContent .= "FROM debian:bookworm-slim";
+                $dockerReceiptWritter->addRawContent("FROM debian:bookworm-slim");
                 break;
             case "8.4":
-                $dockerContent .= "FROM php:8.4.7-apache-bookworm";
+                $dockerReceiptWritter->addRawContent("FROM php:8.4.7-apache-bookworm");
                 break;
             default:
                 throw new Exception("I don't have such php version. Try 8.2 or 8.4.");
         }
 
-        $dockerContent .= <<<EOF
+        $dockerReceiptWritter->addBlankLine();
+        $dockerReceiptWritter->addAptGetUpdate();
 
-        
-        RUN apt-get update
+        $dockerContent = $dockerReceiptWritter->dump() . "\n";
+
+        $dockerContent .= <<<EOF
         RUN apt-get upgrade -y
         RUN apt-get install curl git zip -y
         RUN apt-get install php php-mysql php-xdebug php-curl php-zip php-xml php-mbstring -y
