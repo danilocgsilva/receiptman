@@ -70,7 +70,7 @@ class DockerReceiptWritterTest extends TestCase
         FROM php:8.4.7-apache-bookworm
 
         RUN apt-get update
-        RUN apt-get upgrade
+        RUN apt-get upgrade -y
         EOF;
 
         $this->assertSame($expectedContent, $this->dockerReceiptWritter->dump());
@@ -87,7 +87,7 @@ class DockerReceiptWritterTest extends TestCase
         FROM php:8.4.7-apache-bookworm
 
         RUN apt-get update
-        RUN apt-get upgrade
+        RUN apt-get upgrade -y
         EOF;
 
         $this->assertSame($expectedContent, $this->dockerReceiptWritter->dump());
@@ -106,7 +106,7 @@ class DockerReceiptWritterTest extends TestCase
 
         RUN apt-get update
 
-        RUN apt-get upgrade
+        RUN apt-get upgrade -y
         EOF;
 
         $this->assertSame($expectedContent, $this->dockerReceiptWritter->dump());

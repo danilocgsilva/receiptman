@@ -8,6 +8,6 @@ class AptGetUpgrade implements DockerReceiptWritterInterface
 {
     public function dump(): string
     {
-        return "RUN apt-get upgrade";
+        return "RUN apt-get upgrade -y";
     }
 }

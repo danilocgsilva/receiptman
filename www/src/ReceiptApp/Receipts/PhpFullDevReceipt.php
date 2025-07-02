@@ -225,13 +225,16 @@ class PhpFullDevReceipt extends ReceiptCommons implements ReceiptInterface
 
         $dockerReceiptWritter->addBlankLine();
         $dockerReceiptWritter->addAptGetUpdate();
+        $dockerReceiptWritter->addAptGetUpgrade();
+        $dockerReceiptWritter->addInstallPackages(["curl", "git", "zip"]);
+
+        if ($this->phpVersion === "8.2") {
+            $dockerReceiptWritter->addInstallPackages(["php", "php-mysql", "php-xdebug", "php-curl", "php-zip", "php-xml", "php-mbstring"]);
+        }
 
         $dockerContent = $dockerReceiptWritter->dump() . "\n";
-
+        
         $dockerContent .= <<<EOF
-        RUN apt-get upgrade -y
-        RUN apt-get install curl git zip -y
-        RUN apt-get install php php-mysql php-xdebug php-curl php-zip php-xml php-mbstring -y
         RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer\n
         EOF;
 
