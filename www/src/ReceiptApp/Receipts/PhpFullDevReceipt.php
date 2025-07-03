@@ -232,31 +232,24 @@ class PhpFullDevReceipt extends ReceiptCommons implements ReceiptInterface
             $dockerReceiptWritter->addInstallPackages(["php", "php-mysql", "php-xdebug", "php-curl", "php-zip", "php-xml", "php-mbstring"]);
         }
 
-        $dockerContent = $dockerReceiptWritter->dump() . "\n";
-        
-        $dockerContent .= <<<EOF
-        RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer\n
-        EOF;
+        $dockerReceiptWritter->addRawContent("RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer");
 
         if ($this->node) {
-            $nodePartReceipt = <<<EOF
-            RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - 
-            RUN apt-get install -y nodejs
-            
-            EOF;
-
-            $dockerContent .= $nodePartReceipt;
+            $dockerReceiptWritter->addRawContent("RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - ");
+            $dockerReceiptWritter->addInstallPackages(["nodejs"]);
         }
 
-        $dockerContent .= <<<EOF
-        COPY /config/xdebug.ini /etc/php/8.2/mods-available/
-        COPY /config/startup.sh /startup.sh
-        COPY /config/apache2.conf /etc/apache2/
-        EOF;
+        if ($this->phpVersion === "8.2") {
+            $dockerReceiptWritter->addRawContent("COPY /config/xdebug.ini /etc/php/8.2/mods-available/");
+        }
+
+        $dockerReceiptWritter->addRawContent("COPY /config/startup.sh /startup.sh");
+        $dockerReceiptWritter->addRawContent("COPY /config/apache2.conf /etc/apache2/");
 
         if ($this->rootNameAsPublic) {
-            $dockerContent .= "\nCOPY /config/000-default.conf /etc/apache2/sites-available/";
+            $dockerReceiptWritter->addRawContent("COPY /config/000-default.conf /etc/apache2/sites-available/");
         }
+        $dockerContent = $dockerReceiptWritter->dump();
 
         $dockerContent .= "\n";
         $dockerContent .= <<<EOF

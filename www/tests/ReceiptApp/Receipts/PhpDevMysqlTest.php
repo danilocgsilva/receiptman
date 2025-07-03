@@ -378,6 +378,8 @@ class PhpDevMysqlTest extends TestCase
         RUN apt-get install -y curl git zip
         RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
         COPY /config/startup.sh /startup.sh
+        COPY /config/apache2.conf /etc/apache2/
+        RUN chmod +x /startup.sh
 
         CMD sh /startup.sh
         EOF;
