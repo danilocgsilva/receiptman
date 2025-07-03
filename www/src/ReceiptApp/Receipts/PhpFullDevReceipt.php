@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\ReceiptApp\Receipts;
 
+use App\ReceiptApp\Receipts\Interfaces\PhpInterface;
 use App\ReceiptApp\Receipts\Interfaces\ReceiptInterface;
 use Symfony\Component\Yaml\Yaml;
 use App\ReceiptApp\File;
@@ -17,8 +18,9 @@ use App\ReceiptApp\Receipts\NotReadyException;
 use App\ReceiptApp\Receipts\ConfigurationsDataTraits\ApacheConfigurationContentGeneratorTrait;
 use Exception;
 use App\Utilities\DockerReceiptWritter;
+use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
 
-class PhpFullDevReceipt extends ReceiptCommons implements ReceiptInterface
+class PhpFullDevReceipt extends ReceiptCommons implements ReceiptInterface, PhpInterface
 {
     use HttpPortRedirection;
     use RemoveQuestionByMethod;
@@ -41,6 +43,7 @@ class PhpFullDevReceipt extends ReceiptCommons implements ReceiptInterface
     public function __construct(Filesystem $fs)
     {
         parent::__construct($fs);
+
         $this->questionsPairs = (new PhpDevMysqlQuestions())->getPropertyQuestionPair();
     }
 
@@ -220,7 +223,7 @@ class PhpFullDevReceipt extends ReceiptCommons implements ReceiptInterface
                 $dockerReceiptWritter->addRawContent("FROM php:8.4.7-apache-bookworm");
                 break;
             default:
-                throw new Exception("I don't have such php version. Try 8.2 or 8.4.");
+                throw new Exception(sprintf("I don't have such php version -> %s <-. Try 8.2 or 8.4.", $this->phpVersion));
         }
 
         $dockerReceiptWritter->addBlankLine();

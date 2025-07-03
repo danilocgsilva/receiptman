@@ -197,7 +197,7 @@ class PhpDevMysqlTest extends TestCase
     public function testQuestionsAvailable(): void
     {
         $questionsPairs = $this->phpDevMysql->getPropertyQuestionsPairs();
-        $this->assertCount(8, $questionsPairs);
+        $this->assertCount(9, $questionsPairs);
     }
 
     public function testCheckEachQuestion(): void
@@ -225,7 +225,7 @@ class PhpDevMysqlTest extends TestCase
         $this->assertTrue($this->hasQuestionWithMethod("setPublicFolderAsHost", $questionsPairs));
         $this->assertFalse($this->hasQuestionWithMethod("setMysqlPortRedirection", $questionsPairs));
         $this->assertFalse($this->hasQuestionWithMethod("setMysqlRootPassword", $questionsPairs));
-        $this->assertCount(6, $questionsPairs);
+        $this->assertCount(7, $questionsPairs);
     }
 
     public function testGetFiles(): void

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\ReceiptApp\Receipts;
 
-use App\ReceiptApp\File;
 use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
 use Symfony\Component\Filesystem\Filesystem;
 

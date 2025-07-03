@@ -26,7 +26,7 @@ class PhpFullDevCommandTest extends TestCase
 
         $commandTester->setInputs([
             "no", "the_container_test2", 
-            "no", "no", 
+            "no", "no", "8.2", 
             "3306", "no", 
             "no", "no",
             "the_container_test2"

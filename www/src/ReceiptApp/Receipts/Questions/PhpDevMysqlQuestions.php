@@ -17,6 +17,12 @@ class PhpDevMysqlQuestions extends BaseQuestion implements QuestionInterface
             $this->propertyQuestionPair,
             [
                 new QuestionEntry(
+                    methodName: "setPhpVersion",
+                    textQuestion: "Write the PHP version to use \n",
+                )
+            ],
+            [
+                new QuestionEntry(
                     methodName: "setHttpPortRedirection",
                     textQuestion: "Write the port number redirection for http\n"
                 )

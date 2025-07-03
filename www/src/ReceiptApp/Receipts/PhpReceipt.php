@@ -4,18 +4,25 @@ declare(strict_types=1);
 
 namespace App\ReceiptApp\Receipts;
 
+use App\ReceiptApp\Receipts\Interfaces\PhpInterface;
 use App\ReceiptApp\Receipts\Interfaces\ReceiptInterface;
 use App\ReceiptApp\File;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Filesystem\Filesystem;
+use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
 
-class PhpReceipt extends ReceiptCommons implements ReceiptInterface
+class PhpReceipt extends ReceiptCommons implements ReceiptInterface, PhpInterface
 {
     public function __construct(Filesystem $fs)
     {
         parent::__construct($fs);
-        // For this ReceiptInterface implementation no questions are required so far.
-        $this->questionsPairs = [];
+
+        $this->questionsPairs = [
+            new QuestionEntry(
+                methodName: "setPhpVersion",
+                textQuestion: "Write the PHP version to use \n",
+            )
+        ];
     }
 
     /**
@@ -30,6 +37,12 @@ class PhpReceipt extends ReceiptCommons implements ReceiptInterface
         ];
 
         return $files;
+    }
+
+    public function setPhpVersion(string $phpVersion): static
+    {
+        $this->phpVersion = $phpVersion;
+        return $this;
     }
 
     private function buildYamlStructure(): void
