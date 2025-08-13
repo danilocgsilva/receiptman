@@ -7,6 +7,7 @@ namespace App\ReceiptApp\Receipts;
 use App\ReceiptApp\Receipts\Interfaces\PhpInterface;
 use App\ReceiptApp\Receipts\Interfaces\ReceiptInterface;
 use App\ReceiptApp\File;
+use App\ReceiptApp\Receipts\Questions\BaseQuestion;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Filesystem\Filesystem;
 use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
@@ -17,12 +18,15 @@ class PhpReceipt extends ReceiptCommons implements ReceiptInterface, PhpInterfac
     {
         parent::__construct($fs);
 
-        $this->questionsPairs = [
-            new QuestionEntry(
-                methodName: "setPhpVersion",
-                textQuestion: "Write the PHP version to use \n",
-            )
-        ];
+        $this->questionsPairs = array_merge(
+            (new BaseQuestion())->getPropertyQuestionPair(),
+            [
+                new QuestionEntry(
+                    methodName: "setPhpVersion",
+                    textQuestion: "Write the PHP version to use \n",
+                )
+            ]
+        );
     }
 
     /**
