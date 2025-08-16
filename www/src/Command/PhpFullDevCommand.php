@@ -2,16 +2,17 @@
 
 namespace App\Command;
 
+use App\ReceiptApp\Receipts\PhpFullDevReceipt;
+use App\ReceiptApp\Traits\PrepareExecution;
 use App\Command\Traits\ReceiptFolder;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use App\ReceiptApp\Receipts\PhpFullDevReceipt;
-use App\ReceiptApp\Traits\PrepareExecution;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Console\Helper\QuestionHelper;
 
 #[AsCommand(
     name: 'receipt:php-full-dev',
@@ -28,7 +29,7 @@ class PhpFullDevCommand extends ReceiptmanCommand
 
     private $output;
 
-    private $questionHelper;
+    private QuestionHelper $questionHelper;
 
     private PhpFullDevReceipt $receipt;
 
@@ -38,8 +39,12 @@ class PhpFullDevCommand extends ReceiptmanCommand
 
         $io = new SymfonyStyle($input, $output);
 
-        $questionNeedsDb = new ConfirmationQuestion("Should the receipt have a database? \n", true);
-        if (!$this->questionHelper->ask($this->input, $this->output, $questionNeedsDb)) {
+        if (!$this->questionHelper->ask(
+            $this->input, 
+            $this->output, 
+            new ConfirmationQuestion("Should the receipt have a database? \n", true)
+            )
+        ) {
             $this->receipt->setNoDatabase();
         }
 
@@ -47,13 +52,16 @@ class PhpFullDevCommand extends ReceiptmanCommand
             $this->feedReceipt($propertyQuestionPair);
         }
 
-        $questionApp = new ConfirmationQuestion(
-            "Should this receipt be hosted in /app? Type yes or y for yes, or no or n for no. Default is no. \n", 
-            false
+        $folderReceiptQuestion = $this->questionHelper->ask(
+            $this->input,
+            $this->output,
+            new ConfirmationQuestion(
+                "Should this receipt be hosted in /app? Type yes or y for yes, or no or n for no. Default is no. \n",
+                false
+            )
         );
 
-        $responseQuestion = $this->questionHelper->ask($this->input, $this->output, $questionApp);
-        if ($responseQuestion) {
+        if ($folderReceiptQuestion) {
             $this->receipt->setAppFolder();
         }
 
