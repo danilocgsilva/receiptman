@@ -231,14 +231,90 @@ class PhpDevMysqlTest extends TestCase
     public function testGetFiles(): void
     {
         $this->phpDevMysql
-            ->setName(name: "the_beloved_environment.")
+            ->setName(name: "the_beloved_environment")
             ->setHttpPortRedirection("2013")
             ->setMysqlPortRedirection("3433")
-            ->setMysqlRootPassword("mysupersecurepassword");
+            ->setMysqlRootPassword("mysupersecurepassword")
+        ;
 
         $files = $this->phpDevMysql->getFiles();
 
         $this->assertCount(6, $files);
+    }
+
+    public function test2GetFiles(): void
+    {
+        $this->phpDevMysql
+            ->setName(name: "the_beloved_environment")
+            ->setHttpPortRedirection("2013")
+            ->setNoDatabase()
+            ->setPhpVersion("8.4")
+        ;
+
+        $files = $this->phpDevMysql->getFiles();
+
+        $this->assertCount(6, $files);
+    }
+
+    public function testDockerFileWithoutRootNameAsPublic(): void
+    {
+        $this->phpDevMysql
+            ->setName(name: "the_beloved_environment")
+            ->setNoDatabase()
+            ->setHttpPortRedirection("2013")
+            ->setPhpVersion("8.4")
+        ;
+
+        $files = $this->phpDevMysql->getFiles();
+
+        $dockerFile = $this->getSpecificFile($files, "Dockerfile");
+
+        $dockerFileContentExpected = <<<EOF
+        FROM php:8.4.7-apache-bookworm
+
+        RUN apt-get update
+        RUN apt-get upgrade -y
+        RUN apt-get install -y curl git zip
+        RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
+        COPY /config/startup.sh /startup.sh
+        COPY /config/apache2.conf /etc/apache2/
+        RUN chmod +x /startup.sh
+
+        CMD sh /startup.sh
+        EOF;
+
+        $this->assertSame($dockerFileContentExpected, $dockerFile->content);
+    }
+
+
+    public function test2DockerFileWithoutRootNameAsPublic(): void
+    {
+        $this->phpDevMysql
+            ->setNoDatabase()
+            ->setName(name: "the_beloved_environment_3")
+            ->setHttpPortRedirection("7101")
+            ->setPhpVersion("8.4")
+        ;
+
+        $files = $this->phpDevMysql->getFiles();
+
+        $dockerFile = $this->getSpecificFile($files, "Dockerfile");
+
+        $dockerFileContentExpected = <<<EOF
+        FROM php:8.4.7-apache-bookworm
+
+        RUN apt-get update
+        RUN apt-get upgrade -y
+        RUN apt-get install -y curl git zip
+        RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
+        COPY /config/startup.sh /startup.sh
+        COPY /config/apache2.conf /etc/apache2/
+        RUN chmod +x /startup.sh
+
+        CMD sh /startup.sh
+        EOF;
+
+        $this->assertSame($dockerFileContentExpected, $dockerFile->content);
     }
 
     public function testGetFilesWithoutRequiringDatabase(): void
