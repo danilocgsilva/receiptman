@@ -37,7 +37,7 @@ class ReceiptCommons
     /**
      * Set a name for contrainer
      * @param string $name
-     * @return ReceiptCommons
+     * @return static
      */
     public function setName(string $name): static
     {

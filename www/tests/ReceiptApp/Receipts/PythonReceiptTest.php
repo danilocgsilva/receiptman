@@ -54,4 +54,28 @@ class PythonReceiptTest extends TestCase
 
         $this->assertSame($expectedString, $dockerFile->content);
     }
+
+    public function testSetPip(): void
+    {
+        $this->pythonReceipt
+            ->setName("python_receipt")
+            ->setPip();
+
+        $receiptFiles = $this->pythonReceipt->getFiles();
+
+        $dockerFile = $this->getSpecificFile($receiptFiles, "Dockerfile");
+
+        $expectedString = <<<EOF
+        FROM debian:bookworm-slim
+
+        RUN apt-get update
+        RUN apt-get upgrade -y
+        RUN apt-get install python3 -y
+        RUN apt-get install python3-pip -y
+
+        CMD while : ; do sleep 1000; done
+        EOF;
+
+        $this->assertSame($expectedString, $dockerFile->content);
+    }
 }

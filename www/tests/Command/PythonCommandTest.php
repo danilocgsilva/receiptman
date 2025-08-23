@@ -21,7 +21,9 @@ class PythonCommandTest extends TestCase
 
         $commandTester->setInputs([
             "my_testing_container", "no",
-            "no", "my_testing_container"
+            "no",
+            "yes", "yes", 
+            "my_testing_container"
         ]);
 
         $commandTester->execute([]);

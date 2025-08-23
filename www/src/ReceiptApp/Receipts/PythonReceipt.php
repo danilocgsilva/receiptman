@@ -15,6 +15,8 @@ class PythonReceipt extends ReceiptCommons implements ReceiptInterface
 {
     private QuestionInterface $questions;
 
+    private bool $pip = false;
+
     public function __construct(Filesystem $fs)
     {
         parent::__construct($fs);
@@ -32,6 +34,12 @@ class PythonReceipt extends ReceiptCommons implements ReceiptInterface
             new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs),
             new File("Dockerfile", $this->getDockerfile(), $this->fs)
         ];
+    }
+
+    public function setPip(): self
+    {
+        $this->pip = true;
+        return $this;
     }
 
     private function buildYamlStructure(): void
@@ -55,14 +63,27 @@ class PythonReceipt extends ReceiptCommons implements ReceiptInterface
 
     private function getDockerfile(): string
     {
-        return <<<EOF
+        
+        $receiptString = <<<EOF
         FROM debian:bookworm-slim
 
         RUN apt-get update
         RUN apt-get upgrade -y
         RUN apt-get install python3 -y
+        EOF;
+
+        if ($this->pip) {
+            $receiptString .= <<<EOF
+
+            RUN apt-get install python3-pip -y
+            EOF;
+        }
+
+        $receiptString .= <<<EOF
 
         CMD while : ; do sleep 1000; done
         EOF;
+
+        return $receiptString;
     }
 }
