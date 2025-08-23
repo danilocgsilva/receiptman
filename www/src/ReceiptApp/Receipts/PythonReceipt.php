@@ -17,6 +17,8 @@ class PythonReceipt extends ReceiptCommons implements ReceiptInterface
 
     private bool $pip = false;
 
+    private bool $installGit = false;
+
     public function __construct(Filesystem $fs)
     {
         parent::__construct($fs);
@@ -42,6 +44,12 @@ class PythonReceipt extends ReceiptCommons implements ReceiptInterface
         return $this;
     }
 
+    public function setInstallGit(): self
+    {
+        $this->installGit = true;
+        return $this;
+    }
+
     private function buildYamlStructure(): void
     {
         $this->yamlStructure = [
@@ -63,27 +71,25 @@ class PythonReceipt extends ReceiptCommons implements ReceiptInterface
 
     private function getDockerfile(): string
     {
-        
-        $receiptString = <<<EOF
-        FROM debian:bookworm-slim
-
-        RUN apt-get update
-        RUN apt-get upgrade -y
-        RUN apt-get install python3 -y
-        EOF;
+        $receiptLines = [
+            'FROM debian:bookworm-slim',
+            '',
+            'RUN apt-get update',
+            'RUN apt-get upgrade -y',
+            'RUN apt-get install python3 -y',
+        ];
 
         if ($this->pip) {
-            $receiptString .= <<<EOF
-
-            RUN apt-get install python3-pip -y
-            EOF;
+            $receiptLines[] = 'RUN apt-get install python3-pip -y';
         }
 
-        $receiptString .= <<<EOF
+        if ($this->installGit) {
+            $receiptLines[] = 'RUN apt-get install git -y';
+        }
 
-        CMD while : ; do sleep 1000; done
-        EOF;
+        $receiptLines[] = '';
+        $receiptLines[] = 'CMD while : ; do sleep 1000; done';
 
-        return $receiptString;
+        return implode("\n", $receiptLines);
     }
 }
