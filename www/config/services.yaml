@@ -22,3 +22,9 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Commands:
+        resource: '../src/Commands/*'
+        tags: ['console.command']
+        autowire: true
+        autoconfigure: true

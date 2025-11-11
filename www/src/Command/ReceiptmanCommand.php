@@ -9,10 +9,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 abstract class ReceiptmanCommand extends Command
 {
-    
-    public function __construct(Filesystem $filesystem)
+    public function __construct(public Filesystem $filesystem)
     {
         parent::__construct();
-        $this->fs = $filesystem;
     }
 }

@@ -1,7 +1,8 @@
 #!/usr/bin/env php
 <?php
 
-use Symfony\Component\Console\Application;
+// use Symfony\Component\Console\Application;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use App\Command\{
     DebianCommand,
     PhpFullDevCommand,
@@ -14,24 +15,31 @@ use App\Command\{
     PostgreCommand,
     MySQLCommand
 };
+use App\Kernel;
 use App\Command\Dev\AddNew;
 use Symfony\Component\Filesystem\Filesystem;
 
 require_once './vendor/autoload.php';
 
-$fileSystem = new Filesystem();
+$kernel = new Kernel('dev', true);
+$application = new Application($kernel);
 
-$application = new Application();
-$application->add(new PhpFullDevCommand($fileSystem));
-$application->add(new DebianCommand($fileSystem));
-$application->add(new PythonCommand($fileSystem));
-$application->add(new NodeCommand($fileSystem));
-$application->add(new NginxCommand($fileSystem));
-$application->add(new ApacheCommand($fileSystem));
-$application->add(new DotNetCommand($fileSystem));
-$application->add(new PhpCommand($fileSystem));
-$application->add(new PostgreCommand($fileSystem));
-$application->add(new MySQLCommand($fileSystem));
+// $fileSystem = new Filesystem();
+
+// $application = new Application();
+// $application->add(new PhpFullDevCommand($fileSystem));
+// $application->add(new DebianCommand($fileSystem));
+// $application->add(new PythonCommand($fileSystem));
+// $application->add(new NodeCommand($fileSystem));
+// $application->add(new NginxCommand($fileSystem));
+// $application->add(new ApacheCommand($fileSystem));
+// $application->add(new DotNetCommand($fileSystem));
+// $application->add(new PhpCommand($fileSystem));
+// $application->add(new PostgreCommand($fileSystem));
+// $application->add(new MySQLCommand($fileSystem));
 $application->add(new AddNew());
+
+// $application->run();
+
 
 $application->run();

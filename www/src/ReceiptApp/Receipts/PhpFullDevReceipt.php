@@ -40,9 +40,9 @@ class PhpFullDevReceipt extends ReceiptCommons implements ReceiptInterface, PhpI
 
     private string $phpVersion = "8.2";
 
-    public function __construct(Filesystem $fs)
+    public function __construct(Filesystem $filesystem)
     {
-        parent::__construct($fs);
+        parent::__construct($filesystem);
 
         $this->questionsPairs = (new PhpDevMysqlQuestions())->getPropertyQuestionPair();
     }

@@ -11,7 +11,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Console\Helper\QuestionHelper;
 
 #[AsCommand(
@@ -22,8 +21,6 @@ class PhpFullDevCommand extends ReceiptmanCommand
 {
     use PrepareExecution;
     use ReceiptFolder;
-
-    protected Filesystem $fs;
 
     private $input;
 

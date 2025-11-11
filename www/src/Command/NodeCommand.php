@@ -24,8 +24,6 @@ class NodeCommand extends ReceiptmanCommand
     use PrepareExecution;
     use ReceiptFolder;
 
-    protected Filesystem $fs;
-
     private $input;
 
     private $output;

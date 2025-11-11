@@ -25,8 +25,6 @@ class DebianCommand extends ReceiptmanCommand
 
     private $input;
 
-    protected Filesystem $fs;
-
     private $output;
 
     private $questionHelper;
@@ -35,7 +33,7 @@ class DebianCommand extends ReceiptmanCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->prepareExecution($input, $output, new DebianReceipt($this->fs));
+        $this->prepareExecution($input, $output, new DebianReceipt($this->filesystem));
         
         $io = new SymfonyStyle($input, $output);
 

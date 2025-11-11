@@ -27,8 +27,6 @@ class PhpCommand extends ReceiptmanCommand
 
     private PhpReceipt $receipt;
 
-    protected Filesystem $fs;
-
     private $input;
 
     private $output;

@@ -31,9 +31,13 @@ class PythonCommand extends ReceiptmanCommand
 
     private PythonReceipt $receipt;
 
+    // public function __construct(public Filesystem $filesystem) {
+    //     parent::__construct($this->filesystem);
+    // }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->prepareExecution($input, $output, new PythonReceipt($this->fs));
+        $this->prepareExecution($input, $output, new PythonReceipt($this->filesystem));
 
         $io = new SymfonyStyle($input, $output);
 

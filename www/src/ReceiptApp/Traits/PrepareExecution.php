@@ -89,13 +89,13 @@ trait PrepareExecution
 
     private function makerFile(string $dirPath, ReceiptInterface $receipt)
     {
-        if ($this->fs->exists($dirPath)) {
+        if ($this->filesystem->exists($dirPath)) {
             throw new Exception(sprintf("The path %1\$s exists. Action aborted with exception.", $dirPath));
         }
-        $this->fs->mkdir($dirPath);
+        $this->filesystem->mkdir($dirPath);
 
         foreach ($receipt->getFiles() as $file) {
-            $file->write($dirPath, $this->fs);
+            $file->write($dirPath, $this->filesystem);
         }
     }
 }
