@@ -4,7 +4,7 @@ namespace App\Utilities\DockerLineCommands;
 
 use App\Utilities\DockerReceiptWritterInterface;
 
-class installPackages implements DockerReceiptWritterInterface
+class InstallPackages implements DockerReceiptWritterInterface
 {
     private array $packages;
 

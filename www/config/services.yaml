@@ -23,8 +23,10 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    App\Commands:
-        resource: '../src/Commands/*'
+    App\Command\:
+        resource: '../src/Command/*'
         tags: ['console.command']
         autowire: true
         autoconfigure: true
+        exclude:
+            - '../src/Command/Dev/FilesContentScaffold/*'
