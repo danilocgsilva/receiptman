@@ -32,7 +32,7 @@ class PhpFullDevCommand extends ReceiptmanCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->prepareExecution($input, $output, new PhpFullDevReceipt($this->fs));
+        $this->prepareExecution($input, $output, new PhpFullDevReceipt($this->filesystem));
 
         $io = new SymfonyStyle($input, $output);
 

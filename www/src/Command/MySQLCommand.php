@@ -23,8 +23,6 @@ class MySQLCommand extends ReceiptmanCommand
     use PrepareExecution;
     use ReceiptFolder;
 
-    protected Filesystem $fs;
-
     private MySQLReceipt $receipt;
 
     private InputInterface $input;
@@ -35,7 +33,7 @@ class MySQLCommand extends ReceiptmanCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->prepareExecution($input, $output, new MySQLReceipt($this->fs));
+        $this->prepareExecution($input, $output, new MySQLReceipt($this->filesystem));
 
         $io = new SymfonyStyle($input, $output);
 
