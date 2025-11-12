@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Utilities;
 
 use App\Utilities\DockerReceiptWritter;
 use PHPUnit\Framework\TestCase;

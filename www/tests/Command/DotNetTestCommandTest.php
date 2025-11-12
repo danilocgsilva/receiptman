@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace App\Tests\Command;
+
 use App\Command\DotNetCommand;
 use App\Tests\Traits\MockFileSystemTrait;
 use PHPUnit\Framework\TestCase;

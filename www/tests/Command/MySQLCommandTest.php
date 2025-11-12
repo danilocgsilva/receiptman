@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace App\Tests\Command;
+
 use App\Command\MySQLCommand;
 use Symfony\Component\Console\Tester\CommandTester;
 use PHPUnit\Framework\TestCase;

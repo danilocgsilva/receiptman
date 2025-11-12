@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace App\Tests\Command;
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Console\Application;
