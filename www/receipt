@@ -2,44 +2,168 @@
 <?php
 
 // use Symfony\Component\Console\Application;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
-use App\Command\{
-    DebianCommand,
-    PhpFullDevCommand,
-    PythonCommand,
-    NodeCommand,
-    NginxCommand,
-    ApacheCommand,
-    DotNetCommand,
-    PhpCommand,
-    PostgreCommand,
-    MySQLCommand
-};
-use App\Kernel;
-use App\Command\Dev\AddNew;
-use Symfony\Component\Filesystem\Filesystem;
+// // use Symfony\Bundle\FrameworkBundle\Console\Application;
+// // use App\Command\{
+// //     DebianCommand,
+// //     PhpFullDevCommand,
+// //     PythonCommand,
+// //     NodeCommand,
+// //     NginxCommand,
+// //     ApacheCommand,
+// //     DotNetCommand,
+// //     PhpCommand,
+// //     PostgreCommand,
+// //     MySQLCommand
+// // };
+// use App\Kernel;
+// use App\Command\Dev\AddNew;
+// // use Symfony\Component\Filesystem\Filesystem;
 
-require_once './vendor/autoload.php';
+// require_once './vendor/autoload.php';
 
-$kernel = new Kernel('dev', true);
-$application = new Application($kernel);
-
-// $fileSystem = new Filesystem();
+// $kernel = new Kernel('dev', true);
+// $kernel->boot();
+// $container = $kernel->getContainer();
 
 // $application = new Application();
-// $application->add(new PhpFullDevCommand($fileSystem));
-// $application->add(new DebianCommand($fileSystem));
-// $application->add(new PythonCommand($fileSystem));
-// $application->add(new NodeCommand($fileSystem));
-// $application->add(new NginxCommand($fileSystem));
-// $application->add(new ApacheCommand($fileSystem));
-// $application->add(new DotNetCommand($fileSystem));
-// $application->add(new PhpCommand($fileSystem));
-// $application->add(new PostgreCommand($fileSystem));
-// $application->add(new MySQLCommand($fileSystem));
-$application->add(new AddNew());
+
+// foreach ($container->findTaggedServiceIds('console.command') as $id => $tags) {
+//     $application->add($container->get($id));
+// }
+
+// // $fileSystem = new Filesystem();
+
+// // $application = new Application();
+// // $application->add(new PhpFullDevCommand($fileSystem));
+// // $application->add(new DebianCommand($fileSystem));
+// // $application->add(new PythonCommand($fileSystem));
+// // $application->add(new NodeCommand($fileSystem));
+// // $application->add(new NginxCommand($fileSystem));
+// // $application->add(new ApacheCommand($fileSystem));
+// // $application->add(new DotNetCommand($fileSystem));
+// // $application->add(new PhpCommand($fileSystem));
+// // $application->add(new PostgreCommand($fileSystem));
+// // $application->add(new MySQLCommand($fileSystem));
+// $application->add(new AddNew());
+
+// // $application->run();
 
 // $application->run();
 
 
+
+
+
+
+
+
+
+
+
+
+// use App\Kernel;
+// use Symfony\Component\Console\Application;
+
+// // require __DIR__.'/../vendor/autoload.php';
+// require_once './vendor/autoload.php';
+
+// $kernel = new Kernel('dev', true);
+// $kernel->boot();
+
+// $container = $kernel->getContainer();
+
+// // Create a plain console application (no framework commands)
+// $application = new Application();
+
+// $commandLoader = $kernel->getContainer()->get('console.command_loader');
+
+// // Load only your commands tagged with console.command
+// // foreach ($container->findTaggedServiceIds('console.command') as $id => $tags) {
+// //     $application->add($container->get($id));
+// // }
+
+// $application->setCommandLoader($commandLoader);
+
+// $application->run();
+
+
+
+
+
+// use App\Kernel;
+// use Symfony\Component\Console\Application;
+// use Symfony\Component\Console\CommandLoader\ContainerCommandLoader;
+
+// require_once './vendor/autoload.php';
+
+// $kernel = new Kernel('dev', true);
+// $kernel->boot();
+
+// $container = $kernel->getContainer();
+// $application = new Application();
+
+// // manually collect only your commands
+// $commandIds = [];
+
+// // foreach ($container->findTaggedServiceIds('console.command') as $id => $tags) {
+// foreach ($container->getServiceIds() as $id) {
+//     // Filter: load only command services located in your namespace
+//     print($id . PHP_EOL);
+//     if (str_starts_with($id, needle: 'App\\') && $container->has($id)) {
+//         $service = $container->get($id);
+
+//         if ($service instanceof Symfony\Component\Console\Command\Command) {
+//             $commandIds[$service->getName()] = $id;
+//         }
+//     }
+    
+// }
+
+// // attach custom loader
+// $application->setCommandLoader(new ContainerCommandLoader($container, $commandIds));
+
+// $application->run();
+
+
+
+
+
+
+
+
+
+
+use App\Kernel;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
+
+require_once './vendor/autoload.php';
+
+$kernel = new Kernel('dev', true);
+$kernel->boot();
+
+$container = $kernel->getContainer();
+$application = new Application();
+
+// Get Symfony’s command loader
+$loader = $container->get('console.command_loader');
+
+// Manually load commands from it, but keep only those in your namespace
+foreach ($loader->getNames() as $name) {
+// foreach ($loader->getServiceIds as $id) {
+    // print($name . PHP_EOL);
+    $command = $loader->get($name);
+    print(get_class($command) . PHP_EOL);
+
+    if ($command instanceof Command && str_starts_with(get_class($command), 'App\\')) {
+        $application->add($command);
+        print("------------------------");
+    }
+}
+
 $application->run();
+
+
+
+
+
