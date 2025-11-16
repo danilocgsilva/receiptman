@@ -2,36 +2,21 @@
 <?php
 
 use Symfony\Component\Console\Application;
-use App\Command\{
-    DebianCommand,
-    PhpFullDevCommand,
-    PythonCommand,
-    NodeCommand,
-    NginxCommand,
-    ApacheCommand,
-    DotNetCommand,
-    PhpCommand,
-    PostgreCommand,
-    MySQLCommand
-};
-use App\Command\Dev\AddNew;
-use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
-require_once './vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
-$fileSystem = new Filesystem();
+$container = new ContainerBuilder();
+$loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/config'));
+$loader->load('services.yaml');
+$container->compile();
 
 $application = new Application();
-$application->add(new PhpFullDevCommand($fileSystem));
-$application->add(new DebianCommand($fileSystem));
-$application->add(new PythonCommand($fileSystem));
-$application->add(new NodeCommand($fileSystem));
-$application->add(new NginxCommand($fileSystem));
-$application->add(new ApacheCommand($fileSystem));
-$application->add(new DotNetCommand($fileSystem));
-$application->add(new PhpCommand($fileSystem));
-$application->add(new PostgreCommand($fileSystem));
-$application->add(new MySQLCommand($fileSystem));
-$application->add(new AddNew());
+
+foreach ($container->findTaggedServiceIds('console.command') as $id => $tags) {
+    $application->add($container->get($id));
+}
 
 $application->run();
