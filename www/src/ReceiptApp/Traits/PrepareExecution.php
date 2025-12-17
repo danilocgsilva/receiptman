@@ -94,8 +94,9 @@ trait PrepareExecution
         }
         $this->fs->mkdir($dirPath);
 
+        /** @var \App\ReceiptApp\File $file */
         foreach ($receipt->getFiles() as $file) {
-            $file->write($dirPath, $this->fs);
+            $file->write($dirPath);
         }
     }
 }

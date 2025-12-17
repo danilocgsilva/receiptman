@@ -11,9 +11,7 @@ use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
  */
 interface ReceiptInterface
 {
-    /**
-     * @return \App\ReceiptApp\File[]
-     */
+    /** @return \App\ReceiptApp\File[] */
     public function getFiles(): array;
 
     public function getPropertyQuestionsPairs(): array;
