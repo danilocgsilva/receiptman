@@ -76,6 +76,11 @@ class ReceiptCommons
         return $this->questionsPairs[$this->currentQuestion++] ?? null;
     }
 
+    public function getServiceYamlStructure(): array
+    {
+        return $this->yamlStructure;
+    }
+
     protected function postYamlProcessing(): void
     {
         if ($this->sshVolume) {

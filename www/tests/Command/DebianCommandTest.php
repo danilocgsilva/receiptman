@@ -29,5 +29,9 @@ class DebianCommandTest extends TestCase
         ]);
 
         $commandTester->execute([]);
+        $this->assertStringContainsString(
+            sprintf("Project created in %1\$s.", 'output/my_debian_container'),
+            $commandTester->getDisplay()
+        );
     }
 }

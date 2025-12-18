@@ -39,8 +39,6 @@ class DebianCommand extends ReceiptmanCommand
         
         $io = new SymfonyStyle($input, $output);
 
-        $dirPath = $this->getDirPath();
-
         foreach ($this->receipt->getPropertyQuestionsPairs() as $propertyQuestionPair) {
             $this->feedReceipt($propertyQuestionPair);    
         }

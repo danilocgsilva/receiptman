@@ -27,6 +27,10 @@ class PythonCommandTest extends TestCase
         ]);
 
         $commandTester->execute([]);
+        $this->assertStringContainsString(
+            sprintf("Project created in %1\$s.", 'output/my_testing_container'),
+            $commandTester->getDisplay()
+        );
     }
 
     private function getFileSystemMocked(): Filesystem
