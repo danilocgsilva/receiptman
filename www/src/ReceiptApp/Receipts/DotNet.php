@@ -11,6 +11,7 @@ use App\ReceiptApp\Receipts\Interfaces\ReceiptInterface;
 use App\ReceiptApp\Traits\PutGenericDatabase;
 use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
 use Symfony\Component\Filesystem\Filesystem;
+use App\Utilities\DockerReceiptWritter;
 
 class DotNet extends ReceiptCommons implements ReceiptInterface
 {
@@ -105,11 +106,11 @@ class DotNet extends ReceiptCommons implements ReceiptInterface
 
     private function getDockerfileContent(): string
     {
-        return <<<EOF
-        FROM mcr.microsoft.com/dotnet/sdk:8.0
+        $dockerfileWritter = new DockerReceiptWritter();
 
-        CMD while : ; do sleep 1000; done
-
-        EOF;
+        $dockerfileWritter->addRawContent("FROM mcr.microsoft.com/dotnet/sdk:8.0");
+        $dockerfileWritter->addBlankLine();
+        $dockerfileWritter->addRawContent("CMD while : ; do sleep 1000; done");
+        return $dockerfileWritter->dump();
     }
 }

@@ -9,6 +9,7 @@ use Symfony\Component\Yaml\Yaml;
 use App\ReceiptApp\Receipts\Questions\DebianQuestion;
 use App\ReceiptApp\Receipts\Interfaces\ReceiptInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use App\Utilities\DockerReceiptWritter;
 
 class DebianReceipt extends ReceiptCommons implements ReceiptInterface
 {
@@ -43,13 +44,14 @@ class DebianReceipt extends ReceiptCommons implements ReceiptInterface
 
     private function getDockerfile(): string
     {
-        return <<<EOF
-        FROM debian:bookworm-slim
+        $dockerfileWritter = new DockerReceiptWritter();
+        $dockerfileWritter->addRawContent("FROM debian:bookworm-slim");
+        $dockerfileWritter->addBlankLine();
+        $dockerfileWritter->addAptGetUpdate();
+        $dockerfileWritter->addAptGetUpgrade();
+        $dockerfileWritter->addBlankLine();
+        $dockerfileWritter->addRawContent("CMD while : ; do sleep 1000; done");
 
-        RUN apt-get update
-        RUN apt-get upgrade -y
-
-        CMD while : ; do sleep 1000; done
-        EOF;
+        return $dockerfileWritter->dump();
     }
 }

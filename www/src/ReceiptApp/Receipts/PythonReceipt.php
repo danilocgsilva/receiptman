@@ -10,6 +10,7 @@ use Symfony\Component\Yaml\Yaml;
 use App\ReceiptApp\Receipts\Questions\QuestionInterface;
 use App\ReceiptApp\Receipts\Questions\PythonQuestion;
 use Symfony\Component\Filesystem\Filesystem;
+use App\Utilities\DockerReceiptWritter;
 
 class PythonReceipt extends ReceiptCommons implements ReceiptInterface
 {
@@ -71,25 +72,22 @@ class PythonReceipt extends ReceiptCommons implements ReceiptInterface
 
     private function getDockerfile(): string
     {
-        $receiptLines = [
-            'FROM debian:bookworm-slim',
-            '',
-            'RUN apt-get update',
-            'RUN apt-get upgrade -y',
-            'RUN apt-get install python3 -y',
-        ];
-
+        $dockerfileWritter = new DockerReceiptWritter();
+        $dockerfileWritter->addRawContent("FROM debian:bookworm-slim");
+        $dockerfileWritter->addBlankLine();
+        $dockerfileWritter->addAptGetUpdate();
+        $dockerfileWritter->addAptGetUpgrade();
+        $dockerfileWritter->addRawContent("RUN apt-get install python3 -y");
         if ($this->pip) {
-            $receiptLines[] = 'RUN apt-get install python3-pip -y';
+            $dockerfileWritter->addRawContent("RUN apt-get install python3-pip -y");
         }
 
         if ($this->installGit) {
-            $receiptLines[] = 'RUN apt-get install git -y';
+            $dockerfileWritter->addRawContent("RUN apt-get install git -y");
         }
+        $dockerfileWritter->addBlankLine();
+        $dockerfileWritter->addRawContent("CMD while : ; do sleep 1000; done");
 
-        $receiptLines[] = '';
-        $receiptLines[] = 'CMD while : ; do sleep 1000; done';
-
-        return implode("\n", $receiptLines);
+        return $dockerfileWritter->dump();
     }
 }

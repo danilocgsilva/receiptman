@@ -13,6 +13,7 @@ use App\ReceiptApp\Receipts\Interfaces\{
     HttpReportableInterface
 };
 use Symfony\Component\Filesystem\Filesystem;
+use App\Utilities\DockerReceiptWritter;
 
 class NginxReceipt extends ReceiptCommons implements ReceiptInterface, HttpReportableInterface
 {
@@ -126,12 +127,12 @@ class NginxReceipt extends ReceiptCommons implements ReceiptInterface, HttpRepor
 
     private function getDockerfileContent(): string
     {
-        return <<<EOF
-        FROM nginx:latest
+        $dockerFileWritter = new DockerReceiptWritter();
+        $dockerFileWritter->addRawContent("FROM nginx:latest");
+        $dockerFileWritter->addBlankLine();
+        $dockerFileWritter->addRawContent("COPY ./config/default.conf /etc/nginx/conf.d/default.conf");
 
-        COPY ./config/default.conf /etc/nginx/conf.d/default.conf
-
-        EOF;
+        return $dockerFileWritter->dump();
     }
 }
 

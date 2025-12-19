@@ -68,16 +68,4 @@ class Apache extends ReceiptCommons implements ReceiptInterface, HttpReportableI
             $this->yamlStructure['services'][$this->name]['network_mode'] = 'host';
         }
     }
-
-    private function getDockerfile(): string
-    {
-        return <<<EOF
-            FROM debian:bookworm-slim
-
-            RUN apt-get update
-            RUN apt-get upgrade -y
-
-            CMD while : ; do sleep 1000; done
-            EOF;
-    }
 }
