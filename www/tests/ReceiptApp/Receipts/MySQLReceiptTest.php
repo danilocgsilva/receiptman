@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 use App\ReceiptApp\Receipts\MySQLReceipt;
 use App\Tests\Traits\GetSpecificFileTrait;
 use App\Tests\Traits\MockFileSystemTrait;
-use App\ReceiptApp\File;
 
 class MySQLReceiptTest extends TestCase
 {
@@ -30,23 +29,17 @@ class MySQLReceiptTest extends TestCase
         $this->mySQLReceipt->setMysqlPortRedirection("3306");
         $this->mySQLReceipt->setMysqlRootPassword("mysecretpass");
 
-        $dockerComposeFileContent = <<<EOF
-        services:
-          mysql_env:
-            image: 'mysql:latest'
-            container_name: mysql_env
-            environment:
-              - MYSQL_ROOT_PASSWORD=mysecretpass
-            ports:
-              - '3306:3306'
-        
-        EOF;
+        $yamlStructure = $this->mySQLReceipt->getServiceYamlStructure();
 
-        $dockerComposeFile = $this->mySQLReceipt->getFiles();
-        $dockerComposeFile = $this->getSpecificFile($dockerComposeFile, "docker-compose.yml");
-
-        $this->assertInstanceOf(File::class, $dockerComposeFile);
-        $this->assertSame($dockerComposeFileContent, $dockerComposeFile->content);
+        $this->assertArrayHasKey('mysql_env', $yamlStructure);
+        $this->assertArrayHasKey('image', $yamlStructure["mysql_env"]);
+        $this->assertArrayHasKey('container_name', $yamlStructure["mysql_env"]);
+        $this->assertArrayHasKey('environment', $yamlStructure["mysql_env"]);
+        $this->assertArrayHasKey('ports', $yamlStructure["mysql_env"]);
+        $this->assertEquals('mysql:latest', $yamlStructure["mysql_env"]['image']);
+        $this->assertEquals('mysql_env', $yamlStructure["mysql_env"]['container_name']);
+        $this->assertEquals('MYSQL_ROOT_PASSWORD=mysecretpass', $yamlStructure["mysql_env"]['environment'][0]);
+        $this->assertEquals('3306:3306', $yamlStructure["mysql_env"]['ports'][0]);
     }
 
     public function testDockerFileContentDifferentPortdAndPassword(): void
@@ -55,22 +48,15 @@ class MySQLReceiptTest extends TestCase
         $this->mySQLReceipt->setMysqlPortRedirection("7162");
         $this->mySQLReceipt->setMysqlRootPassword("anotherveryhardsecret");
 
-        $dockerComposeFileContent = <<<EOF
-        services:
-          mysql_env:
-            image: 'mysql:latest'
-            container_name: mysql_env
-            environment:
-              - MYSQL_ROOT_PASSWORD=anotherveryhardsecret
-            ports:
-              - '7162:3306'
-        
-        EOF;
-
-        $dockerComposeFile = $this->mySQLReceipt->getFiles();
-        $dockerComposeFile = $this->getSpecificFile($dockerComposeFile, "docker-compose.yml");
-
-        $this->assertInstanceOf(File::class, $dockerComposeFile);
-        $this->assertSame($dockerComposeFileContent, $dockerComposeFile->content);
+        $yamlStructure = $this->mySQLReceipt->getServiceYamlStructure();
+        $this->assertArrayHasKey('mysql_env', $yamlStructure);
+        $this->assertArrayHasKey('image', $yamlStructure['mysql_env']);
+        $this->assertArrayHasKey('container_name', $yamlStructure['mysql_env']);
+        $this->assertArrayHasKey('environment', $yamlStructure['mysql_env']);
+        $this->assertArrayHasKey('ports', $yamlStructure['mysql_env']);
+        $this->assertEquals('mysql:latest', $yamlStructure['mysql_env']['image']);
+        $this->assertEquals('mysql_env', $yamlStructure['mysql_env']['container_name']);
+        $this->assertEquals('MYSQL_ROOT_PASSWORD=anotherveryhardsecret', $yamlStructure['mysql_env']['environment'][0]);
+        $this->assertEquals('7162:3306', $yamlStructure['mysql_env']['ports'][0]);
     }
 }

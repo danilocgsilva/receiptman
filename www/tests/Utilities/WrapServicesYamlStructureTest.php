@@ -6,7 +6,8 @@ namespace App\Tests;
 
 use PHPUnit\Framework\TestCase;
 use App\ReceiptApp\Receipts\ApacheReceipt;
-use App\ReceiptApp\Receipts\DotNet;
+use App\ReceiptApp\Receipts\DotNetReceipt;
+use App\ReceiptApp\Receipts\MySQLReceipt;
 use App\Tests\Traits\MockFileSystemTrait;
 use App\Utilities\WrapServicesYamlStructure;
 use Symfony\Component\Yaml\Yaml;
@@ -110,14 +111,120 @@ class WrapServicesYamlStructureTest extends TestCase
         $this->testApacheReceiptInstance($apacheReceipt, $dockerComposeFileContent);
     }
 
+    public function testDockerComposeFileContentForDotNetReceipt(): void
+    {
+        $dotnetReceipt = $this->getDotNetReceipt();
+        $dotnetReceipt->setName("dotnet_env");
+
+        $dockerComposeFileContent = <<<EOF
+        services:
+          dotnet_env:
+            build:
+              context: .
+            container_name: dotnet_env
+        
+        EOF;
+
+        $this->testDotNetReceiptInstance($dotnetReceipt, $dockerComposeFileContent);
+    }
+
+    public function testDockerComposeFileContentForDotNetSetHostMountVolume(): void
+    {
+        $dotnetReceipt = $this->getDotNetReceipt();
+        $dotnetReceipt->setName("dotnet_env");
+        $dotnetReceipt->setHostMountVolume();
+
+        $dockerComposeFileContent = <<<EOF
+        services:
+          dotnet_env:
+            build:
+              context: .
+            container_name: dotnet_env
+            volumes:
+              - './app:/app'
+        
+        EOF;
+
+        $this->testDotNetReceiptInstance($dotnetReceipt, $dockerComposeFileContent);
+    }
+
+    public function testDockerFileContentForMySQLReceipt(): void
+    {
+        $mySQLReceipt = $this->getMySQLReceipt();
+        $mySQLReceipt->setName("mysql_env");
+        $mySQLReceipt->setMysqlPortRedirection("3306");
+        $mySQLReceipt->setMysqlRootPassword("mysecretpass");
+
+        $dockerComposeFileContent = <<<EOF
+        services:
+          mysql_env:
+            image: 'mysql:latest'
+            container_name: mysql_env
+            environment:
+              - MYSQL_ROOT_PASSWORD=mysecretpass
+            ports:
+              - '3306:3306'
+        
+        EOF;
+
+        $this->testMysqLReceiptInstance($mySQLReceipt, $dockerComposeFileContent);
+    }
+
+    public function testDockerFileContenFortDifferentPortdAndPassword()
+    {
+        $mySQLReceipt = $this->getMySQLReceipt();
+        $mySQLReceipt->setName("mysql_env");
+        $mySQLReceipt->setMysqlPortRedirection("7162");
+        $mySQLReceipt->setMysqlRootPassword("anotherveryhardsecret");
+
+        $dockerComposeFileContent = <<<EOF
+        services:
+          mysql_env:
+            image: 'mysql:latest'
+            container_name: mysql_env
+            environment:
+              - MYSQL_ROOT_PASSWORD=anotherveryhardsecret
+            ports:
+              - '7162:3306'
+
+        EOF;
+
+        $this->testMysqLReceiptInstance($mySQLReceipt, $dockerComposeFileContent);
+    }
+
     private function getApacheReceipt(): ApacheReceipt
     {
         return new ApacheReceipt($this->getFileSystemMocked("", 0));
     }
 
-    private function getDotNetReceipt(): ReceiptInterface
+    private function getDotNetReceipt(): DotNetReceipt
     {
-        return new ApacheReceipt($this->getFileSystemMocked("", 0));
+        return new DotNetReceipt($this->getFileSystemMocked("", 0));
+    }
+
+    private function getMySQLReceipt(): MySQLReceipt
+    {
+        return new MySQLReceipt($this->getFileSystemMocked("", 0));
+    }
+
+    private function testMysqLReceiptInstance(MySQLReceipt $receipt, string $dockerComposeFileContent): void
+    {
+        $wrapServicesYamlStructure = new WrapServicesYamlStructure($receipt);
+        $yamlFullStructure = $wrapServicesYamlStructure->getFullDockerComposeYamlStructure();
+
+        $fileContent = Yaml::dump($yamlFullStructure, 4, 2);
+
+        $this->assertSame($dockerComposeFileContent, $fileContent);
+    }
+
+    private function testDotNetReceiptInstance(ReceiptInterface $receipt, string $dockerComposeFileContent): void
+    {
+        $wrapServicesYamlStructure = new WrapServicesYamlStructure($receipt);
+        $yamlFullStructure = $wrapServicesYamlStructure->getFullDockerComposeYamlStructure();
+
+        $fileContent = Yaml::dump($yamlFullStructure, 4, 2);
+
+        $this->assertSame($dockerComposeFileContent, $fileContent);
     }
 
     private function testApacheReceiptInstance(ReceiptInterface $receipt, string $dockerComposeFileContent): void

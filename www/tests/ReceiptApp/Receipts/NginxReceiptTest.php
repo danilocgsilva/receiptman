@@ -96,18 +96,13 @@ EOF;
     {
         $this->nginxReceipt->setName("nginx_env");
 
-        $dockerComposeFileContent = <<<EOF
-        services:
-          nginx_env:
-            image: 'nginx:latest'
-            container_name: nginx_env
-        
-        EOF;
+        $yamlStructure = $this->nginxReceipt->getServiceYamlStructure();
 
-        $dockerComposeFile = $this->nginxReceipt->getFiles();
-        $dockerComposeFile = $this->getSpecificFile($dockerComposeFile, "docker-compose.yml");
-
-        $this->assertInstanceOf(File::class, $dockerComposeFile);
-        $this->assertSame($dockerComposeFileContent, $dockerComposeFile->content);
+        $this->assertIsArray($yamlStructure);
+        $this->assertArrayHasKey("nginx_env", $yamlStructure);
+        $this->assertArrayHasKey("image", array: $yamlStructure["nginx_env"]);
+        $this->assertArrayHasKey("container_name", $yamlStructure["nginx_env"]);
+        $this->assertSame("nginx:latest", $yamlStructure["nginx_env"]["image"]);
+        $this->assertSame("nginx_env", $yamlStructure["nginx_env"]["container_name"]);
     }
 }

@@ -35,19 +35,6 @@ class DotNetTest extends TestCase
     public function testDockerComposeFileContent(): void
     {
         $this->receipt->setName("dotnet_env");
-        $dockerComposeFile = $this->receipt->getFiles()[0];
-
-        // @todo Replicar esse teste específico em WrapServicesYamlStructureTest
-        // $expectedFileContent = <<<EOF
-        // services:
-        //   dotnet_env:
-        //     build:
-        //       context: .
-        //     container_name: dotnet_env
-
-        // EOF;
-
-        // $this->assertSame($expectedFileContent, $dockerComposeFile->content);
 
         $yamlStructure = $this->receipt->getServiceYamlStructure();
 
@@ -61,22 +48,6 @@ class DotNetTest extends TestCase
     {
         $this->receipt->setName("dotnet_env");
         $this->receipt->setHostMountVolume();
-
-        // @todo Replicar esse teste específico em WrapServicesYamlStructureTest
-        // $dockerComposeFile = $this->getSpecificFile($this->receipt->getFiles(), 'docker-compose.yml');
-
-        // $expectedFileContent = <<<EOF
-        // services:
-        //   dotnet_env:
-        //     build:
-        //       context: .
-        //     container_name: dotnet_env
-        //     volumes:
-        //       - './app:/app'
-
-        // EOF;
-
-        // $this->assertSame($expectedFileContent, $dockerComposeFile->content);
 
         $yamlStructure = $this->receipt->getServiceYamlStructure();
 

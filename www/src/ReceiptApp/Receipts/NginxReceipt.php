@@ -57,15 +57,15 @@ class NginxReceipt extends ReceiptCommons implements ReceiptInterface, HttpRepor
         ];
 
         if ($this->exposeServerDefaultFile) {
-            $this->yamlStructure['services'][$this->name]['build']['context'] = '.';
+            $this->yamlStructure[$this->name]['build']['context'] = '.';
         } else {
-            $this->yamlStructure['services'][$this->name]['image'] = 'nginx:latest';
+            $this->yamlStructure[$this->name]['image'] = 'nginx:latest';
         }
 
-        $this->yamlStructure['services'][$this->name]['container_name'] = $this->name;
+        $this->yamlStructure[$this->name]['container_name'] = $this->name;
 
         if (isset($this->httpPortRedirection)) {
-            $this->yamlStructure['services'][$this->name]['ports'][] = sprintf('%s:80', $this->httpPortRedirection);
+            $this->yamlStructure[$this->name]['ports'][] = sprintf('%s:80', $this->httpPortRedirection);
         }
     }
 
