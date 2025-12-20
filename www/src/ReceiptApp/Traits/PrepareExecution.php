@@ -6,6 +6,7 @@ namespace App\ReceiptApp\Traits;
 
 use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
 use App\ReceiptApp\Receipts\Interfaces\ReceiptInterface;
+use App\Utilities\WrapServicesYamlStructure;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use DateTime;
@@ -13,6 +14,8 @@ use Symfony\Component\Console\Question\{Question, ConfirmationQuestion};
 use Exception;
 use InvalidArgumentException;
 use App\ReceiptApp\Receipts\Questions\Types\InputType;
+use App\ReceiptApp\File;
+use Symfony\Component\Yaml\Yaml;
 
 trait PrepareExecution
 {
@@ -98,5 +101,13 @@ trait PrepareExecution
         foreach ($receipt->getFiles() as $file) {
             $file->write($dirPath);
         }
+
+        $serviceYamlWrapper = new WrapServicesYamlStructure($receipt);
+
+        (new File(
+            'docker-compose.yml',
+            Yaml::dump($serviceYamlWrapper->getFullDockerComposeYamlStructure(), 4, 2),
+            $this->fs
+        ))->write($dirPath);
     }
 }

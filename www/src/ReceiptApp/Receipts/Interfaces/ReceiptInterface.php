@@ -18,6 +18,8 @@ interface ReceiptInterface
 
     public function setName(string $name): static;
 
+    public function getName(): string;
+
     public function getNextQuestionPair(): QuestionEntry|null;
 
     public function getServiceYamlStructure(): array;

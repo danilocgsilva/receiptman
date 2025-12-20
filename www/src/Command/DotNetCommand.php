@@ -13,7 +13,7 @@ use Symfony\Component\Console\{
     Input\InputInterface,
     Output\OutputInterface
 };
-use App\ReceiptApp\Receipts\DotNet as DotNetReceipt;
+use App\ReceiptApp\Receipts\DotNetReceipt;
 use App\ReceiptApp\Traits\PrepareExecution;
 use App\Command\Traits\ReceiptFolder;
 use Symfony\Component\Filesystem\Filesystem;

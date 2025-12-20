@@ -14,7 +14,7 @@ use App\ReceiptApp\Receipts\Interfaces\{
 use App\ReceiptApp\Traits\HttpPortRedirection;
 use Symfony\Component\Filesystem\Filesystem;
 
-class Apache extends ReceiptCommons implements ReceiptInterface, HttpReportableInterface
+class ApacheReceipt extends ReceiptCommons implements ReceiptInterface, HttpReportableInterface
 {
     use HttpPortRedirection;
 
@@ -28,15 +28,18 @@ class Apache extends ReceiptCommons implements ReceiptInterface, HttpReportableI
 
     public function getFiles(): array
     {
-        $this->buildYamlStructure();
+        // $this->buildYamlStructure();
 
-        return [
-            new File(
-                "docker-compose.yml", 
-                Yaml::dump($this->yamlStructure, 4, 2),
-                $this->fs
-            )
-        ];
+        // return [
+        //     new File(
+        //         "docker-compose.yml", 
+        //         Yaml::dump($this->yamlStructure, 4, 2),
+        //         $this->fs
+        //     )
+        // ];
+
+        // The only required file is docker-compose.yml, but it will be taylored afterwards.
+        return [];
     }
 
     public function onExposeWWW(): static
@@ -48,24 +51,22 @@ class Apache extends ReceiptCommons implements ReceiptInterface, HttpReportableI
     public function buildYamlStructure(): void
     {
         $this->yamlStructure = [
-            'services' => [
-                $this->name => [
-                    'image' => 'httpd:latest',
-                    'container_name' => $this->name
-                ]
+            $this->name => [
+                'image' => 'httpd:latest',
+                'container_name' => $this->name
             ]
         ];
 
         if (isset($this->httpPortRedirection)) {
-            $this->yamlStructure['services'][$this->name]['ports'][] = sprintf('%s:80', $this->httpPortRedirection);
+            $this->yamlStructure[$this->name]['ports'][] = sprintf('%s:80', $this->httpPortRedirection);
         }
 
         if ($this->exposewww) {
-            $this->yamlStructure['services'][$this->name]['volumes'][] = './html:/var/www/html';
+            $this->yamlStructure[$this->name]['volumes'][] = './html:/var/www/html';
         }
 
         if ($this->networkModeHost) {
-            $this->yamlStructure['services'][$this->name]['network_mode'] = 'host';
+            $this->yamlStructure[$this->name]['network_mode'] = 'host';
         }
     }
 }

@@ -14,6 +14,7 @@ use App\ReceiptApp\Receipts\Interfaces\{
 };
 use Symfony\Component\Filesystem\Filesystem;
 use App\Utilities\DockerReceiptWritter;
+use App\ReceiptApp\Receipts\NotReadyException;
 
 class NginxReceipt extends ReceiptCommons implements ReceiptInterface, HttpReportableInterface
 {
@@ -30,14 +31,16 @@ class NginxReceipt extends ReceiptCommons implements ReceiptInterface, HttpRepor
     public function getFiles(): array
     {
         if (!isset($this->name)) {
-            throw new NotReadyException();
+            throw new NotReadyException($this);
         }
         
         $this->buildYamlStructure();
 
-        $files = [
-            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs)
-        ];
+        // $files = [
+        //     new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs)
+        // ];
+
+        $files = [];
 
         if ($this->exposeServerDefaultFile) {
             $files[] = new File("Dockerfile", $this->getDockerfileContent(), $this->fs);
@@ -50,9 +53,7 @@ class NginxReceipt extends ReceiptCommons implements ReceiptInterface, HttpRepor
     public function buildYamlStructure(): void
     {
         $this->yamlStructure = [
-            'services' => [
-                $this->name => []
-            ]
+            $this->name => []
         ];
 
         if ($this->exposeServerDefaultFile) {

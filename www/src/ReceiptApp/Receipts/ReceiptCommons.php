@@ -45,6 +45,11 @@ class ReceiptCommons
         return $this;
     }
 
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
     /**
      * @return \App\ReceiptApp\Receipts\Questions\Types\QuestionEntry[]
      */
@@ -78,13 +83,16 @@ class ReceiptCommons
 
     public function getServiceYamlStructure(): array
     {
+        if (empty($this->yamlStructure) && method_exists($this, 'buildYamlStructure')) {
+            call_user_func([$this, 'buildYamlStructure']);
+        }
         return $this->yamlStructure;
     }
 
     protected function postYamlProcessing(): void
     {
         if ($this->sshVolume) {
-            $this->yamlStructure['services'][$this->name]['volumes'][] = './.ssh/:/root/.ssh';
+            $this->yamlStructure[$this->name]['volumes'][] = './.ssh/:/root/.ssh';
         }
     }
 }

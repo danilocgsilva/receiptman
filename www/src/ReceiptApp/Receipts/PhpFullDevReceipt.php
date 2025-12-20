@@ -77,10 +77,10 @@ class PhpFullDevReceipt extends ReceiptCommons implements ReceiptInterface, PhpI
             throw new NotReadyException($this);
         }
 
-        $this->buildYamlStructure();
+        // $this->buildYamlStructure();
         
         $files = [
-            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs),
+            // new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs),
             new File("Dockerfile", $this->getDockerfile(), $this->fs),
             new File("config/xdebug.ini", $this->getXDebugContent(), $this->fs),
             new File("config/startup.sh", $this->getStartupContent(), $this->fs),

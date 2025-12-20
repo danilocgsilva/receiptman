@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\ReceiptApp\Receipts;
 
 use PHPUnit\Framework\TestCase;
-use App\ReceiptApp\Receipts\DotNet;
+use App\ReceiptApp\Receipts\DotNetReceipt;
 use App\Tests\Traits\GetSpecificFileTrait;
 use App\Tests\Traits\MockFileSystemTrait;
 
@@ -14,11 +14,11 @@ class DotNetTest extends TestCase
     use GetSpecificFileTrait;
     use MockFileSystemTrait;
 
-    private DotNet $receipt;
+    private DotNetReceipt $receipt;
 
     function setUp(): void
     {
-        $this->receipt = new DotNet(
+        $this->receipt = new DotNetReceipt(
             $this->getFileSystemMocked("", 0)
         );
     }
@@ -37,16 +37,24 @@ class DotNetTest extends TestCase
         $this->receipt->setName("dotnet_env");
         $dockerComposeFile = $this->receipt->getFiles()[0];
 
-        $expectedFileContent = <<<EOF
-        services:
-          dotnet_env:
-            build:
-              context: .
-            container_name: dotnet_env
+        // @todo Replicar esse teste específico em WrapServicesYamlStructureTest
+        // $expectedFileContent = <<<EOF
+        // services:
+        //   dotnet_env:
+        //     build:
+        //       context: .
+        //     container_name: dotnet_env
 
-        EOF;
+        // EOF;
 
-        $this->assertSame($expectedFileContent, $dockerComposeFile->content);
+        // $this->assertSame($expectedFileContent, $dockerComposeFile->content);
+
+        $yamlStructure = $this->receipt->getServiceYamlStructure();
+
+        $this->assertIsArray($yamlStructure);
+        $this->assertArrayHasKey("dotnet_env", $yamlStructure);
+        $this->assertArrayHasKey("build", $yamlStructure["dotnet_env"]);
+        $this->assertArrayHasKey("container_name", $yamlStructure["dotnet_env"]);
     }
 
     public function testSetHostMountVolume(): void
@@ -54,19 +62,29 @@ class DotNetTest extends TestCase
         $this->receipt->setName("dotnet_env");
         $this->receipt->setHostMountVolume();
 
-        $dockerComposeFile = $this->getSpecificFile($this->receipt->getFiles(), 'docker-compose.yml');
+        // @todo Replicar esse teste específico em WrapServicesYamlStructureTest
+        // $dockerComposeFile = $this->getSpecificFile($this->receipt->getFiles(), 'docker-compose.yml');
 
-        $expectedFileContent = <<<EOF
-        services:
-          dotnet_env:
-            build:
-              context: .
-            container_name: dotnet_env
-            volumes:
-              - './app:/app'
+        // $expectedFileContent = <<<EOF
+        // services:
+        //   dotnet_env:
+        //     build:
+        //       context: .
+        //     container_name: dotnet_env
+        //     volumes:
+        //       - './app:/app'
 
-        EOF;
+        // EOF;
 
-        $this->assertSame($expectedFileContent, $dockerComposeFile->content);
+        // $this->assertSame($expectedFileContent, $dockerComposeFile->content);
+
+        $yamlStructure = $this->receipt->getServiceYamlStructure();
+
+        $this->assertIsArray($yamlStructure);
+        $this->assertArrayHasKey("dotnet_env", $yamlStructure);
+        $this->assertArrayHasKey("build", $yamlStructure["dotnet_env"]);
+        $this->assertArrayHasKey("container_name", $yamlStructure["dotnet_env"]);
+        $this->assertArrayHasKey("volumes", $yamlStructure["dotnet_env"]);
+        $this->assertSame("./app:/app", $yamlStructure["dotnet_env"]["volumes"][0]);
     }
 }

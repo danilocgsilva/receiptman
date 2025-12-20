@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\ReceiptApp\Receipts;
 
 use App\ReceiptApp\Receipts\Interfaces\ReceiptInterface;
-use App\ReceiptApp\File;
-use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Filesystem\Filesystem;
 use App\ReceiptApp\Receipts\Questions\MySQLQuestions;
 use App\ReceiptApp\Receipts\Traits\MySQLMethodsTrait;
@@ -26,28 +24,29 @@ class MySQLReceipt extends ReceiptCommons implements ReceiptInterface
      */
     public function getFiles(): array
     {
-        $this->buildYamlStructure();
+        // $this->buildYamlStructure();
         
-        $files = [
-            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs),
-        ];
+        // $files = [
+        //     new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs),
+        // ];
 
-        return $files;
+        // return $files;
+
+        // The only required file is docker-compose.yml, but it will be taylored afterwards.
+        return [];
     }
 
-    private function buildYamlStructure(): void
+    protected function buildYamlStructure(): void
     {
         $this->yamlStructure = [
-            'services' => [
-                $this->name => [
-                    'image' => 'mysql:latest',
-                    'container_name' => $this->name,
-                    'environment' => [
-                        sprintf('MYSQL_ROOT_PASSWORD=%s', $this->mysqlRootPassword)
-                    ],
-                    'ports' => [
-                        sprintf('%s:3306', $this->mysqlPortRedirection)
-                    ]
+            $this->name => [
+                'image' => 'mysql:latest',
+                'container_name' => $this->name,
+                'environment' => [
+                    sprintf('MYSQL_ROOT_PASSWORD=%s', $this->mysqlRootPassword)
+                ],
+                'ports' => [
+                    sprintf('%s:3306', $this->mysqlPortRedirection)
                 ]
             ]
         ];

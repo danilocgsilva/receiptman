@@ -26,28 +26,29 @@ class PostgreReceipt extends ReceiptCommons implements ReceiptInterface
      */
     public function getFiles(): array
     {
-        $this->buildYamlStructure();
+        // $this->buildYamlStructure();
 
-        $files = [
-            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs)
-        ];
+        // $files = [
+        //     new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs)
+        // ];
         
-        return $files;
+        // return $files;
+
+        // The only required file is docker-compose.yml, but it will be taylored afterwards.
+        return [];
     }
 
     private function buildYamlStructure(): void
     {
         $this->yamlStructure = [
-            'services' => [
-                $this->name => [
-                    'image' => 'postgres',
-                    'container_name' => $this->name,
-                    'ports' => [
-                        '5432:5432'
-                    ],
-                    'environment' => [
-                        "POSTGRES_PASSWORD" => $this->databaseRootPassword
-                    ]
+            $this->name => [
+                'image' => 'postgres',
+                'container_name' => $this->name,
+                'ports' => [
+                    '5432:5432'
+                ],
+                'environment' => [
+                    "POSTGRES_PASSWORD" => $this->databaseRootPassword
                 ]
             ]
         ];

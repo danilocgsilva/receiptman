@@ -34,7 +34,7 @@ class PythonReceipt extends ReceiptCommons implements ReceiptInterface
         $this->buildYamlStructure();
         
         return [
-            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs),
+            // new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs),
             new File("Dockerfile", $this->getDockerfile(), $this->fs)
         ];
     }
@@ -54,13 +54,11 @@ class PythonReceipt extends ReceiptCommons implements ReceiptInterface
     private function buildYamlStructure(): void
     {
         $this->yamlStructure = [
-            'services' => [
-                $this->name => [
-                    'build' => [
-                        'context' => '.'
-                    ],
-                    'container_name' => $this->name
-                ]
+            $this->name => [
+                'build' => [
+                    'context' => '.'
+                ],
+                'container_name' => $this->name
             ]
         ];
     }

@@ -6,14 +6,14 @@ namespace App\ReceiptApp\Receipts;
 
 use App\ReceiptApp\Receipts\Interfaces\PhpInterface;
 use App\ReceiptApp\Receipts\Interfaces\ReceiptInterface;
-use App\ReceiptApp\File;
 use App\ReceiptApp\Receipts\Questions\BaseQuestion;
-use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Filesystem\Filesystem;
 use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
 
 class PhpReceipt extends ReceiptCommons implements ReceiptInterface, PhpInterface
 {
+    private string $phpVersion = "8.2";
+    
     public function __construct(Filesystem $fs)
     {
         parent::__construct($fs);
@@ -34,13 +34,16 @@ class PhpReceipt extends ReceiptCommons implements ReceiptInterface, PhpInterfac
      */
     public function getFiles(): array
     {
-        $this->buildYamlStructure();
+        // $this->buildYamlStructure();
         
-        $files = [
-            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs)
-        ];
+        // $files = [
+        //     new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs)
+        // ];
 
-        return $files;
+        // return $files;
+
+        // The only required file is docker-compose.yml, but it will be taylored afterwards.
+        return [];
     }
 
     public function setPhpVersion(string $phpVersion): static
@@ -52,11 +55,9 @@ class PhpReceipt extends ReceiptCommons implements ReceiptInterface, PhpInterfac
     private function buildYamlStructure(): void
     {
         $this->yamlStructure = [
-            'services' => [
-                $this->name => [
-                    'image' => 'php:latest',
-                    'container_name' => $this->name
-                ]
+            $this->name => [
+                'image' => 'php:latest',
+                'container_name' => $this->name
             ]
         ];
     }

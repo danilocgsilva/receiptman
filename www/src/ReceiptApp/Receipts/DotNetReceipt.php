@@ -13,7 +13,7 @@ use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
 use Symfony\Component\Filesystem\Filesystem;
 use App\Utilities\DockerReceiptWritter;
 
-class DotNet extends ReceiptCommons implements ReceiptInterface
+class DotNetReceipt extends ReceiptCommons implements ReceiptInterface
 {
     use PutGenericDatabase;
 
@@ -33,10 +33,10 @@ class DotNet extends ReceiptCommons implements ReceiptInterface
 
     public function getFiles(): array
     {
-        $this->buildYamlStructure();
+        // $this->buildYamlStructure();
 
         return [
-            new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs),
+            // new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs),
             new File("Dockerfile", $this->getDockerfileContent(), $this->fs)
         ];
     }
@@ -44,18 +44,16 @@ class DotNet extends ReceiptCommons implements ReceiptInterface
     public function buildYamlStructure(): void
     {
         $this->yamlStructure = [
-            'services' => [
-                $this->name => [
-                    'build' => [
-                        'context' => '.'
-                    ],
-                    'container_name' => $this->name
-                ]
+            $this->name => [
+                'build' => [
+                    'context' => '.'
+                ],
+                'container_name' => $this->name
             ]
         ];
 
         if ($this->hostMountVolume) {
-            $this->yamlStructure['services'][$this->name]['volumes'][] = './app:/app';
+            $this->yamlStructure[$this->name]['volumes'][] = './app:/app';
         }
 
         if ($this->database) {
