@@ -58,30 +58,28 @@ class NodeReceipt extends ReceiptCommons implements ReceiptInterface
         EOF;
     }
 
-    private function buildYamlStructure(): void
+    protected function buildYamlStructure(): void
     {
         $this->yamlStructure = [
-            'services' => [
-                $this->name => []
-            ]
+            $this->name => []
         ];
 
         if ($this->infinityLoop) {
-            $this->yamlStructure['services'][$this->name]['build'] = [
+            $this->yamlStructure[$this->name]['build'] = [
                 'context' => '.'
             ];
         } else {
-            $this->yamlStructure['services'][$this->name]['image'] = 'node:latest';
+            $this->yamlStructure[$this->name]['image'] = 'node:latest';
         }
-        
-        $this->yamlStructure['services'][$this->name]['container_name'] = $this->name;
+
+        $this->yamlStructure[$this->name]['container_name'] = $this->name;
 
         if ($this->volumeApp) {
-            $this->yamlStructure['services'][$this->name]['volumes'][] = './app:/app';
+            $this->yamlStructure[$this->name]['volumes'][] = './app:/app';
         }
 
         if ($this->networkModeHost) {
-            $this->yamlStructure['services'][$this->name]['network_mode'] = 'host';
+            $this->yamlStructure[$this->name]['network_mode'] = 'host';
         }
     }
 

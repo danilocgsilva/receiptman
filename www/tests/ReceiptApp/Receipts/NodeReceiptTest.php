@@ -101,20 +101,30 @@ EOF;
         $this->nodeReceipt->setName("must_have_volume_app");
         $this->nodeReceipt->setVolumeApp();
 
-        $expectedFileContent = <<<EOF
-services:
-  must_have_volume_app:
-    image: 'node:latest'
-    container_name: must_have_volume_app
-    volumes:
-      - './app:/app'
+        // @todo transformar este teste em um teste para o objeto WrapServicesYamlStructureTest
+//         $expectedFileContent = <<<EOF
+// services:
+//   must_have_volume_app:
+//     image: 'node:latest'
+//     container_name: must_have_volume_app
+//     volumes:
+//       - './app:/app'
 
-EOF;
+// EOF;
 
-        $receiptFiles = $this->nodeReceipt->getFiles();
-        $dockerCompose = $this->getSpecificFile($receiptFiles, 'docker-compose.yml');
+//         $receiptFiles = $this->nodeReceipt->getFiles();
+//         $dockerCompose = $this->getSpecificFile($receiptFiles, 'docker-compose.yml');
 
-        $this->assertSame($expectedFileContent, $dockerCompose->content);
+//         $this->assertSame($expectedFileContent, $dockerCompose->content);
+        $yamlServiceStructure = $this->nodeReceipt->getServiceYamlStructure();
+        $this->assertIsArray($yamlServiceStructure);
+        $this->assertArrayHasKey('must_have_volume_app', $yamlServiceStructure);
+        $this->assertArrayHasKey('image', $yamlServiceStructure['must_have_volume_app']);
+        $this->assertArrayHasKey('container_name', $yamlServiceStructure['must_have_volume_app']);
+        $this->assertArrayHasKey('volumes', $yamlServiceStructure['must_have_volume_app']);
+        $this->assertSame('node:latest', $yamlServiceStructure['must_have_volume_app']['image']);
+        $this->assertSame('must_have_volume_app', $yamlServiceStructure['must_have_volume_app']['container_name']);
+        $this->assertSame('./app:/app', $yamlServiceStructure['must_have_volume_app']['volumes'][0]);
     }
 
     public function testAppVolumeAndLoop(): void
