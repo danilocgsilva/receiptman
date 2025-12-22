@@ -45,6 +45,11 @@ class PhpCommand extends ReceiptmanCommand
             $this->feedReceipt($propertyQuestionPair);
         }
 
+        $questionInfinitLoop = new ConfirmationQuestion("Should an infinit loop should be applied, so the container does not halts in initialization?\n", true);
+        if ($this->questionHelper->ask($this->input, $this->output, $questionInfinitLoop)) {
+            $this->receipt->setInfinitLoop();
+        }
+
         $dirPath = $this->askForReceiptFolderAndWriteFiles();
 
         $io->success(sprintf("Project created in %1\$s.", $dirPath));
