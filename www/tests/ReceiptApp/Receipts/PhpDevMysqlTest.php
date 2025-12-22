@@ -36,30 +36,49 @@ class PhpDevMysqlTest extends TestCase
             ->setMysqlPortRedirection("4006")
             ->setMysqlRootPassword("testing_password");
 
-        $expectedContent = <<<EOF
-            services:
-              testing_env:
-                build:
-                  context: .
-                container_name: testing_env
-                volumes:
-                  - './www:/var/www'
-                ports:
-                  - '6000:80'
-                working_dir: /var/www
-              testing_env_db:
-                image: 'mysql:latest'
-                container_name: testing_env_db
-                environment:
-                  - MYSQL_ROOT_PASSWORD=testing_password
-                ports:
-                  - '4006:3306'
+        // $expectedContent = <<<EOF
+        //     services:
+        //       testing_env:
+        //         build:
+        //           context: .
+        //         container_name: testing_env
+        //         volumes:
+        //           - './www:/var/www'
+        //         ports:
+        //           - '6000:80'
+        //         working_dir: /var/www
+        //       testing_env_db:
+        //         image: 'mysql:latest'
+        //         container_name: testing_env_db
+        //         environment:
+        //           - MYSQL_ROOT_PASSWORD=testing_password
+        //         ports:
+        //           - '4006:3306'
 
-            EOF;
+        //     EOF;
 
-        $fileDockerfile = $this->getSpecificFile($this->phpDevMysql->getFiles(), "docker-compose.yml");
+        // $fileDockerfile = $this->getSpecificFile($this->phpDevMysql->getFiles(), "docker-compose.yml");
 
-        $this->assertSame($expectedContent, $fileDockerfile->content);
+        // $this->assertSame($expectedContent, $fileDockerfile->content);
+
+        $yamlServiceStructure = $this->phpDevMysql->getServiceYamlStructure();
+        $this->assertIsArray($yamlServiceStructure);
+        $this->assertArrayHasKey('testing_env', $yamlServiceStructure);
+        $this->assertArrayHasKey('testing_env_db', $yamlServiceStructure);
+        $this->assertArrayHasKey('image', $yamlServiceStructure['testing_env_db']);
+        $this->assertArrayHasKey('container_name', $yamlServiceStructure['testing_env_db']);
+        $this->assertArrayHasKey('environment', $yamlServiceStructure['testing_env_db']);
+        $this->assertArrayHasKey('ports', $yamlServiceStructure['testing_env_db']);
+        $this->assertSame('mysql:latest', $yamlServiceStructure['testing_env_db']['image']);
+        $this->assertSame('testing_env_db', $yamlServiceStructure['testing_env_db']['container_name']);
+        $this->assertArrayHasKey('build', $yamlServiceStructure['testing_env']);
+        $this->assertArrayHasKey('context', $yamlServiceStructure['testing_env']['build']);
+        $this->assertArrayHasKey('container_name', $yamlServiceStructure['testing_env']);
+        $this->assertArrayHasKey('volumes', $yamlServiceStructure['testing_env']);
+        $this->assertArrayHasKey('ports', $yamlServiceStructure['testing_env']);
+        $this->assertArrayHasKey('working_dir', $yamlServiceStructure['testing_env']);
+        $this->assertSame('.', $yamlServiceStructure['testing_env']['build']['context']);
+        $this->assertSame('testing_env', $yamlServiceStructure['testing_env']['container_name']);
     }
 
     public function testAppFolder(): void

@@ -153,21 +153,19 @@ class PhpFullDevReceipt extends ReceiptCommons implements ReceiptInterface, PhpI
         return $this->httpPortRedirection;
     }
 
-    private function buildYamlStructure(): void
+    protected function buildYamlStructure(): void
     {
         $this->yamlStructure = [
-            'services' => [
-                $this->name => [
-                    'build' => [
-                        'context' => '.'
-                    ],
-                    'container_name' => $this->name,
-                    'volumes' => [],
-                    'ports' => [
-                        sprintf('%s:80', $this->httpPortRedirection)
-                    ],
-                    'working_dir' => ''
-                ]
+            $this->name => [
+                'build' => [
+                    'context' => '.'
+                ],
+                'container_name' => $this->name,
+                'volumes' => [],
+                'ports' => [
+                    sprintf('%s:80', $this->httpPortRedirection)
+                ],
+                'working_dir' => ''
             ]
         ];
 
@@ -183,19 +181,19 @@ class PhpFullDevReceipt extends ReceiptCommons implements ReceiptInterface, PhpI
                 ]
             ];
 
-            $this->yamlStructure['services'][$this->name . '_db'] = $databaseReceipt;
+            $this->yamlStructure[$this->name . '_db'] = $databaseReceipt;
         }
 
         if ($this->appDir) {
-            $this->yamlStructure['services'][$this->name]['volumes'] = [
+            $this->yamlStructure[$this->name]['volumes'] = [
                 './app:/app'
             ];
-            $this->yamlStructure['services'][$this->name]['working_dir'] = '/app';
+            $this->yamlStructure[$this->name]['working_dir'] = '/app';
         } else {
-            $this->yamlStructure['services'][$this->name]['volumes'] = [
+            $this->yamlStructure[$this->name]['volumes'] = [
                 './www:/var/www'
             ];
-            $this->yamlStructure['services'][$this->name]['working_dir'] = '/var/www';
+            $this->yamlStructure[$this->name]['working_dir'] = '/var/www';
         }
 
         $this->postYamlProcessing();
