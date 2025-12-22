@@ -42,8 +42,8 @@ class PythonCommandTest extends TestCase
             ->method('touch')
             ->willReturnCallback(function (string $providedArgumentValueForNThTime) use ($matcher) {
                 match ($matcher->numberOfInvocations()) {
-                    1 =>  $this->assertEquals("output/my_testing_container/docker-compose.yml", $providedArgumentValueForNThTime),
-                    2 =>  $this->assertEquals("output/my_testing_container/Dockerfile", $providedArgumentValueForNThTime),
+                    1 =>  $this->assertEquals("output/my_testing_container/Dockerfile", $providedArgumentValueForNThTime),
+                    2 =>  $this->assertEquals("output/my_testing_container/docker-compose.yml", $providedArgumentValueForNThTime),
                 };
             });
 

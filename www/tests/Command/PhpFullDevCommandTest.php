@@ -44,12 +44,12 @@ class PhpFullDevCommandTest extends TestCase
             ->method('touch')
             ->willReturnCallback(function (string $providedArgumentValueForNThTime) use ($matcher) {
                 match ($matcher->numberOfInvocations()) {
-                    1 =>  $this->assertEquals("output/the_container_test2/docker-compose.yml", $providedArgumentValueForNThTime),
-                    2 =>  $this->assertEquals("output/the_container_test2/Dockerfile", $providedArgumentValueForNThTime),
-                    3 =>  $this->assertEquals("output/the_container_test2/config/xdebug.ini", $providedArgumentValueForNThTime),
-                    4 =>  $this->assertEquals("output/the_container_test2/config/startup.sh", $providedArgumentValueForNThTime),
-                    5 =>  $this->assertEquals("output/the_container_test2/config/apache2.conf", $providedArgumentValueForNThTime),
-                    6 =>  $this->assertEquals("output/the_container_test2/www/html/index.php", $providedArgumentValueForNThTime),
+                    1 =>  $this->assertEquals("output/the_container_test2/Dockerfile", $providedArgumentValueForNThTime),
+                    2 =>  $this->assertEquals("output/the_container_test2/config/xdebug.ini", $providedArgumentValueForNThTime),
+                    3 =>  $this->assertEquals("output/the_container_test2/config/startup.sh", $providedArgumentValueForNThTime),
+                    4 =>  $this->assertEquals("output/the_container_test2/config/apache2.conf", $providedArgumentValueForNThTime),
+                    5 =>  $this->assertEquals("output/the_container_test2/www/html/index.php", $providedArgumentValueForNThTime),
+                    6 =>  $this->assertEquals("output/the_container_test2/docker-compose.yml", $providedArgumentValueForNThTime),
                 };
             });
 

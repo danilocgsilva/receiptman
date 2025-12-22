@@ -38,7 +38,7 @@ class PostgreReceipt extends ReceiptCommons implements ReceiptInterface
         return [];
     }
 
-    private function buildYamlStructure(): void
+    protected function buildYamlStructure(): void
     {
         $this->yamlStructure = [
             $this->name => [

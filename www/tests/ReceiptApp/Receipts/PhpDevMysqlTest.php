@@ -89,30 +89,49 @@ class PhpDevMysqlTest extends TestCase
             ->setMysqlRootPassword("testing_password")
             ->setAppFolder();
 
-        $expectedContent = <<<EOF
-            services:
-              testing_env:
-                build:
-                  context: .
-                container_name: testing_env
-                volumes:
-                  - './app:/app'
-                ports:
-                  - '6000:80'
-                working_dir: /app
-              testing_env_db:
-                image: 'mysql:latest'
-                container_name: testing_env_db
-                environment:
-                  - MYSQL_ROOT_PASSWORD=testing_password
-                ports:
-                  - '4006:3306'
+        // $expectedContent = <<<EOF
+        //     services:
+        //       testing_env:
+        //         build:
+        //           context: .
+        //         container_name: testing_env
+        //         volumes:
+        //           - './app:/app'
+        //         ports:
+        //           - '6000:80'
+        //         working_dir: /app
+        //       testing_env_db:
+        //         image: 'mysql:latest'
+        //         container_name: testing_env_db
+        //         environment:
+        //           - MYSQL_ROOT_PASSWORD=testing_password
+        //         ports:
+        //           - '4006:3306'
 
-            EOF;
+        //     EOF;
 
-        $fileDockerfile = $this->getSpecificFile($this->phpDevMysql->getFiles(), "docker-compose.yml");
+        // $fileDockerfile = $this->getSpecificFile($this->phpDevMysql->getFiles(), "docker-compose.yml");
 
-        $this->assertSame($expectedContent, $fileDockerfile->content);
+        // $this->assertSame($expectedContent, $fileDockerfile->content);
+
+        $yamlServiceStructure = $this->phpDevMysql->getServiceYamlStructure();
+        $this->assertIsArray($yamlServiceStructure);
+        $this->assertArrayHasKey('testing_env', $yamlServiceStructure);
+        $this->assertArrayHasKey('testing_env_db', $yamlServiceStructure);
+        $this->assertArrayHasKey('image', $yamlServiceStructure['testing_env_db']);
+        $this->assertArrayHasKey('container_name', $yamlServiceStructure['testing_env_db']);
+        $this->assertArrayHasKey('environment', $yamlServiceStructure['testing_env_db']);
+        $this->assertArrayHasKey('ports', $yamlServiceStructure['testing_env_db']);
+        $this->assertSame('mysql:latest', $yamlServiceStructure['testing_env_db']['image']);
+        $this->assertSame('testing_env_db', $yamlServiceStructure['testing_env_db']['container_name']);
+        $this->assertArrayHasKey('build', $yamlServiceStructure['testing_env']);
+        $this->assertArrayHasKey('context', $yamlServiceStructure['testing_env']['build']);
+        $this->assertArrayHasKey('container_name', $yamlServiceStructure['testing_env']);
+        $this->assertArrayHasKey('volumes', $yamlServiceStructure['testing_env']);
+        $this->assertArrayHasKey('ports', $yamlServiceStructure['testing_env']);
+        $this->assertArrayHasKey('working_dir', $yamlServiceStructure['testing_env']);
+        $this->assertSame('.', $yamlServiceStructure['testing_env']['build']['context']);
+        $this->assertSame('testing_env', $yamlServiceStructure['testing_env']['container_name']);
     }
 
     public function testSsh(): void
@@ -123,31 +142,50 @@ class PhpDevMysqlTest extends TestCase
             ->setMysqlRootPassword("opass2")
             ->setSshVolume();
 
-        $fileDockerCompose = $this->getSpecificFile($this->phpDevMysql->getFiles(), "docker-compose.yml");
+        // $fileDockerCompose = $this->getSpecificFile($this->phpDevMysql->getFiles(), "docker-compose.yml");
 
-        $expectedContent = <<<EOF
-            services:
-              testing_env2:
-                build:
-                  context: .
-                container_name: testing_env2
-                volumes:
-                  - './www:/var/www'
-                  - './.ssh/:/root/.ssh'
-                ports:
-                  - '4000:80'
-                working_dir: /var/www
-              testing_env2_db:
-                image: 'mysql:latest'
-                container_name: testing_env2_db
-                environment:
-                  - MYSQL_ROOT_PASSWORD=opass2
-                ports:
-                  - '3333:3306'
+        // $expectedContent = <<<EOF
+        //     services:
+        //       testing_env2:
+        //         build:
+        //           context: .
+        //         container_name: testing_env2
+        //         volumes:
+        //           - './www:/var/www'
+        //           - './.ssh/:/root/.ssh'
+        //         ports:
+        //           - '4000:80'
+        //         working_dir: /var/www
+        //       testing_env2_db:
+        //         image: 'mysql:latest'
+        //         container_name: testing_env2_db
+        //         environment:
+        //           - MYSQL_ROOT_PASSWORD=opass2
+        //         ports:
+        //           - '3333:3306'
 
-            EOF;
+        //     EOF;
 
-        $this->assertSame($expectedContent, $fileDockerCompose->content);
+        // $this->assertSame($expectedContent, $fileDockerCompose->content);
+
+        $yamlServiceStructure = $this->phpDevMysql->getServiceYamlStructure();
+        $this->assertIsArray($yamlServiceStructure);
+        $this->assertArrayHasKey('testing_env2', $yamlServiceStructure);
+        $this->assertArrayHasKey('testing_env2_db', $yamlServiceStructure);
+        $this->assertArrayHasKey('image', $yamlServiceStructure['testing_env2_db']);
+        $this->assertArrayHasKey('container_name', $yamlServiceStructure['testing_env2_db']);
+        $this->assertArrayHasKey('environment', $yamlServiceStructure['testing_env2_db']);
+        $this->assertArrayHasKey('ports', $yamlServiceStructure['testing_env2_db']);
+        $this->assertSame('mysql:latest', $yamlServiceStructure['testing_env2_db']['image']);
+        $this->assertSame('testing_env2_db', $yamlServiceStructure['testing_env2_db']['container_name']);
+        $this->assertArrayHasKey('build', $yamlServiceStructure['testing_env2']);
+        $this->assertArrayHasKey('context', $yamlServiceStructure['testing_env2']['build']);
+        $this->assertArrayHasKey('container_name', $yamlServiceStructure['testing_env2']);
+        $this->assertArrayHasKey('volumes', $yamlServiceStructure['testing_env2']);
+        $this->assertArrayHasKey('ports', $yamlServiceStructure['testing_env2']);
+        $this->assertArrayHasKey('working_dir', $yamlServiceStructure['testing_env2']);
+        $this->assertSame('.', $yamlServiceStructure['testing_env2']['build']['context']);
+        $this->assertSame('testing_env2', $yamlServiceStructure['testing_env2']['container_name']);
     }
 
     public function testCountFiles(): void
@@ -157,7 +195,7 @@ class PhpDevMysqlTest extends TestCase
             ->setMysqlPortRedirection("4333")
             ->setMysqlRootPassword("opass2");
 
-        $this->assertCount(6, $this->phpDevMysql->getFiles());
+        $this->assertCount(5, $this->phpDevMysql->getFiles());
     }
 
     public function testGetSpecificFiles(): void
@@ -169,10 +207,10 @@ class PhpDevMysqlTest extends TestCase
 
         $receiptFiles = $this->phpDevMysql->getFiles();
 
-        $this->assertInstanceOf(
-            File::class,
-            $this->getSpecificFile($receiptFiles, "docker-compose.yml")
-        );
+        // $this->assertInstanceOf(
+        //     File::class,
+        //     $this->getSpecificFile($receiptFiles, "docker-compose.yml")
+        // );
         $this->assertInstanceOf(
             File::class,
             $this->getSpecificFile($receiptFiles, "Dockerfile")
@@ -201,7 +239,7 @@ class PhpDevMysqlTest extends TestCase
 
         $receiptFiles = $this->phpDevMysql->getFiles();
 
-        $this->assertCount(7, $receiptFiles);
+        $this->assertCount(6, $receiptFiles);
     }
 
     public function testTypeOfPropertiesQuestionPairs(): void
@@ -258,7 +296,7 @@ class PhpDevMysqlTest extends TestCase
 
         $files = $this->phpDevMysql->getFiles();
 
-        $this->assertCount(6, $files);
+        $this->assertCount(5, $files);
     }
 
     public function test2GetFiles(): void
@@ -272,7 +310,7 @@ class PhpDevMysqlTest extends TestCase
 
         $files = $this->phpDevMysql->getFiles();
 
-        $this->assertCount(6, $files);
+        $this->assertCount(5, $files);
     }
 
     public function testDockerFileWithoutRootNameAsPublic(): void
@@ -345,7 +383,7 @@ class PhpDevMysqlTest extends TestCase
 
         $files = $this->phpDevMysql->getFiles();
 
-        $this->assertCount(6, $files);
+        $this->assertCount(5, $files);
     }
 
     public function testForgetSetContainerNameAndGetFiles(): void

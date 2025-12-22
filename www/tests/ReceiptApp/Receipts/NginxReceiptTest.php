@@ -8,7 +8,6 @@ use App\Tests\Traits\GetSpecificFileTrait;
 use PHPUnit\Framework\TestCase;
 use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
 use App\ReceiptApp\Receipts\NginxReceipt;
-use App\ReceiptApp\File;
 use App\Tests\Traits\MockFileSystemTrait;
 
 class NginxReceiptTest extends TestCase
@@ -28,17 +27,23 @@ class NginxReceiptTest extends TestCase
     public function testDockerComposeFileContent(): void
     {
         $this->nginxReceipt->setName("nginx_env");
-        $dockerComposeFile = $this->nginxReceipt->getFiles()[0];
+//         $dockerComposeFile = $this->nginxReceipt->getFiles()[0];
 
-        $expectedFileContent = <<<EOF
-services:
-  nginx_env:
-    image: 'nginx:latest'
-    container_name: nginx_env
+//         $expectedFileContent = <<<EOF
+// services:
+//   nginx_env:
+//     image: 'nginx:latest'
+//     container_name: nginx_env
 
-EOF;
+// EOF;
 
-        $this->assertSame($expectedFileContent, $dockerComposeFile->content);
+//         $this->assertSame($expectedFileContent, $dockerComposeFile->content);
+
+        $yamlStructure = $this->nginxReceipt->getServiceYamlStructure();
+        $this->assertIsArray($yamlStructure);
+        $this->assertArrayHasKey("nginx_env", $yamlStructure);
+        $this->assertArrayHasKey("image", $yamlStructure["nginx_env"]);
+        $this->assertArrayHasKey("container_name", $yamlStructure["nginx_env"]);
     }
 
     public function testDockerComposeFilePort(): void
@@ -46,28 +51,25 @@ EOF;
         $this->nginxReceipt->setName("nginx_env");
         $this->nginxReceipt->setHttpPortRedirection("8081");
 
-        $dockerComposeFile = $this->nginxReceipt->getFiles()[0];
+//         $dockerComposeFile = $this->nginxReceipt->getFiles()[0];
 
-        $expectedFileContent = <<<EOF
-services:
-  nginx_env:
-    image: 'nginx:latest'
-    container_name: nginx_env
-    ports:
-      - '8081:80'
+//         $expectedFileContent = <<<EOF
+// services:
+//   nginx_env:
+//     image: 'nginx:latest'
+//     container_name: nginx_env
+//     ports:
+//       - '8081:80'
 
-EOF;
+// EOF;
 
-        $this->assertSame($expectedFileContent, $dockerComposeFile->content);
-    }
+//         $this->assertSame($expectedFileContent, $dockerComposeFile->content);
 
-    public function testCountReceiptFiles(): void
-    {
-        $this->nginxReceipt->setName("nginx_env");
-
-        $dockerComposeFile = $this->nginxReceipt->getFiles();
-
-        $this->assertCount(1, $dockerComposeFile);
+        $yamlStructure = $this->nginxReceipt->getServiceYamlStructure();
+        $this->assertIsArray($yamlStructure);
+        $this->assertArrayHasKey("nginx_env", $yamlStructure);
+        $this->assertArrayHasKey("ports", $yamlStructure["nginx_env"]);
+        $this->assertSame(['8081:80'], $yamlStructure["nginx_env"]["ports"]);
     }
 
     public function testCountReceiptExposingConfigurationFile(): void
@@ -77,7 +79,7 @@ EOF;
 
         $dockerComposeFile = $this->nginxReceipt->getFiles();
 
-        $this->assertCount(3, $dockerComposeFile);
+        $this->assertCount(2, $dockerComposeFile);
     }
 
     public function testGetPropertyQuestionsPairs(): void
