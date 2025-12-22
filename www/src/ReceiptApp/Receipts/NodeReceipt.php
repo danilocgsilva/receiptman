@@ -33,15 +33,8 @@ class NodeReceipt extends ReceiptCommons implements ReceiptInterface
         if (!property_exists($this,"name")) {
             throw new NotReadyException($this);
         }
-        
-        // $this->buildYamlStructure();
-        
-        // $files = [
-        //     new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs)
-        // ];
 
         $files = [];
-
         if ($this->infinityLoop) {
             $files[] = new File('Dockerfile', $this->getDockerfileContent(), $this->fs);
         }

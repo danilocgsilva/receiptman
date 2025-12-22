@@ -19,23 +19,6 @@ class MySQLReceipt extends ReceiptCommons implements ReceiptInterface
         $this->questionsPairs = (new MySQLQuestions())->getPropertyQuestionPair();
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getFiles(): array
-    {
-        // $this->buildYamlStructure();
-        
-        // $files = [
-        //     new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs),
-        // ];
-
-        // return $files;
-
-        // The only required file is docker-compose.yml, but it will be taylored afterwards.
-        return [];
-    }
-
     protected function buildYamlStructure(): void
     {
         $this->yamlStructure = [

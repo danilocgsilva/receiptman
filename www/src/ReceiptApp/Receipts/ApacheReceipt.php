@@ -26,22 +26,6 @@ class ApacheReceipt extends ReceiptCommons implements ReceiptInterface, HttpRepo
         $this->questionsPairs = (new ApacheQuestions())->getPropertyQuestionPair();
     }
 
-    public function getFiles(): array
-    {
-        // $this->buildYamlStructure();
-
-        // return [
-        //     new File(
-        //         "docker-compose.yml", 
-        //         Yaml::dump($this->yamlStructure, 4, 2),
-        //         $this->fs
-        //     )
-        // ];
-
-        // The only required file is docker-compose.yml, but it will be taylored afterwards.
-        return [];
-    }
-
     public function onExposeWWW(): static
     {
         $this->exposewww = true;

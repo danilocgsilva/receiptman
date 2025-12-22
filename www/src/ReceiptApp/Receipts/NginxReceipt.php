@@ -34,12 +34,6 @@ class NginxReceipt extends ReceiptCommons implements ReceiptInterface, HttpRepor
             throw new NotReadyException($this);
         }
         
-        $this->buildYamlStructure();
-
-        // $files = [
-        //     new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs)
-        // ];
-
         $files = [];
 
         if ($this->exposeServerDefaultFile) {

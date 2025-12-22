@@ -29,30 +29,13 @@ class PhpReceipt extends ReceiptCommons implements ReceiptInterface, PhpInterfac
         );
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getFiles(): array
-    {
-        // $this->buildYamlStructure();
-        
-        // $files = [
-        //     new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs)
-        // ];
-
-        // return $files;
-
-        // The only required file is docker-compose.yml, but it will be taylored afterwards.
-        return [];
-    }
-
     public function setPhpVersion(string $phpVersion): static
     {
         $this->phpVersion = $phpVersion;
         return $this;
     }
 
-    private function buildYamlStructure(): void
+    protected function buildYamlStructure(): void
     {
         $this->yamlStructure = [
             $this->name => [
@@ -60,5 +43,9 @@ class PhpReceipt extends ReceiptCommons implements ReceiptInterface, PhpInterfac
                 'container_name' => $this->name
             ]
         ];
+
+        if ($this->networkModeHost) {
+            $this->yamlStructure[$this->name]['network_mode'] = 'host';
+        }
     }
 }

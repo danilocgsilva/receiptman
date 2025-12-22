@@ -6,7 +6,6 @@ namespace App\ReceiptApp\Receipts;
 
 use App\ReceiptApp\Receipts\Interfaces\PhpInterface;
 use App\ReceiptApp\Receipts\Interfaces\ReceiptInterface;
-use Symfony\Component\Yaml\Yaml;
 use App\ReceiptApp\File;
 use App\ReceiptApp\Receipts\Questions\PhpDevMysqlQuestions;
 use App\ReceiptApp\Traits\{
@@ -18,7 +17,6 @@ use App\ReceiptApp\Receipts\NotReadyException;
 use App\ReceiptApp\Receipts\ConfigurationsDataTraits\ApacheConfigurationContentGeneratorTrait;
 use Exception;
 use App\Utilities\DockerReceiptWritter;
-use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
 
 class PhpFullDevReceipt extends ReceiptCommons implements ReceiptInterface, PhpInterface
 {
@@ -77,10 +75,7 @@ class PhpFullDevReceipt extends ReceiptCommons implements ReceiptInterface, PhpI
             throw new NotReadyException($this);
         }
 
-        // $this->buildYamlStructure();
-        
         $files = [
-            // new File("docker-compose.yml", Yaml::dump($this->yamlStructure, 4, 2), $this->fs),
             new File("Dockerfile", $this->getDockerfile(), $this->fs),
             new File("config/xdebug.ini", $this->getXDebugContent(), $this->fs),
             new File("config/startup.sh", $this->getStartupContent(), $this->fs),

@@ -89,6 +89,14 @@ class ReceiptCommons
         return $this->yamlStructure;
     }
 
+    /**
+     * For specific receipt files, a override must be made.
+     */
+    public function getFiles(): array
+    {
+        return [];
+    }
+
     protected function postYamlProcessing(): void
     {
         if ($this->sshVolume) {
