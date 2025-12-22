@@ -18,10 +18,18 @@ class WrapServicesYamlStructure
 
     public function getFullDockerComposeYamlStructure(): array
     {
-        $yamlStructure = $this->receipts[0];
-        
+        $services = [];
+
+        foreach ($this->receipts as $receipt) {
+            $structure = $receipt->getServiceYamlStructure();
+            if (!is_array($structure)) {
+                continue;
+            }
+            $services = array_merge($services, $structure);
+        }
+
         return [
-            'services' => $yamlStructure->getServiceYamlStructure()
+            'services' => $services
         ];
     }
 }

@@ -192,6 +192,39 @@ class WrapServicesYamlStructureTest extends TestCase
         $this->testMysqLReceiptInstance($mySQLReceipt, $dockerComposeFileContent);
     }
 
+    public function testMergeTwoRecipes()
+    {
+        $apacheReceipt = $this->getApacheReceipt();
+        $apacheReceipt->setName("apache_env");
+
+        $mySQLReceipt = $this->getMySQLReceipt();
+        $mySQLReceipt->setName("mysql_env");
+        $mySQLReceipt->setMysqlPortRedirection("3306");
+        $mySQLReceipt->setMysqlRootPassword("mysecretpass");
+
+        $wrapServicesYamlStructure = new WrapServicesYamlStructure($apacheReceipt, $mySQLReceipt);
+        $yamlFullStructure = $wrapServicesYamlStructure->getFullDockerComposeYamlStructure();
+
+        $fileContent = Yaml::dump($yamlFullStructure, 4, 2);
+
+        $dockerComposeFileContent = <<<EOF
+        services:
+          apache_env:
+            image: 'httpd:latest'
+            container_name: apache_env
+          mysql_env:
+            image: 'mysql:latest'
+            container_name: mysql_env
+            environment:
+              - MYSQL_ROOT_PASSWORD=mysecretpass
+            ports:
+              - '3306:3306'
+        
+        EOF;
+
+        $this->assertSame($dockerComposeFileContent, $fileContent);
+    }
+
     private function getApacheReceipt(): ApacheReceipt
     {
         return new ApacheReceipt($this->getFileSystemMocked("", 0));
