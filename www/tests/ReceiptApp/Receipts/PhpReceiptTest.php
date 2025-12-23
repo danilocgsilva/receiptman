@@ -92,7 +92,8 @@ class PhpReceiptTest extends TestCase
         $this->assertSame("php_84", $yamlStructure['php_84']["container_name"]);
     }
 
-    public function testPhpVersion85(): void{
+    public function testPhpVersion85(): void
+    {
         $this->phpReceipt->setName("php_85");
         $this->phpReceipt->setPhpVersion("8.5");
 

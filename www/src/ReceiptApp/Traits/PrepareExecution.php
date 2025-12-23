@@ -51,6 +51,9 @@ trait PrepareExecution
     private function feedReceipt(QuestionEntry $questionEntry)
     {
         if ($questionEntry->inputType === null) {
+            if (!$questionEntry->textQuestion || !$questionEntry->methodName) {
+                throw new InvalidArgumentException("Question text and method name are required for non-yes/no questions.");
+            }
             $answer = $this->makeQuestionAndGetAnswer($questionEntry->textQuestion);
             $this->receipt->{$questionEntry->methodName}($answer);
             return;
