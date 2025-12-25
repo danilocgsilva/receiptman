@@ -12,6 +12,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use App\ReceiptApp\Traits\PrepareExecution;
 use Symfony\Component\Console\Question\{Question, ConfirmationQuestion};
+use 
 
 #[AsCommand(
     name: 'receipt:python',
@@ -44,9 +45,10 @@ class PythonCommand extends ReceiptmanCommand
 
         $response = $this->askYesOrNo("Does you need to add a database?");
         if ($response) {
-            print("The user wants a database.\n");
-        } else {
-            print("The user don't need a database.\n");
+            $mySqlReceipt = new MySQLReceipt($this->fs);
+            foreach ($mySqlReceipt->getPropertyQuestionsPairs() as $mysqlQuestionPair) {
+                $this->feedReceipt($mysqlQuestionPair);
+            }
         }
 
         $dirPath = $this->askForReceiptFolderAndWriteFiles();
