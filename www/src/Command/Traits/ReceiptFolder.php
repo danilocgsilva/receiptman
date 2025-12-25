@@ -11,7 +11,8 @@ trait ReceiptFolder
         $questionFolderName = new Question("Would you like to set a name for directory receipt? If so, just type the directory name or keep it blank to set the default directory name. \n");
         $responseDirName = $this->questionHelper->ask($this->input, $this->output, $questionFolderName);
         $dirPath = $this->getDirPath($responseDirName);
-        $this->makerFile($dirPath, $this->receipt);
+        $allReceipts = array_merge([$this->receipt], $this->additionalReceipts);
+        $this->makerFile($dirPath, ...$allReceipts);
         return $dirPath;
     }
 }

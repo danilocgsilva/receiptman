@@ -11,8 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use App\ReceiptApp\Traits\PrepareExecution;
-use Symfony\Component\Console\Question\{Question, ConfirmationQuestion};
-use 
+use App\ReceiptApp\Receipts\MySQLReceipt;
 
 #[AsCommand(
     name: 'receipt:python',
@@ -43,9 +42,10 @@ class PythonCommand extends ReceiptmanCommand
             $this->feedReceipt($propertyQuestionPair);    
         }
 
-        $response = $this->askYesOrNo("Does you need to add a database?");
+        $response = $this->askYesOrNo("Does you need to add a database?\n");
         if ($response) {
             $mySqlReceipt = new MySQLReceipt($this->fs);
+            $this->additionalReceipts[] = $mySqlReceipt;
             foreach ($mySqlReceipt->getPropertyQuestionsPairs() as $mysqlQuestionPair) {
                 $this->feedReceipt($mysqlQuestionPair);
             }

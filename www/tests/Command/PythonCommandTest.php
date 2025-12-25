@@ -23,6 +23,7 @@ class PythonCommandTest extends TestCase
             "my_testing_container", "no",
             "no",
             "yes", "yes", 
+            "no",
             "my_testing_container"
         ]);
 

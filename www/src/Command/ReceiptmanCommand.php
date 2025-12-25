@@ -9,6 +9,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 abstract class ReceiptmanCommand extends Command
 {
+    protected array $additionalReceipts = [];
     
     public function __construct(Filesystem $filesystem)
     {

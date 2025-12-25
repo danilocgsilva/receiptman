@@ -48,14 +48,15 @@ trait PrepareExecution
      * @throws \InvalidArgumentException
      * @return void
      */
-    private function feedReceipt(QuestionEntry $questionEntry)
+    private function feedReceipt(QuestionEntry $questionEntry, ReceiptInterface|null $currentReceipt)
     {
+        $receiptInSetup = $this->receipt;
         if ($questionEntry->inputType === null) {
             if (!$questionEntry->textQuestion || !$questionEntry->methodName) {
                 throw new InvalidArgumentException("Question text and method name are required for non-yes/no questions.");
             }
             $answer = $this->makeQuestionAndGetAnswer($questionEntry->textQuestion);
-            $this->receipt->{$questionEntry->methodName}($answer);
+            $receiptInSetup->{$questionEntry->methodName}($answer);
             return;
         }
 
@@ -63,13 +64,13 @@ trait PrepareExecution
         switch ($questionEntry->inputType) {
             case InputType::yesorno:
                 if ($answer) {
-                    $this->receipt->{$questionEntry->methodName}();
+                    $receiptInSetup->{$questionEntry->methodName}();
                 }
                 break;
 
             case InputType::yesornoinverse:
                 if (!$answer) {
-                    $this->receipt->{$questionEntry->methodName}();
+                    $receiptInSetup->{$questionEntry->methodName}();
                 }
                 break;
 
@@ -93,19 +94,34 @@ trait PrepareExecution
         return (string) $this->questionHelper->ask($this->input, $this->output, $question);
     }
 
-    private function makerFile(string $dirPath, ReceiptInterface $receipt)
+    private function makerFile(string $dirPath, ReceiptInterface ...$allReceipts)
     {
         if ($this->fs->exists($dirPath)) {
             throw new Exception(sprintf("The path %1\$s exists. Action aborted with exception.", $dirPath));
         }
         $this->fs->mkdir($dirPath);
 
-        /** @var \App\ReceiptApp\File $file */
-        foreach ($receipt->getFiles() as $file) {
-            $file->write($dirPath);
+        foreach ($allReceipts as $receipt) {
+            // $receipt->write($dirPath);
+            /** @var \App\ReceiptApp\File $file */
+            foreach ($receipt->getFiles() as $file) {
+                $file->write($dirPath);
+            }
         }
 
-        $serviceYamlWrapper = new WrapServicesYamlStructure($receipt);
+
+        // if ($additionalReceipts) {
+        //     $allReceipts = [$receipt, ...$additionalReceipts];
+        //     foreach ($additionalReceipts as $additionalReceipt) {
+        //         foreach ($additionalReceipt->getFiles() as $file) {
+        //             $file->write($dirPath);
+        //         }
+        //     }
+        // } else {
+        //     $allReceipts = [$receipt];
+        // }
+
+        $serviceYamlWrapper = new WrapServicesYamlStructure(...$allReceipts);
 
         (new File(
             'docker-compose.yml',
