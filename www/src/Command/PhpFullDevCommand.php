@@ -49,7 +49,7 @@ class PhpFullDevCommand extends ReceiptmanCommand
         }
 
         while ($propertyQuestionPair = $this->receipt->getNextQuestionPair()) {
-            $this->feedReceipt($propertyQuestionPair);
+            $this->feedReceipt($propertyQuestionPair, $this->receipt);
         }
 
         $folderReceiptQuestion = $this->questionHelper->ask(

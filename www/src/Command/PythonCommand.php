@@ -47,7 +47,7 @@ class PythonCommand extends ReceiptmanCommand
             $mySqlReceipt = new MySQLReceipt($this->fs);
             $this->additionalReceipts[] = $mySqlReceipt;
             foreach ($mySqlReceipt->getPropertyQuestionsPairs() as $mysqlQuestionPair) {
-                $this->feedReceipt($mysqlQuestionPair);
+                $this->feedReceipt($mysqlQuestionPair, $mySqlReceipt);
             }
         }
 

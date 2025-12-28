@@ -38,7 +38,7 @@ class ApacheCommand extends ReceiptmanCommand
         $io = new SymfonyStyle($input, $output);
 
         while ($propertyQuestionPair = $this->receipt->getNextQuestionPair()) {
-            $this->feedReceipt($propertyQuestionPair);
+            $this->feedReceipt($propertyQuestionPair, $this->receipt);
         }
 
         $dirPath = $this->askForReceiptFolder();

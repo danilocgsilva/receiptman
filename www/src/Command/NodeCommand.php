@@ -41,7 +41,7 @@ class NodeCommand extends ReceiptmanCommand
         $io = new SymfonyStyle($input, $output);
 
         foreach ($this->receipt->getPropertyQuestionsPairs() as $propertyQuestionPair) {
-            $this->feedReceipt($propertyQuestionPair);    
+            $this->feedReceipt($propertyQuestionPair, $this->receipt);    
         }
 
         $questionInfinitLoop = new ConfirmationQuestion("Should an infinit loop should be applied, so the container does not halts in initialization?\n", true);

@@ -40,7 +40,7 @@ class DebianCommand extends ReceiptmanCommand
         $io = new SymfonyStyle($input, $output);
 
         foreach ($this->receipt->getPropertyQuestionsPairs() as $propertyQuestionPair) {
-            $this->feedReceipt($propertyQuestionPair);    
+            $this->feedReceipt($propertyQuestionPair, $this->receipt);    
         }
 
         $dirPath = $this->askForReceiptFolderAndWriteFiles();
