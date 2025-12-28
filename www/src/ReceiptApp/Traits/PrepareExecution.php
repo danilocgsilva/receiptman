@@ -48,15 +48,14 @@ trait PrepareExecution
      * @throws \InvalidArgumentException
      * @return void
      */
-    private function feedReceipt(QuestionEntry $questionEntry, ReceiptInterface|null $currentReceipt)
+    private function feedReceipt(QuestionEntry $questionEntry, ReceiptInterface $currentReceipt)
     {
-        $receiptInSetup = $this->receipt;
         if ($questionEntry->inputType === null) {
             if (!$questionEntry->textQuestion || !$questionEntry->methodName) {
                 throw new InvalidArgumentException("Question text and method name are required for non-yes/no questions.");
             }
             $answer = $this->makeQuestionAndGetAnswer($questionEntry->textQuestion);
-            $receiptInSetup->{$questionEntry->methodName}($answer);
+            $currentReceipt->{$questionEntry->methodName}($answer);
             return;
         }
 
@@ -64,13 +63,13 @@ trait PrepareExecution
         switch ($questionEntry->inputType) {
             case InputType::yesorno:
                 if ($answer) {
-                    $receiptInSetup->{$questionEntry->methodName}();
+                    $currentReceipt->{$questionEntry->methodName}();
                 }
                 break;
 
             case InputType::yesornoinverse:
                 if (!$answer) {
-                    $receiptInSetup->{$questionEntry->methodName}();
+                    $currentReceipt->{$questionEntry->methodName}();
                 }
                 break;
 

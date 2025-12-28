@@ -39,7 +39,7 @@ class PythonCommand extends ReceiptmanCommand
         $io = new SymfonyStyle($input, $output);
 
         foreach ($this->receipt->getPropertyQuestionsPairs() as $propertyQuestionPair) {
-            $this->feedReceipt($propertyQuestionPair);    
+            $this->feedReceipt($propertyQuestionPair, $this->receipt);    
         }
 
         $response = $this->askYesOrNo("Does you need to add a database?\n");
