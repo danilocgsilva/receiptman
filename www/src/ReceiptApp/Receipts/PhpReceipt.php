@@ -10,11 +10,14 @@ use App\ReceiptApp\Receipts\Interfaces\ReceiptInterface;
 use App\ReceiptApp\Receipts\Questions\BaseQuestion;
 use Symfony\Component\Filesystem\Filesystem;
 use App\ReceiptApp\Receipts\Questions\Types\QuestionEntry;
+USE App\ReceiptApp\Receipts\Questions\Types\InputType;
 
 class PhpReceipt extends ReceiptCommons implements ReceiptInterface, PhpInterface
 {
     private string $phpVersion = "latest";
     private bool $infinityLoop = false;
+
+    private bool $composer = false;
     
     private array $versionMapping = [
         '8.5' => '8.5.1',
@@ -31,8 +34,21 @@ class PhpReceipt extends ReceiptCommons implements ReceiptInterface, PhpInterfac
                     methodName: "setPhpVersion",
                     textQuestion: "Write the PHP version to use \n",
                 )
+            ],
+            [
+                new QuestionEntry(
+                    methodName: "setComposer",
+                    textQuestion: "Should I install Composer? \n",
+                    inputType: InputType::yesorno
+                )
             ]
         );
+    }
+
+    public function setComposer(): self
+    {
+        $this->composer = true;
+        return $this;
     }
 
     public function setPhpVersion(string $phpVersion): static
@@ -58,12 +74,21 @@ class PhpReceipt extends ReceiptCommons implements ReceiptInterface, PhpInterfac
     private function getDockerfileContent(): string
     {
         $imageTag = $this->versionMapping[$this->phpVersion] ?? $this->phpVersion;
-        
-        return <<<EOF
-        FROM php:{$imageTag}
 
-        CMD while : ; do sleep 1000; done
-        EOF;
+        $recipeLines = [
+            "FROM php:{$imageTag}",
+            "",
+        ];
+
+        if ($this->composer) {
+            $recipeLines[] = "RUN php -r \"copy('https://getcomposer.org/installer', 'composer-setup.php');\"";
+            $recipeLines[] = "RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer";
+            $recipeLines[] = "";
+        }
+
+        $recipeLines[] = "CMD while : ; do sleep 1000; done";
+
+        return implode("\n", $recipeLines);
     }
 
     protected function buildYamlStructure(): void

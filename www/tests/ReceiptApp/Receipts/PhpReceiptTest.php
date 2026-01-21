@@ -113,4 +113,42 @@ class PhpReceiptTest extends TestCase
             actual: $questionsParis[0]
         );
     }
+
+    public function testBasicDockerfileContent(): void
+    {
+        $this->phpReceipt->setPhpVersion("8.4");
+        $this->phpReceipt->setName("php_test");
+        $this->phpReceipt->setInfinitLoop();
+        $files = $this->phpReceipt->getFiles();
+        $dockerfile = $this->getSpecificFile($files, "Dockerfile");
+
+        $expectedContent = <<<EOF
+        FROM php:8.4
+
+        CMD while : ; do sleep 1000; done
+        EOF;
+
+        $this->assertSame($expectedContent, $dockerfile->content);
+    }
+
+    public function testDockerfileContentWithComposer(): void
+    {
+        $this->phpReceipt->setPhpVersion("8.4");
+        $this->phpReceipt->setName("php_test");
+        $this->phpReceipt->setComposer();
+        $this->phpReceipt->setInfinitLoop();
+        $files = $this->phpReceipt->getFiles();
+        $dockerfile = $this->getSpecificFile($files, "Dockerfile");
+
+        $expectedContent = <<<EOF
+        FROM php:8.4
+
+        RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+        RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+
+        CMD while : ; do sleep 1000; done
+        EOF;
+
+        $this->assertSame($expectedContent, $dockerfile->content);
+    }
 }
