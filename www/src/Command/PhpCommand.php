@@ -48,9 +48,20 @@ class PhpCommand extends ReceiptmanCommand
             $this->feedReceipt($propertyQuestionPair, $this->receipt);
         }
 
-        $questionInfinitLoop = new ConfirmationQuestion("Should an infinit loop should be applied, so the container does not halts in initialization?\n", true);
-        if ($this->questionHelper->ask($this->input, $this->output, $questionInfinitLoop)) {
+        if ($this->questionHelper->ask(
+            $this->input, 
+            $this->output, 
+            new ConfirmationQuestion("Should an infinit loop should be applied, so the container does not halts in initialization?\n", true)
+        )) {
             $this->receipt->setInfinitLoop();
+        }
+
+        if ($this->questionHelper->ask(
+            $this->input, 
+            $this->output, 
+            new ConfirmationQuestion("Should I set up Xdebug for step debugging?\n", false)
+        )) {
+            $this->receipt->setXdebug();
         }
 
         $addDatabase = new ConfirmationQuestion("Should I add a database container as well?\n", false);

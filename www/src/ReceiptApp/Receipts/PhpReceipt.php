@@ -18,6 +18,8 @@ class PhpReceipt extends ReceiptCommons implements ReceiptInterface, PhpInterfac
     private bool $infinityLoop = false;
 
     private bool $composer = false;
+
+    private bool $xdebug = false;
     
     private array $versionMapping = [
         '8.5' => '8.5.1',
@@ -51,6 +53,12 @@ class PhpReceipt extends ReceiptCommons implements ReceiptInterface, PhpInterfac
         return $this;
     }
 
+    public function setXdebug(): self
+    {
+        $this->xdebug = true;
+        return $this;
+    }
+
     public function setPhpVersion(string $phpVersion): static
     {
         $this->phpVersion = $phpVersion;
@@ -65,8 +73,11 @@ class PhpReceipt extends ReceiptCommons implements ReceiptInterface, PhpInterfac
     public function getFiles(): array
     {
         $files = [];
-        if ($this->infinityLoop) {
+        if ($this->infinityLoop || $this->xdebug) {
             $files[] = new File('Dockerfile', $this->getDockerfileContent(), $this->fs);
+        }
+        if ($this->xdebug) {
+            $files[] = new File('config/xdebug.ini', $this->getXdebugIniContent(), $this->fs);
         }
         return $files;
     }
@@ -86,9 +97,29 @@ class PhpReceipt extends ReceiptCommons implements ReceiptInterface, PhpInterfac
             $recipeLines[] = "";
         }
 
-        $recipeLines[] = "CMD while : ; do sleep 1000; done";
+        if ($this->xdebug) {
+            $recipeLines[] = "RUN pecl install xdebug && docker-php-ext-enable xdebug";
+            $recipeLines[] = "COPY /config/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini";
+            $recipeLines[] = "";
+        }
+
+        if ($this->infinityLoop) {
+            $recipeLines[] = "CMD while : ; do sleep 1000; done";
+        }
 
         return implode("\n", $recipeLines);
+    }
+
+    private function getXdebugIniContent(): string
+    {
+        return <<<INI
+        zend_extension=xdebug.so
+
+        xdebug.mode=debug
+        xdebug.start_with_request=yes
+        xdebug.client_host=host.docker.internal
+        xdebug.client_port=9003
+        INI;
     }
 
     protected function buildYamlStructure(): void
@@ -99,7 +130,7 @@ class PhpReceipt extends ReceiptCommons implements ReceiptInterface, PhpInterfac
             $this->name => []
         ];
 
-        if ($this->infinityLoop) {
+        if ($this->infinityLoop || $this->xdebug) {
             $this->yamlStructure[$this->name]['build'] = [
                 'context' => '.'
             ];
