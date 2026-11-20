@@ -11,7 +11,7 @@ use Symfony\Component\Console\{
 };
 use Symfony\Component\Console\Command\Command;
 use App\ReceiptApp\Traits\PrepareExecution;
-use App\ReceiptApp\Receipts\Apache as ApacheReceipt;
+use App\ReceiptApp\Receipts\ApacheReceipt;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use App\Command\Traits\ReceiptFolder;
 use Symfony\Component\Filesystem\Filesystem;
@@ -41,7 +41,7 @@ class ApacheCommand extends ReceiptmanCommand
             $this->feedReceipt($propertyQuestionPair, $this->receipt);
         }
 
-        $dirPath = $this->askForReceiptFolder();
+        $dirPath = $this->askForReceiptFolderAndWriteFiles();
 
         $io->success(sprintf("Project created in %1\$s.", $dirPath));
 
