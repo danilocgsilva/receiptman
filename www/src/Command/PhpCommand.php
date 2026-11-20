@@ -7,6 +7,8 @@ namespace App\Command;
 use App\Command\Traits\ReceiptFolder;
 use App\ReceiptApp\Traits\PrepareExecution;
 use App\ReceiptApp\Receipts\PhpReceipt;
+use App\ReceiptApp\Receipts\MySQLReceipt;
+use App\ReceiptApp\Receipts\PostgreReceipt;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -14,6 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 #[AsCommand(
@@ -48,6 +51,26 @@ class PhpCommand extends ReceiptmanCommand
         $questionInfinitLoop = new ConfirmationQuestion("Should an infinit loop should be applied, so the container does not halts in initialization?\n", true);
         if ($this->questionHelper->ask($this->input, $this->output, $questionInfinitLoop)) {
             $this->receipt->setInfinitLoop();
+        }
+
+        $addDatabase = new ConfirmationQuestion("Should I add a database container as well?\n", false);
+        if ($this->questionHelper->ask($this->input, $this->output, $addDatabase)) {
+            $dbChoice = new ChoiceQuestion(
+                "Which database engine?\n",
+                ['mysql', 'postgre'],
+                'mysql'
+            );
+            $dbEngine = $this->questionHelper->ask($this->input, $this->output, $dbChoice);
+
+            $dbReceipt = $dbEngine === 'mysql'
+                ? new MySQLReceipt($this->fs)
+                : new PostgreReceipt($this->fs);
+
+            while ($pair = $dbReceipt->getNextQuestionPair()) {
+                $this->feedReceipt($pair, $dbReceipt);
+            }
+
+            $this->additionalReceipts[] = $dbReceipt;
         }
 
         $dirPath = $this->askForReceiptFolderAndWriteFiles();
