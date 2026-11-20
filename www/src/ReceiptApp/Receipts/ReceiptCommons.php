@@ -11,6 +11,8 @@ class ReceiptCommons
 {
     protected bool $sshVolume = false;
 
+    protected bool $windowsExtraHost = false;
+
     protected array $yamlStructure;
 
     protected bool $networkModeHost = false;
@@ -31,6 +33,12 @@ class ReceiptCommons
     public function setSshVolume(): self
     {
         $this->sshVolume = true;
+        return $this;
+    }
+
+    public function setWindowsExtraHost(): self
+    {
+        $this->windowsExtraHost = true;
         return $this;
     }
 
@@ -101,6 +109,10 @@ class ReceiptCommons
     {
         if ($this->sshVolume) {
             $this->yamlStructure[$this->name]['volumes'][] = './.ssh/:/root/.ssh';
+        }
+
+        if ($this->windowsExtraHost) {
+            $this->yamlStructure[$this->name]['extra_hosts'][] = 'host.docker.internal:host-gateway';
         }
     }
 }

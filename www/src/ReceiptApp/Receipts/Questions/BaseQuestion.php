@@ -31,6 +31,11 @@ class BaseQuestion implements QuestionInterface
                 textQuestion: "Should I mount the .ssh in a local volume?\n",
                 inputType: InputType::yesorno
             ),
+            new QuestionEntry(
+                methodName: "setWindowsExtraHost",
+                textQuestion: "Should I add the Windows extra host (host.docker.internal) to the docker-compose.yml?\n",
+                inputType: InputType::yesorno
+            ),
         ];
     }
 
